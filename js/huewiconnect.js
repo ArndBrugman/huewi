@@ -7,47 +7,53 @@
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
   } else
-  $(document).ready(onStartup);
+    $(document).ready(onStartup);
+
+  window.onload = function() {
+    window.onresize();
+  }
+
+  window.onresize = function() {
+    Redraw();
+  }
+
+  function Redraw() {
+  }
+
+  $("#window").click(function(event) {
+  });
 
   function onStartup() {
-
     onResume();
-    window.onload = function() {
-      window.onresize();
-    };
-    window.onresize = function() {
-      Redraw();
-    };
-    function Redraw() {
-    };
-    $("#window").click(function(event) {
-    });
   }
 
   function onResume() {
     TimeBasedGradientUpdate();
     angular.element(document.getElementById('HueStatusController')).controller().ConnectToHueBridge();
     HeartbeatInterval = window.setInterval(StatusHeartbeat, 2500);
-      StatusHeartbeat(); // Execute Immediate Too!
-    }
+    StatusHeartbeat(); // Execute Immediate Too!
+  }
 
-    function onPause() {
-      window.clearInterval(HeartbeatInterval);
-      $('#HueStatusbar').show(500);
-    }
+  function onPause() {
+    window.clearInterval(HeartbeatInterval);
+    $('#HueStatusbar').show(500);
+  }
 
-    function StatusHeartbeat() {
-      if ((PrevStatus != angular.element(document.getElementById('HueStatusController')).controller().Status) &
-        (angular.element(document.getElementById('HueStatusController')).controller().Status === 'Connected'))
-      {
-        $('#HueStatusbar').slideUp(1500);
-      }
-      PrevStatus = angular.element(document.getElementById('HueStatusController')).controller().Status;
-      angular.element(document.getElementById('HueStatusController')).controller().MyHue.BridgeGetData().then(function UpdateUI() {
-        angular.element(document.getElementById('Groups')).controller().Update();
-        angular.element(document.getElementById('Lights')).controller().Update();
-      }, function BridgeGetDataFailed() { setTimeout(function(){  onPause(); onResume(); }, 1500);
+  function StatusHeartbeat() {
+    if ((PrevStatus != angular.element(document.getElementById('HueStatusController')).controller().Status) &
+      (angular.element(document.getElementById('HueStatusController')).controller().Status === 'Connected')) {
+      $('#HueStatusbar').slideUp(1500);
+    }
+    PrevStatus = angular.element(document.getElementById('HueStatusController')).controller().Status;
+    angular.element(document.getElementById('HueStatusController')).controller().MyHue.BridgeGetData().then(function UpdateUI() {
+      angular.element(document.getElementById('Groups')).controller().Update();
+      angular.element(document.getElementById('Lights')).controller().Update();
+    }, function BridgeGetDataFailed() {
+      setTimeout(function() {
+        onPause();
+        onResume();
+      }, 1500);
     });
-    }
-    
-  })();
+  }
+
+})();
