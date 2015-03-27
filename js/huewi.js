@@ -1,7 +1,10 @@
 (function() {
+
   var app = angular.module('huewi', []);
   var MyHue = new huepi();
   MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
+
+  localStorage.MyHueBridgeIP = "192.168.2.1";
 
   app.controller('HueStatusController', function($scope){
     self = this; // Calling Async Functions looses this... Fix: Store this in self for later reference
@@ -20,24 +23,24 @@
             if (!MyHue.BridgeUsernameWhitelisted) {
               self.Status='Please press connect button on Bridge';
               MyHue.BridgeCreateUser().then(function ReReadBridgeConfiguration() {
-                return self.ConnectToHueBridge();
+                return;
               }, function UnableToCreateUseronBridge() {
                 self.Status='Unable to Create User on Bridge';
-                return self.ConnectToHueBridge();
+                return;
               });
             } else {
-              localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Store Cache BridgeIP
+              localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
               self.BridgeName = MyHue.BridgeName;
               self.Status='Connected';
               $scope.$apply();
             }
           }, function UnableToRetreiveBridgeConfiguration() {
             self.Status='Unable to Retreive Bridge Configuration';
-            return self.ConnectToHueBridge();
+            return;
           });
         }, function UnableToDiscoverLocalBridgesViaPortal() {
           self.Status='Unable to find Local Bridge via Portal';
-          return self.ConnectToHueBridge();
+          return;
         });
 } else {
   MyHue.BridgeIP = localStorage.MyHueBridgeIP;
@@ -50,12 +53,12 @@
     } else {
       delete localStorage.MyHueBridgeIP;
       self.Status='Not Whitelisted anymore';
-      return self.ConnectToHueBridge();
+      return;
     }
   }, function ErrorGettingCachedBridgeData() {
     delete localStorage.MyHueBridgeIP;
     self.Status='Not found anymore';
-    return self.ConnectToHueBridge();
+    return;
   });
 }
 }
@@ -67,7 +70,7 @@ function ToHexString(In) {
 }
 
 app.controller('GroupController', function($scope){
-  this.Groups = [{'name':'All available lights'}];
+  this.Groups = [{'name':'All available lights'}, {'name':'Group'}];
 
   this.Update = function(){
     this.Groups = _.toArray(MyHue.Groups);
@@ -85,17 +88,17 @@ app.controller('GroupController', function($scope){
         } else if (Group.action.colormode === 'ct') {
           RGB = huepi.HelperColortemperaturetoRGB(Math.round(1000000 / Group.action.ct));
           var xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
-          RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, Grouep.modelid, Group.action.bri/255);
+          RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, Group.modelid, Group.action.bri/255);
         }
         Group.HTMLColor="#"+ToHexString(RGB.Red * 255)+ToHexString(RGB.Green * 255)+ToHexString(RGB.Blue * 255);
       } else Group.HTMLColor="#ffcc88";
     })
-    $scope.$apply();
-  }
+$scope.$apply();
+}
 })
 
 app.controller('LightController', function($scope){
-  this.Lights = [{'name':'Corner'}, {'name':'Desk'}, {'name':'Stand'}];
+  this.Lights = [{'name':'Light'}, {'name':'Light'}, {'name':'Light'}];
 
   this.Update = function(){
     this.Lights = _.toArray(MyHue.Lights);
@@ -118,6 +121,5 @@ app.controller('LightController', function($scope){
   }
 
 });
-
 
 })();
