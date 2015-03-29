@@ -4,7 +4,11 @@
   var MyHue = new huepi();
   MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
 
+<<<<<<< HEAD
    delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges
+=======
+  //delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges
+>>>>>>> gh-pages
 
   function ToHexString(In) {
     var Result = Math.floor(In).toString(16);
@@ -13,7 +17,7 @@
 
   app.controller('HueStatusController', function($scope) {
     self = this; // Calling Async Functions looses this... Fix: Store this in self for later reference
-    this.MyHue = MyHue; // to be called via 'HueStatusController'.controller().MyHue+GroupOn() in HTML
+    this.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatusController')).controller().MyHue. in HTML
     this.BridgeIP = '';
     this.BridgeName = '';
     this.Status = '';
