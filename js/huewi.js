@@ -4,7 +4,7 @@
   var MyHue = new huepi();
   MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
 
-  localStorage.MyHueBridgeIP = "192.168.2.1"; // Temp Fix for Philips Portal Wierdness...
+   delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges
 
   function ToHexString(In) {
     var Result = Math.floor(In).toString(16);
@@ -19,18 +19,20 @@
     this.Status = '';
 
     this.ConnectToHueBridge = function() {
-      $scope.$apply(); // Recursive Calling uses this to Update Status in HTML
       if (!localStorage.MyHueBridgeIP) { // No Cached BridgeIP?
         self.Status = 'Trying to Discover Bridge via Portal';
+        $scope.$apply();
         MyHue.PortalDiscoverLocalBridges().then(function GetBridgeConfig() {
           MyHue.BridgeGetData().then(function EnsureWhitelisting() {
             self.BridgeIP = MyHue.BridgeIP;
             if (!MyHue.BridgeUsernameWhitelisted) {
               self.Status = 'Please press connect button on Bridge';
+              $scope.$apply();
               MyHue.BridgeCreateUser().then(function ReReadBridgeConfiguration() {
                 return;
               }, function UnableToCreateUseronBridge() {
                 self.Status = 'Unable to Create User on Bridge';
+                $scope.$apply();
                 return;
               });
             } else {
@@ -41,10 +43,12 @@
             }
           }, function UnableToRetreiveBridgeConfiguration() {
             self.Status = 'Unable to Retreive Bridge Configuration';
+            $scope.$apply();
             return;
           });
         }, function UnableToDiscoverLocalBridgesViaPortal() {
           self.Status = 'Unable to find Local Bridge via Portal';
+          $scope.$apply();
           return;
         });
       } else {
@@ -58,11 +62,13 @@
           } else {
             delete localStorage.MyHueBridgeIP;
             self.Status = 'Not Whitelisted anymore';
+            $scope.$apply();
             return;
           }
         }, function ErrorGettingCachedBridgeData() {
           delete localStorage.MyHueBridgeIP;
           self.Status = 'Not found anymore';
+          $scope.$apply();
           return;
         });
       }
