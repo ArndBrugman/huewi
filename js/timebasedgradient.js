@@ -58,6 +58,9 @@ function TimeBasedGradientUpdate(){
   var index = new Date().getHours();
 
   $(".timebasedgradient").css("background", timebasedgradients[index]);
+  $(".timebasedgradient").css("background-position","right top");
+  $(".timebasedgradient").css("background-repeat","no-repeat");
+  $(".timebasedgradient").css("background-attachment","fixed");
   $(".timebasedgradient").css("background-image:", timebasedgradients[index]);
   $(".timebasedgradient").css("background-image:", "-webkit-" + timebasedgradients[index]);
   $(".timebasedgradient").css("background-image:", "-moz-" + timebasedgradients[index]);
