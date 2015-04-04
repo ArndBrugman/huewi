@@ -66,5 +66,5 @@ function TimeBasedGradientUpdate(){
   $(".timebasedgradient").css("background-image:", "-moz-" + timebasedgradients[index]);
   $(".timebasedgradient").css("background-image:", "-o-background: " + timebasedgradients[index]);
 
-  $(".timebasedgradient").css("color", timebasedcolors[(index-14)%24]);
+  $(".timebasedgradient").css("color", timebasedcolors[(index-12)%24]);
 }
