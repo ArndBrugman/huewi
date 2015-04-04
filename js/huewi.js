@@ -10,11 +10,6 @@
   //delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges
 >>>>>>> gh-pages
 
-  function ToHexString(In) {
-    var Result = Math.floor(In).toString(16);
-    return Result.length == 1 ? "0" + Result : Result;
-  }
-
   app.controller('HueStatusController', function($scope) {
     self = this; // Calling Async Functions looses this... Fix: Store this in self for later reference
     this.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatusController')).controller().MyHue. in HTML
@@ -79,6 +74,11 @@
     }
   });
 
+  function ToHexString(In) {
+    var Result = Math.floor(In).toString(16);
+    return Result.length == 1 ? "0" + Result : Result;
+  }
+
   app.controller('GroupController', function($scope) {
     this.Groups = [{'name': 'All available lights'}, {'name': 'Group'}];
 
@@ -107,6 +107,13 @@
     }
   })
 
+  app.directive("huewiGroup", function() {
+    return {
+      restrict: 'E',
+      templateUrl: "huewi-group.html"
+    };
+  });
+
   app.controller('LightController', function($scope) {
     this.Lights = [{'name': 'Light'}, {'name': 'Light'}, {'name': 'Light'}];
 
@@ -129,7 +136,14 @@
       })
       $scope.$apply();
     }
-
   });
+
+  app.directive("huewiLight", function() {
+    return {
+      restrict: 'E',
+      templateUrl: "huewi-light.html"
+    };
+  });
+
 
 })();

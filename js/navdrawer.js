@@ -19,6 +19,7 @@ $(document).ready(function(){
     }
     return false;
   });
+
   document.body.addEventListener('click', closeNavdrawer);
 });
 

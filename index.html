@@ -54,15 +54,7 @@
       <h3>Groups</h3>
       <div class="list-group">
         <div class="list-group-item" ng-repeat="Group in GroupCtrl.Groups">
-          <span left>{{Group.name}}</span>
-          <button type="button" class="btn btn-sm right" ng-click="HueStatusCtrl.MyHue.GroupOff($index);" ng-class="{ hidden: !((Group.action.on) || ($index == 0)) }">
-            <span class="glyphicon glyphicon-record" style="color:{{Group.HTMLColor}}" aria-hidden="true"></span>
-          </button>
-
-          <button type="button" class="btn btn-sm right" ng-click="HueStatusCtrl.MyHue.GroupOn($index);" ng-class="{ hidden:Group.action.on }">
-            <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-          </button>
-
+          <huewi-group></huewi-group>
         </div>
       </div>
     </div>
@@ -76,15 +68,7 @@
       <h3>Lights</h3>
       <div class="list-group">
         <div class="list-group-item" ng-repeat="Light in LightCtrl.Lights" ng-class="{ grayed:!Light.state.reachable }">
-          <span left>{{Light.name}}</span>
-          <span ng-class="{ hidden:!Light.state.reachable }">
-            <button type="button" class="btn btn-sm right" ng-click="HueStatusCtrl.MyHue.LightOff($index + 1);" ng-class="{ hidden:!Light.state.on }">
-              <span class="glyphicon glyphicon-record" style="color:{{Light.HTMLColor}}" aria-hidden="true"></span>
-          </button>
-          <button type="button" class="btn btn-sm right" ng-click="HueStatusCtrl.MyHue.LightOn($index + 1);" ng-class="{ hidden:Light.state.on }">
-            <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-          </button>
-          </span>
+          <huewi-light></huewi-light>
         </div>
       </div>
     </div>
