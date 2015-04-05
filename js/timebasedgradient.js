@@ -26,45 +26,43 @@ var timebasedgradients = [ // from http://codepen.io/zessx/pen/rDEAl
 ];
 
 var timebasedcolors = [
-  "#00000c",
-  "#020111",
-  "#020111",
-  "#020111",
-  "#20202c",
-  "#40405c",
-  "#4a4969",
-  "#757abf",
-  "#82addb",
-  "#94c5f8",
   "#b7eaff",
-  "#9be2fe",
-  "#90dffe",
-  "#57c1eb",
-  "#2d91c2",
-  "#2473ab",
-  "#1e528e",
-  "#1e528e",
-  "#154277",
-  "#163c52",
-  "#071b26",
-  "#010a10",
-  "#090401",
-  "#00000c",
+  "#b7eaff",
+  "#b7eaff",
+  "#b7eaff",
+  "#b7eaff",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#3a3a52",
+  "#b7eaff",
+  "#b7eaff",
+  "#b7eaff",
+  "#b7eaff",
+  "#b7eaff",
 ];
 
 var TimeBasedGradientUpdateInterval = setInterval(TimeBasedGradientUpdate, 5 * 60 * 1000); // Update Every 5 Minute
 
 function TimeBasedGradientUpdate(){
   var index = new Date().getHours();
+  var timebasedgradient = timebasedgradients[index%24] +' no-repeat left top fixed ';
 
-  $(".timebasedgradient").css("background", timebasedgradients[index]);
-  $(".timebasedgradient").css("background-position","right top");
-  $(".timebasedgradient").css("background-repeat","no-repeat");
-  $(".timebasedgradient").css("background-attachment","fixed");
-  $(".timebasedgradient").css("background-image:", timebasedgradients[index]);
-  $(".timebasedgradient").css("background-image:", "-webkit-" + timebasedgradients[index]);
-  $(".timebasedgradient").css("background-image:", "-moz-" + timebasedgradients[index]);
-  $(".timebasedgradient").css("background-image:", "-o-background: " + timebasedgradients[index]);
+  $(".timebasedgradient").css("background", timebasedgradient);
+  //$(".timebasedgradient").css("background-image:", timebasedgradients[index]);
+  //$(".timebasedgradient").css("background-image:", "-webkit-" + timebasedgradients[index]);
+  //$(".timebasedgradient").css("background-image:", "-moz-" + timebasedgradients[index]);
+  //$(".timebasedgradient").css("background-image:", "-o-background: " + timebasedgradients[index]);
 
-  $(".timebasedgradient").css("color", timebasedcolors[(index-12)%24]);
+  $(".timebasedgradient").css("color", timebasedcolors[index%24]);
 }

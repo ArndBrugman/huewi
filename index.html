@@ -38,16 +38,19 @@
 <body class="timebasedgradient" id='HueStatusController' ng-controller='HueStatusController as HueStatusCtrl'>
 
   <div id="navcontainer">
-    <div id="navbutton" class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></div>
+    <div id="navbutton" class="glyphicon glyphicon-menu-hamburger"></div>
     <nav id="navdrawer">
-      <h4>Some kind of additional Menu here</h4>
+      <h4>Settings</h4>
       <ul class="list-group">
-        <li class="list-group-item">Some shortlinks to </li>
-        <li class="list-group-item">Reconnect</li>
-        <li class="list-group-item">Advanced Settings</li>
+        <li class="list-group-item">Schedules</li>
+        <li class="list-group-item">Scenes</li>
+        <li class="list-group-item">Sensors</li>
+        <li class="list-group-item">Rules</li>
+        <li class="list-group-item">Bridges</li>
       </ul>
     </nav>
   </div>
+  <!-- /navcontainer -->
 
   <div class='container' id='Groups' ng-controller='GroupController as GroupCtrl'>
     <div class='content'>
@@ -81,10 +84,9 @@
     <h4>hue Web Interface</h4>
     <!-- Single button -->
     <div id='HueStatusbar'>
-      Bridge IP: {{HueStatusCtrl.BridgeIP}}
-      <br> Bridge Name: {{HueStatusCtrl.BridgeName}}
-      <br> Status: {{HueStatusCtrl.Status}}
-      <br>
+      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
+      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
+      <div>Status: {{HueStatusCtrl.Status}}</div>
     </div>
   </div>
   <!-- /status -->

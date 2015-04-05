@@ -75,8 +75,15 @@
     return Result.length == 1 ? "0" + Result : Result;
   }
 
+  app.directive("huewiGroup", function() {
+    return {
+      restrict: 'E',
+      templateUrl: "huewi-group.html"
+    };
+  });
+
   app.controller('GroupController', function($scope) {
-    this.Groups = [{'name': 'All available lights'}, {'name': 'Group'}];
+    this.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group'}];
 
     this.Update = function() {
       this.Groups = _.toArray(MyHue.Groups);
@@ -103,10 +110,10 @@
     }
   })
 
-  app.directive("huewiGroup", function() {
+  app.directive("huewiLight", function() {
     return {
       restrict: 'E',
-      templateUrl: "huewi-group.html"
+      templateUrl: "huewi-light.html"
     };
   });
 
@@ -133,13 +140,5 @@
       $scope.$apply();
     }
   });
-
-  app.directive("huewiLight", function() {
-    return {
-      restrict: 'E',
-      templateUrl: "huewi-light.html"
-    };
-  });
-
 
 })();
