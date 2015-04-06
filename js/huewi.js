@@ -8,7 +8,7 @@
 
   app.controller('HueStatusController', function($scope) {
     self = this; // Calling Async Functions looses this... Fix: Store this in self for later reference
-    this.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatusController')).controller().MyHue. in HTML
+    this.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatus')).controller().MyHue. in HTML
     this.BridgeIP = '';
     this.BridgeName = '';
     this.Status = '';
@@ -143,15 +143,26 @@
 
   app.controller('MenuController', function($scope) {
     this.Item ="None";
-    this.SetItem = function(NewItem)
-    {
+    this.SetItem = function(NewItem, NewIndex) {
       this.Item = NewItem;
+      if (NewItem === 'Group')
+        angular.element(document.getElementById('Group')).controller().SetGroupNr(NewIndex);
+      else if (NewItem === 'Light')
+        angular.element(document.getElementById('Light')).controller().SetLightNr(NewIndex);
     }
   });
 
   app.controller('GroupController', function($scope) {
+    this.GroupNr = 0;
+    this.SetGroupNr = function(NewGroupNr) {
+      this.GroupNr = NewGroupNr;
+    }
   });
   app.controller('LightController', function($scope) {
+    this.LightNr = 1;
+    this.SetLightNr = function(NewLightNr) {
+      this.LightNr = NewLightNr;
+    }
   });
 
   app.controller('SchedulesController', function($scope) {
@@ -164,8 +175,6 @@
   });
   app.controller('BridgeController', function($scope) {
   });
-
-
 
 
 })();

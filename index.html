@@ -36,7 +36,7 @@
   <!--script src='js/cordova.js' type='text/javascript' onload="javascript:window.isCordovaApp = true;"></script-->
 </head>
 
-<body class="timebasedgradient" id='HueStatusController' ng-controller='HueStatusController as HueStatusCtrl'>
+<body class="timebasedgradient" id='HueStatus' ng-controller='HueStatusController as HueStatusCtrl'>
 
 <div ng-controller='MenuController as MenuCtrl'>
   <div id="navcontainer">
@@ -58,7 +58,8 @@
     <div class='inlay content timebasedgradient'>
       <h3>Group</h3>
       <div></div>
-      <div ng-click="MenuCtrl.SetItem('NONE')">Close</div>
+      <div>GroupName: {{HueStatusCtrl.MyHue.Groups[GroupCtrl.GroupNr].name}}</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -67,7 +68,8 @@
     <div class='inlay content timebasedgradient'>
       <h3>Light</h3>
       <div></div>
-      <div ng-click="MenuCtrl.SetItem('NONE')">Close</div>
+      <div>LightName: {{HueStatusCtrl.MyHue.Lights[LightCtrl.LightNr].name}}</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -76,7 +78,7 @@
     <div class='inlay content timebasedgradient'>
       <h3>Schedules</h3>
       <div></div>
-      <div ng-click="MenuCtrl.SetItem('NONE')">Close</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -85,7 +87,7 @@
     <div class='inlay content timebasedgradient'>
       <h3>Scenes</h3>
       <div></div>
-      <div ng-click="MenuCtrl.SetItem('NONE')">Close</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -94,7 +96,7 @@
     <div class='inlay content timebasedgradient'>
       <h3>Sensors</h3>
       <div></div>
-      <div ng-click="MenuCtrl.SetItem('NONE')">Close</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -103,7 +105,7 @@
     <div class='inlay content timebasedgradient'>
       <h3>Rules</h3>
       <div></div>
-      <div ng-click="MenuCtrl.SetItem('NONE')">Close</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -114,7 +116,7 @@
       <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
       <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
       <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div ng-click="MenuCtrl.SetItem('NONE')">Close</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
