@@ -36,13 +36,13 @@
 
   function onPause() {
     window.clearInterval(HeartbeatInterval);
-    $('#HueStatusbar').show(500);
+    $('#HueStatusbar').show(350);
   }
 
   function StatusHeartbeat() {
     if ((PrevStatus != angular.element(document.getElementById('HueStatusController')).controller().Status) &
       (angular.element(document.getElementById('HueStatusController')).controller().Status === 'Connected')) {
-      $('#HueStatusbar').slideUp(1500);
+      $('#HueStatusbar').slideUp(750);
     }
     PrevStatus = angular.element(document.getElementById('HueStatusController')).controller().Status;
 
@@ -55,7 +55,7 @@
         setTimeout(function() {
           onPause();
           onResume();
-        }, 1500);
+        }, 1000);
       });
     }
   }

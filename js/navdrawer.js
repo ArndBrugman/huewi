@@ -7,7 +7,7 @@
   }
 
   function toggleNavdrawer() {
-    $('#navdrawer').toggle(500);
+    $('#navdrawer').toggle(350);
     return false;
   }
 

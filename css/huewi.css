@@ -8,8 +8,20 @@ html, body {
   -ms-user-select: none;
   user-select: none;
 }
+.fading {
+  -webkit-transition:all linear 0.35s;
+  -moz-transition:all linear 0.35s;
+  -o-transition:all linear 0.35s;
+  transition:all linear 0.35s;
+  opacity: 1;
+}
+.fading.ng-hide {
+  opacity: 0;
+}
 #navcontainer {
   position: fixed;
+  left: 0px;
+  top: 0px;
   max-width: 70%;
   background: rgba(100, 100, 125, 0.7);
   color: rgba(250, 240, 230, 1);
@@ -55,7 +67,7 @@ h3 {
 .list-group-item.grayed {
   background: rgba(50, 50, 75, 0.5);
 }
-button {
+button, .btn {
   background: rgba(100, 100, 125, 0.5);
 }
 @media screen and (orientation:landscape) {
@@ -77,6 +89,26 @@ button {
   .hideonportrait {
     display:none;
   }
+}
+.overlay {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  min-height: 100%;
+  background: rgba(100, 100, 125, 0.75);
+  z-index: 10;
+}
+.inlay {
+  position: relative;
+  background: rgba(200, 200, 250, 0.75);
+  border-radius: 5px;
+  padding: 25px;
+  margin-top: 15%;
+  margin-left: 15%;
+  margin-bottom: 15%;
+  width: 70%;
+  z-index: 11;
 }
 .content { }
 .left {

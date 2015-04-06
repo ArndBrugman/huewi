@@ -1,6 +1,6 @@
 (function() {
 
-  var app = angular.module('huewi', []);
+  var app = angular.module('huewi', ['ngAnimate']);
   var MyHue = new huepi();
   MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
 
@@ -48,7 +48,7 @@
         });
       } else {
         MyHue.BridgeIP = localStorage.MyHueBridgeIP;
-        self.BridgeIP = 'Cached ' + MyHue.BridgeIP;
+        self.BridgeIP = MyHue.BridgeIP;
         MyHue.BridgeGetData().then(function CheckWhitelisting() {
           if (MyHue.BridgeUsernameWhitelisted) {
             self.BridgeName = MyHue.BridgeName;
@@ -82,7 +82,7 @@
     };
   });
 
-  app.controller('GroupController', function($scope) {
+  app.controller('GroupsController', function($scope) {
     this.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group'}];
 
     this.Update = function() {
@@ -117,7 +117,7 @@
     };
   });
 
-  app.controller('LightController', function($scope) {
+  app.controller('LightsController', function($scope) {
     this.Lights = [{'name': 'Light'}, {'name': 'Light'}, {'name': 'Light'}];
 
     this.Update = function() {
@@ -140,5 +140,32 @@
       $scope.$apply();
     }
   });
+
+  app.controller('MenuController', function($scope) {
+    this.Item ="None";
+    this.SetItem = function(NewItem)
+    {
+      this.Item = NewItem;
+    }
+  });
+
+  app.controller('GroupController', function($scope) {
+  });
+  app.controller('LightController', function($scope) {
+  });
+
+  app.controller('SchedulesController', function($scope) {
+  });
+  app.controller('ScenesController', function($scope) {
+  });
+  app.controller('SensorsController', function($scope) {
+  });
+  app.controller('RulesController', function($scope) {
+  });
+  app.controller('BridgeController', function($scope) {
+  });
+
+
+
 
 })();
