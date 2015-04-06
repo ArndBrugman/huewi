@@ -1,6 +1,6 @@
 (function() {
 
-  var app = angular.module('huewi', []);
+  var app = angular.module('huewi', ['ngAnimate']);
   var MyHue = new huepi();
   MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
 
@@ -12,7 +12,7 @@
 
   app.controller('HueStatusController', function($scope) {
     self = this; // Calling Async Functions looses this... Fix: Store this in self for later reference
-    this.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatusController')).controller().MyHue. in HTML
+    this.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatus')).controller().MyHue. in HTML
     this.BridgeIP = '';
     this.BridgeName = '';
     this.Status = '';
@@ -52,7 +52,7 @@
         });
       } else {
         MyHue.BridgeIP = localStorage.MyHueBridgeIP;
-        self.BridgeIP = 'Cached ' + MyHue.BridgeIP;
+        self.BridgeIP = MyHue.BridgeIP;
         MyHue.BridgeGetData().then(function CheckWhitelisting() {
           if (MyHue.BridgeUsernameWhitelisted) {
             self.BridgeName = MyHue.BridgeName;
@@ -79,8 +79,15 @@
     return Result.length == 1 ? "0" + Result : Result;
   }
 
-  app.controller('GroupController', function($scope) {
-    this.Groups = [{'name': 'All available lights'}, {'name': 'Group'}];
+  app.directive("huewiGroup", function() {
+    return {
+      restrict: 'E',
+      templateUrl: "huewi-group.html"
+    };
+  });
+
+  app.controller('GroupsController', function($scope) {
+    this.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group'}];
 
     this.Update = function() {
       this.Groups = _.toArray(MyHue.Groups);
@@ -107,14 +114,14 @@
     }
   })
 
-  app.directive("huewiGroup", function() {
+  app.directive("huewiLight", function() {
     return {
       restrict: 'E',
-      templateUrl: "huewi-group.html"
+      templateUrl: "huewi-light.html"
     };
   });
 
-  app.controller('LightController', function($scope) {
+  app.controller('LightsController', function($scope) {
     this.Lights = [{'name': 'Light'}, {'name': 'Light'}, {'name': 'Light'}];
 
     this.Update = function() {
@@ -138,11 +145,39 @@
     }
   });
 
-  app.directive("huewiLight", function() {
-    return {
-      restrict: 'E',
-      templateUrl: "huewi-light.html"
-    };
+  app.controller('MenuController', function($scope) {
+    this.Item ="None";
+    this.SetItem = function(NewItem, NewIndex) {
+      this.Item = NewItem;
+      if (NewItem === 'Group')
+        angular.element(document.getElementById('Group')).controller().SetGroupNr(NewIndex);
+      else if (NewItem === 'Light')
+        angular.element(document.getElementById('Light')).controller().SetLightNr(NewIndex);
+    }
+  });
+
+  app.controller('GroupController', function($scope) {
+    this.GroupNr = 0;
+    this.SetGroupNr = function(NewGroupNr) {
+      this.GroupNr = NewGroupNr;
+    }
+  });
+  app.controller('LightController', function($scope) {
+    this.LightNr = 1;
+    this.SetLightNr = function(NewLightNr) {
+      this.LightNr = NewLightNr;
+    }
+  });
+
+  app.controller('SchedulesController', function($scope) {
+  });
+  app.controller('ScenesController', function($scope) {
+  });
+  app.controller('SensorsController', function($scope) {
+  });
+  app.controller('RulesController', function($scope) {
+  });
+  app.controller('BridgeController', function($scope) {
   });
 
 
