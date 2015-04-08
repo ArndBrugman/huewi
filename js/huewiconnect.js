@@ -48,7 +48,7 @@
 
     if (angular.element(document.getElementById('HueStatus')).controller().Status === 'Connected')
     {
-      angular.element(document.getElementById('HueStatus')).controller().MyHue.BridgeGetData().then(function UpdateUI() {
+      angular.element(document.getElementById('HueStatus')).controller().Update().then(function UpdateUI() {
         angular.element(document.getElementById('Groups')).controller().Update();
         angular.element(document.getElementById('Lights')).controller().Update();
       }, function BridgeGetDataFailed() {

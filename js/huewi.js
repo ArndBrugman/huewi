@@ -68,6 +68,12 @@
         });
       }
     }
+
+    this.Update = function() {
+      var Result = MyHue.BridgeGetData();
+
+      return Result;
+    }
   });
 
   function ToHexString(In) {
@@ -161,12 +167,16 @@
     this.GroupNr = 0;
     this.SetGroupNr = function(NewGroupNr) {
       this.GroupNr = NewGroupNr;
+      this.Groups = _.toArray(MyHue.Groups);
+      this.Groups.unshift({'name': 'All available lights'});
     }
   });
+  
   app.controller('LightController', function($scope) {
     this.LightNr = 1;
     this.SetLightNr = function(NewLightNr) {
       this.LightNr = NewLightNr;
+      this.Lights = _.toArray(MyHue.Lights);
     }
   });
 
