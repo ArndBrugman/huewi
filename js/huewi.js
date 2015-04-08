@@ -168,7 +168,7 @@
     this.SetGroupNr = function(NewGroupNr) {
       this.GroupNr = NewGroupNr;
       this.Groups = _.toArray(MyHue.Groups);
-      this.Groups.unshift({'name': 'All available lights'});
+      this.Groups.unshift({'name': 'All available lights'}); // Group 0
     }
   });
   
@@ -177,6 +177,7 @@
     this.SetLightNr = function(NewLightNr) {
       this.LightNr = NewLightNr;
       this.Lights = _.toArray(MyHue.Lights);
+      this.Lights.unshift({'name': 'One based index'}); // Light 0 doesn't exist
     }
   });
 
