@@ -26,11 +26,11 @@ var timebasedgradients = [ // from http://codepen.io/zessx/pen/rDEAl
 ];
 
 var timebasedcolors = [
-  "#b7eaff",
-  "#b7eaff",
-  "#b7eaff",
-  "#b7eaff",
-  "#b7eaff",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
   "#3a3a52",
   "#3a3a52",
   "#3a3a52",
@@ -45,11 +45,11 @@ var timebasedcolors = [
   "#3a3a52",
   "#3a3a52",
   "#3a3a52",
-  "#b7eaff",
-  "#b7eaff",
-  "#b7eaff",
-  "#b7eaff",
-  "#b7eaff",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
 ];
 
 var TimeBasedGradientUpdateInterval = setInterval(TimeBasedGradientUpdate, 5 * 60 * 1000); // Update Every 5 Minute
