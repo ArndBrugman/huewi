@@ -23,7 +23,7 @@ html, body {
   left: 0px;
   top: 0px;
   max-width: 70%;
-  background: rgba(100, 100, 125, 0.7);
+  background: rgba(100, 100, 125, 0.85);
   color: rgba(250, 240, 230, 1);
   border-style: solid;
   border: 1px;
@@ -105,10 +105,10 @@ button, .btn {
   background: rgba(200, 200, 250, 0.75);
   border-radius: 5px;
   padding: 25px;
-  margin-top: 5%;
-  margin-left: 5%;
-  margin-bottom: 5%;
-  width: 90%;
+  margin-top: 15%;
+  margin-left: 15%;
+  margin-bottom: 15%;
+  width: 70%;
 }
 .content { }
 .left {
