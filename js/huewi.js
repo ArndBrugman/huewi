@@ -142,9 +142,14 @@
   });
 
   app.controller('MenuController', function($scope) {
-    this.Item ="None";
+    this.Item ='';
     this.SetItem = function(NewItem, NewIndex) {
       this.Item = NewItem;
+      if (this.Item==='')
+        $('body').css('overflow', 'scroll');
+      else
+        $('body').css('overflow', 'hidden');
+
       if (NewItem === 'Group')
         angular.element(document.getElementById('Group')).controller().SetGroupNr(NewIndex);
       else if (NewItem === 'Light')
