@@ -58,7 +58,8 @@
     <div class='inlay content timebasedgradient'>
       <h3>Group</h3>
       <div></div>
-      <div>GroupName: {{HueStatusCtrl.MyHue.Groups[GroupCtrl.GroupNr].name}}</div>
+      <div>GroupName: {{GroupCtrl.Group.Name()}}</div>
+      <input type="text" ng-model="GroupCtrl.Group.Name" ng-model-options="{ getterSetter: true }">
       <div ng-click="MenuCtrl.SetItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
@@ -68,7 +69,7 @@
     <div class='inlay content timebasedgradient'>
       <h3>Light</h3>
       <div></div>
-      <div>LightName: {{HueStatusCtrl.MyHue.Lights[LightCtrl.LightNr].name}}</div>
+      <div>LightName: {{LightCtrl.Name}}</div>
       <div ng-click="MenuCtrl.SetItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
@@ -113,6 +114,34 @@
   <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='MenuCtrl.Item == "Bridge"'>
     <div class='inlay content timebasedgradient'>
       <h3>Bridge</h3>
+      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
+      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
+      <div>Status: {{HueStatusCtrl.Status}}</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
+      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
+      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
+      <div>Status: {{HueStatusCtrl.Status}}</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
+      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
+      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
+      <div>Status: {{HueStatusCtrl.Status}}</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
+      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
+      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
+      <div>Status: {{HueStatusCtrl.Status}}</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
+      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
+      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
+      <div>Status: {{HueStatusCtrl.Status}}</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
+      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
+      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
+      <div>Status: {{HueStatusCtrl.Status}}</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
+      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
+      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
+      <div>Status: {{HueStatusCtrl.Status}}</div>
+      <div ng-click="MenuCtrl.SetItem('')">Close</div>
       <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
       <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
       <div>Status: {{HueStatusCtrl.Status}}</div>

@@ -23,13 +23,13 @@ html, body {
   left: 0px;
   top: 0px;
   max-width: 70%;
-  background: rgba(100, 100, 125, 0.7);
+  background: rgba(100, 100, 125, 0.85);
   color: rgba(250, 240, 230, 1);
   border-style: solid;
   border: 1px;
   border-color: rgba(250, 240, 230, 1);
   border-bottom-right-radius: 5px;
-  z-index: 999;
+  z-index: 9999;
 }
 #navbutton
 {
@@ -52,6 +52,7 @@ nav {
   width: 100%;
   text-align: center;
   background: rgba(100, 100, 125, 0.4);
+  color: rgba(250, 240, 230, 1);
 }
 h3 {
   text-align: center;
@@ -91,24 +92,23 @@ button, .btn {
   }
 }
 .overlay {
-  position: absolute;
+  position: fixed;
   left: 0px;
   top: 0px;
-  width: 100%;
-  min-height: 100%;
-  background: rgba(100, 100, 125, 0.75);
-  z-index: 10;
+  right: 0px;
+  bottom: 0px;
+  background: rgba(100, 100, 125, 0.60);
+  z-index: 9;
+  overflow: scroll;
 }
 .inlay {
-  position: relative;
-  background: rgba(200, 200, 250, 0.75);
+  background: rgba(200, 200, 250, 0.60);
   border-radius: 5px;
   padding: 25px;
   margin-top: 15%;
   margin-left: 15%;
   margin-bottom: 15%;
   width: 70%;
-  z-index: 11;
 }
 .content { }
 .left {
