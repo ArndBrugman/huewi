@@ -69,7 +69,8 @@
     <div class='inlay content timebasedgradient'>
       <h3>Light</h3>
       <div></div>
-      <div>LightName: {{LightCtrl.Name}}</div>
+            <input type="text" ng-model="LightCtrl.Light.Name" ng-model-options="{ getterSetter: true }">
+      <div>LightName: {{LightCtrl.Light.Name()}}</div>
       <div ng-click="MenuCtrl.SetItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
