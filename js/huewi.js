@@ -71,10 +71,9 @@
 
     this.Update = function() {
       var Result = MyHue.BridgeGetData();
-
       return Result;
     }
-  });
+  })
 
   function ToHexString(In) {
     var Result = Math.floor(In).toString(16);
@@ -88,7 +87,7 @@
     };
   });
 
-  app.controller('GroupsController', function($scope) {
+  app.controller('GroupsController', ['$scope', function($scope) {
     this.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
 
     this.Update = function() {
@@ -114,7 +113,7 @@
       })
       $scope.$apply();
     }
-  })
+  }]);
 
   app.directive("huewiLight", function() {
     return {
@@ -123,7 +122,7 @@
     };
   });
 
-  app.controller('LightsController', function($scope) {
+  app.controller('LightsController', ['$scope', function($scope) {
     this.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
 
     this.Update = function() {
@@ -145,11 +144,11 @@
       })
       $scope.$apply();
     }
-  });
+  }]);
 
-  app.controller('MenuController', function($scope) {
+  app.controller('MenuController', function() {
     this.Item ='';
-    this.SetItem = function(NewItem, NewIndex) {
+    this.Update = function(NewItem, NewIndex) {
       this.Item = NewItem;
       if (this.Item==='') // No Overlay selected
         $('body').css('overflow', 'scroll'); // Enable scrolling of the <Body>
@@ -163,71 +162,70 @@
     }
   });
 
-  app.controller('GroupController', ['$scope', function($scope) {
+  app.controller('GroupController', function() {
+    var GroupArray = _.toArray(MyHue.Groups);
     var Index = 0; // Zerobased Index, Group 0 is All
-    var Group_Name = '';
-    var self = this;
+    var _Name = '';
+    this.OrgName = _Name;
 
     this.Update = function(NewGroupNr) {
-      var GroupArray = _.toArray(MyHue.Groups);
+      GroupArray = _.toArray(MyHue.Groups);
+      GroupArray.unshift({'name': 'All available lights'}); // Group 0 is All
       Index = NewGroupNr;
       console.log(Index);
-      GroupArray.unshift({'name': 'All available lights'}); // Group 0 is All
       if (Index < GroupArray.length)
-        Group_Name = GroupArray[Index].name;
-      else Group_Name = "Group" + Index;
+        this.OrgName = _Name = GroupArray[Index].name;
+      else _Name = "Group" + Index;
     }
 
-    this.Group = {
-      Name: function(NewName) { // Getter/Setter function
-        if (angular.isDefined(NewName)) { // Setter
-          console.log('Group.Name.SETter');
-          return Group_Name = NewName;
-        } else { // Getter
-          console.log('Group.Name.geTTer');
-          return Group_Name;
-        }
+    this.Name = function(NewName) { // Getter/Setter function
+      if (angular.isDefined(NewName)) { // Setter
+        console.log('Group.Name.SETter');
+        return _Name = NewName;
+      } else { // Getter
+        console.log('Group.Name.geTTer');
+        return _Name;
       }
     }
-  }]);
+  });
   
-  app.controller('LightController', ['$scope', function($scope) {
+  app.controller('LightController', function() {
+    var self = this; // Calling Async Functions looses this... Fix: Store this in self for later reference
     var Index = 1; // Onebased Index, Light 0 doesn't exist
-    var Light_Name = '';
-    var self = this;
+    var _Name = '';
+    this.OrgName = _Name;
     
     this.Update = function(NewLightNr) {
       var LightArray = _.toArray(MyHue.Lights);
+      LightArray.unshift({'name': 'Onebased index'}); // Light 0 doesn't exist
       Index = NewLightNr;
       console.log(Index);
-      LightArray.unshift({'name': 'Onebased index'}); // Light 0 doesn't exist
       if (Index < LightArray.length)
-        Light_Name = LightArray[Index].name;
-      else Light_Name = "Light" + Index;
+        this.OrgName = _Name = LightArray[Index].name;
+      else _Name = "Light" + Index;
     }
 
-    this.Light = {
-      Name: function(NewName) { // Getter/Setter function
-        if (angular.isDefined(NewName)) { // Setter
-          console.log('Light.Name.SETter');
-          return Light_Name = NewName;
-        } else { // Getter
-          console.log('Light.Name.geTTer');
-          return Light_Name;
-        }
+    this.Name = function(NewName) { // Getter/Setter function
+      if (angular.isDefined(NewName)) { // Setter
+        console.log('Light.Name.SETter');
+        return _Name = NewName;
+      } else { // Getter
+        console.log('Light.Name.geTTer');
+        return _Name;
       }
     }
-  }]);
+    
+  });
 
-  app.controller('SchedulesController', function($scope) {
+  app.controller('SchedulesController', function() {
   });
-  app.controller('ScenesController', function($scope) {
+  app.controller('ScenesController', function() {
   });
-  app.controller('SensorsController', function($scope) {
+  app.controller('SensorsController', function() {
   });
-  app.controller('RulesController', function($scope) {
+  app.controller('RulesController', function() {
   });
-  app.controller('BridgeController', function($scope) {
+  app.controller('BridgeController', function() {
   });
 
 

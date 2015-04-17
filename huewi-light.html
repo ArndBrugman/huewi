@@ -1,4 +1,4 @@
-<span left ng-click="MenuCtrl.SetItem('Light', $index + 1)">{{Light.name}}</span>
+<span left ng-click="MenuCtrl.Update('Light', $index + 1)">{{Light.name}}</span>
 <span ng-class="{ hidden:!Light.state.reachable }">
 	<button type="button" class="btn btn-sm right" ng-click="HueStatusCtrl.MyHue.LightOff($index + 1);" ng-class="{ hidden:!Light.state.on }">
 		<span class="glyphicon glyphicon-off" style="color:{{Light.HTMLColor}}" aria-hidden="true"></span>
