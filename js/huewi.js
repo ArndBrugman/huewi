@@ -6,7 +6,7 @@
 
   //delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges
 
-  app.controller('HueStatusController', function($scope) {
+  app.controller('HueStatusController', ['$scope', function($scope) {
     var self = this; // Calling Async Functions looses this... Fix: Store this in self for later reference
     this.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatus')).controller().MyHue. in HTML
     this.BridgeIP = '';
@@ -73,7 +73,7 @@
       var Result = MyHue.BridgeGetData();
       return Result;
     }
-  })
+  }]);
 
   function ToHexString(In) {
     var Result = Math.floor(In).toString(16);
@@ -88,13 +88,13 @@
   });
 
   app.controller('GroupsController', ['$scope', function($scope) {
-    this.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
+    $scope.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
 
-    this.Update = function() {
-      this.Groups = _.toArray(MyHue.Groups);
-      this.Groups.unshift({'name': 'All available lights'});
+    $scope.Update = function() {
+      $scope.Groups = _.toArray(MyHue.Groups);
+      $scope.Groups.unshift({'name': 'All available lights'});
 
-      _.each(this.Groups, function(Group) {
+      _.each($scope.Groups, function(Group) {
         var RGB;
         if (Group.action) { // Group 0 (All available lights) doesn't have properties
           if (Group.action.colormode === 'hs') {
@@ -123,11 +123,11 @@
   });
 
   app.controller('LightsController', ['$scope', function($scope) {
-    this.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
+    $scope.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
 
-    this.Update = function() {
-      this.Lights = _.toArray(MyHue.Lights);
-      _.each(this.Lights, function(Light) {
+    $scope.Update = function() {
+      $scope.Lights = _.toArray(MyHue.Lights);
+      _.each($scope.Lights, function(Light) {
         var RGB;
         if (Light.state.colormode === 'hs') {
           RGB = huepi.HelperHueAngSatBritoRGB(Light.state.hue * 360 / 65535, Light.state.sat / 255, Light.state.bri / 255);
@@ -147,7 +147,7 @@
   }]);
 
   app.controller('MenuController', ['$scope', function($scope) {
-    $scope.MenuItem ='';
+    $scope.MenuItem ='Connecting';
     
     $scope.SetMenuItem = function(NewItem, NewIndex) {
       //console.log('Menu->SetMenuItem '+NewItem+', '+NewIndex);
