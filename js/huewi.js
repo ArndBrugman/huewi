@@ -7,69 +7,68 @@
   //delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges
 
   app.controller('HueStatusController', ['$scope', function($scope) {
-    var self = this; // Calling Async Functions looses this... Fix: Store this in self for later reference
-    this.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatus')).controller().MyHue. in HTML
-    this.BridgeIP = '';
-    this.BridgeName = '';
-    this.Status = '';
+    //$scope.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatus')).scope().MyHue. in HTML
+    $scope.BridgeIP = '';
+    $scope.BridgeName = '';
+    $scope.Status = '';
 
-    this.ConnectToHueBridge = function() {
+    $scope.ConnectToHueBridge = function() {
       if (!localStorage.MyHueBridgeIP) { // No Cached BridgeIP?
-        self.Status = 'Trying to Discover Bridge via Portal';
+        $scope.Status = 'Trying to Discover Bridge via Portal';
         $scope.$apply();
         MyHue.PortalDiscoverLocalBridges().then(function GetBridgeConfig() {
           MyHue.BridgeGetData().then(function EnsureWhitelisting() {
-            self.BridgeIP = MyHue.BridgeIP;
+            $scope.BridgeIP = MyHue.BridgeIP;
             if (!MyHue.BridgeUsernameWhitelisted) {
-              self.Status = 'Please press connect button on Bridge';
+              $scope.Status = 'Please press connect button on Bridge';
               $scope.$apply();
               MyHue.BridgeCreateUser().then(function ReReadBridgeConfiguration() {
                 return;
               }, function UnableToCreateUseronBridge() {
-                self.Status = 'Unable to Create User on Bridge';
+                $scope.Status = 'Unable to Create User on Bridge';
                 $scope.$apply();
                 return;
               });
             } else {
               localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
-              self.BridgeName = MyHue.BridgeName;
-              self.Status = 'Connected';
+              $scope.BridgeName = MyHue.BridgeName;
+              $scope.Status = 'Connected';
               $scope.$apply();
             }
           }, function UnableToRetreiveBridgeConfiguration() {
-            self.Status = 'Unable to Retreive Bridge Configuration';
+            $scope.Status = 'Unable to Retreive Bridge Configuration';
             $scope.$apply();
             return;
           });
         }, function UnableToDiscoverLocalBridgesViaPortal() {
-          self.Status = 'Unable to find Local Bridge via Portal';
+          $scope.Status = 'Unable to find Local Bridge via Portal';
           $scope.$apply();
           return;
         });
       } else {
         MyHue.BridgeIP = localStorage.MyHueBridgeIP;
-        self.BridgeIP = MyHue.BridgeIP;
+        $scope.BridgeIP = MyHue.BridgeIP;
         MyHue.BridgeGetData().then(function CheckWhitelisting() {
           if (MyHue.BridgeUsernameWhitelisted) {
-            self.BridgeName = MyHue.BridgeName;
-            self.Status = 'Connected';
+            $scope.BridgeName = MyHue.BridgeName;
+            $scope.Status = 'Connected';
             $scope.$apply();
           } else {
             delete localStorage.MyHueBridgeIP;
-            self.Status = 'Not Whitelisted anymore';
+            $scope.Status = 'Not Whitelisted anymore';
             $scope.$apply();
             return;
           }
         }, function ErrorGettingCachedBridgeData() {
           delete localStorage.MyHueBridgeIP;
-          self.Status = 'Not found anymore';
+          $scope.Status = 'Not found anymore';
           $scope.$apply();
           return;
         });
       }
     }
 
-    this.Update = function() {
+    $scope.Update = function() {
       var Result = MyHue.BridgeGetData();
       return Result;
     }

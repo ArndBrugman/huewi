@@ -54,11 +54,11 @@
     </nav>
   </div><!-- /navcontainer -->
 
-  <div class='overlay fading' id='Connecting' ng-show='HueStatusCtrl.Status === "!Connected"'>
+  <div class='overlay fading' id='Connecting' ng-show='Status == "!Connected"'>
     <div class='inlay content timebasedgradient'>
       <h3>Stand by while connecting...</h3>
       <div></div>
-      <h4>{{HueStatusCtrl.Status}}</h4>
+      <h4>{{Status}}</h4>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -124,30 +124,30 @@
   <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='MenuItem === "Bridge"'>
     <div class='inlay content timebasedgradient'>
       <h3>Bridge</h3>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
       <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
@@ -183,12 +183,11 @@
     <h4>hue Web Interface</h4>
     <!-- Single button -->
     <div id='HueStatusbar'>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
     </div>
-  </div>
-  <!-- /status -->
+  </div><!-- /status -->
   
 </body>
   
