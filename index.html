@@ -44,75 +44,75 @@
     <nav id="navdrawer">
       <h4>Settings</h4>
       <ul class="list-group">
-        <li class="list-group-item" ng-click="MenuCtrl.Update('Schedules')">Schedules</li>
-        <li class="list-group-item" ng-click="MenuCtrl.Update('Scenes')">Scenes</li>
-        <li class="list-group-item" ng-click="MenuCtrl.Update('Sensors')">Sensors</li>
-        <li class="list-group-item" ng-click="MenuCtrl.Update('Rules')">Rules</li>
+        <li class="list-group-item" ng-click="SetMenuItem('Schedules')">Schedules</li>
+        <li class="list-group-item" ng-click="SetMenuItem('Scenes')">Scenes</li>
+        <li class="list-group-item" ng-click="SetMenuItem('Sensors')">Sensors</li>
+        <li class="list-group-item" ng-click="SetMenuItem('Rules')">Rules</li>
         <li class="list-group-item"></li>
-        <li class="list-group-item" ng-click="MenuCtrl.Update('Bridge')">Bridge</li>
+        <li class="list-group-item" ng-click="SetMenuItem('Bridge')">Bridge</li>
       </ul>
     </nav>
   </div><!-- /navcontainer -->
 
-  <div class='overlay fading' id='Group' ng-controller='GroupController as GroupCtrl' ng-show='MenuCtrl.Item == "Group"'>
+  <div class='overlay fading' id='Group' ng-controller='GroupController as GroupCtrl' ng-show='MenuItem === "Group"'>
     <div class='inlay content timebasedgradient'>
-      <h3>Group: {{GroupCtrl.OrgName}}</h3>
+      <h3>Group: {{OrgName}}</h3>
       <div></div>
       <span>new GroupName: </span>
-      <input type="text" ng-model="GroupCtrl.Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
-      <div ng-click="MenuCtrl.Update('')">Close</div>
+      <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
+      <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Light' ng-controller='LightController as LightCtrl' ng-show='MenuCtrl.Item == "Light"'>
+  <div class='overlay fading' id='Light' ng-controller='LightController as LightCtrl' ng-show='MenuItem === "Light"'>
     <div class='inlay content timebasedgradient'>
-      <h3>Light: {{LightCtrl.OrgName}}</h3>
+      <h3>Light: {{OrgName}}</h3>
       <div></div>
       <span>new LightName: </span>
-      <input type="text" ng-model="LightCtrl.Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
-      <div ng-click="MenuCtrl.Update('')">Close</div>
+      <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
+      <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Schedules' ng-controller='SchedulesController as SchedulesCtrl' ng-show='MenuCtrl.Item == "Schedules"'>
+  <div class='overlay fading' id='Schedules' ng-controller='SchedulesController as SchedulesCtrl' ng-show='MenuItem === "Schedules"'>
     <div class='inlay content timebasedgradient'>
       <h3>Schedules</h3>
       <div></div>
-      <div ng-click="MenuCtrl.Update('')">Close</div>
+      <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Scenes' ng-controller='ScenesController as ScenesCtrl' ng-show='MenuCtrl.Item == "Scenes"'>
+  <div class='overlay fading' id='Scenes' ng-controller='ScenesController as ScenesCtrl' ng-show='MenuItem === "Scenes"'>
     <div class='inlay content timebasedgradient'>
       <h3>Scenes</h3>
       <div></div>
-      <div ng-click="MenuCtrl.Update('')">Close</div>
+      <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Sensors' ng-controller='SensorsController as SensorsCtrl' ng-show='MenuCtrl.Item == "Sensors"'>
+  <div class='overlay fading' id='Sensors' ng-controller='SensorsController as SensorsCtrl' ng-show='MenuItem === "Sensors"'>
     <div class='inlay content timebasedgradient'>
       <h3>Sensors</h3>
       <div></div>
-      <div ng-click="MenuCtrl.Update('')">Close</div>
+      <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Rules' ng-controller='RulesController as RulesCtrl' ng-show='MenuCtrl.Item == "Rules"'>
+  <div class='overlay fading' id='Rules' ng-controller='RulesController as RulesCtrl' ng-show='MenuItem === "Rules"'>
     <div class='inlay content timebasedgradient'>
       <h3>Rules</h3>
       <div></div>
-      <div ng-click="MenuCtrl.Update('')">Close</div>
+      <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='MenuCtrl.Item == "Bridge"'>
+  <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='MenuItem === "Bridge"'>
     <div class='inlay content timebasedgradient'>
       <h3>Bridge</h3>
       <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
@@ -139,7 +139,7 @@
       <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
       <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
       <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div ng-click="MenuCtrl.Update('')">Close</div>
+      <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
