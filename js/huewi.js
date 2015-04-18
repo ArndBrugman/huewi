@@ -155,7 +155,7 @@
     $scope.SetMenuItem = function(NewItem, NewIndex) {
       //console.log('Menu->SetMenuItem '+NewItem+', '+NewIndex);
       $scope.MenuItem = NewItem;
-      if ($scope.Item === '') // No Overlay selected
+      if ($scope.MenuItem === '') // No Overlay selected
         $('body').css('overflow', 'scroll'); // Enable scrolling of the <Body>
       else
         $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
