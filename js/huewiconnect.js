@@ -29,7 +29,7 @@
 
   function onResume() {
     TimeBasedGradientUpdate();
-    angular.element(document.getElementById('HueStatus')).controller().ConnectToHueBridge();
+    angular.element(document.getElementById('HueStatus')).scope().ConnectToHueBridge();
     HeartbeatInterval = window.setInterval(StatusHeartbeat, 2500);
     StatusHeartbeat(); // Execute Immediate Too!
   }
@@ -40,17 +40,17 @@
   }
 
   function StatusHeartbeat() {
-    if ((PrevStatus != angular.element(document.getElementById('HueStatus')).controller().Status) &
-      (angular.element(document.getElementById('HueStatus')).controller().Status === 'Connected')) {
+    if ((PrevStatus != angular.element(document.getElementById('HueStatus')).scope().Status) &
+      (angular.element(document.getElementById('HueStatus')).scope().Status === 'Connected')) {
       $('#HueStatusbar').slideUp(750);
     }
-    PrevStatus = angular.element(document.getElementById('HueStatus')).controller().Status;
+    PrevStatus = angular.element(document.getElementById('HueStatus')).scope().Status;
 
-    if (angular.element(document.getElementById('HueStatus')).controller().Status === 'Connected')
+    if (angular.element(document.getElementById('HueStatus')).scope().Status === 'Connected')
     {
-      angular.element(document.getElementById('HueStatus')).controller().Update().then(function UpdateUI() {
-        angular.element(document.getElementById('Groups')).controller().Update();
-        angular.element(document.getElementById('Lights')).controller().Update();
+      angular.element(document.getElementById('HueStatus')).scope().Update().then(function UpdateUI() {
+        angular.element(document.getElementById('Groups')).scope().Update();
+        angular.element(document.getElementById('Lights')).scope().Update();
       }, function BridgeGetDataFailed() {
         setTimeout(function() {
           onPause();

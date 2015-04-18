@@ -10,74 +10,73 @@
   //delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges
 >>>>>>> gh-pages
 
-  app.controller('HueStatusController', function($scope) {
-    var self = this; // Calling Async Functions looses this... Fix: Store this in self for later reference
-    this.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatus')).controller().MyHue. in HTML
-    this.BridgeIP = '';
-    this.BridgeName = '';
-    this.Status = '';
+  app.controller('HueStatusController', ['$scope', function($scope) {
+    //$scope.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatus')).scope().MyHue. in HTML
+    $scope.BridgeIP = '';
+    $scope.BridgeName = '';
+    $scope.Status = '';
 
-    this.ConnectToHueBridge = function() {
+    $scope.ConnectToHueBridge = function() {
       if (!localStorage.MyHueBridgeIP) { // No Cached BridgeIP?
-        self.Status = 'Trying to Discover Bridge via Portal';
+        $scope.Status = 'Trying to Discover Bridge via Portal';
         $scope.$apply();
         MyHue.PortalDiscoverLocalBridges().then(function GetBridgeConfig() {
           MyHue.BridgeGetData().then(function EnsureWhitelisting() {
-            self.BridgeIP = MyHue.BridgeIP;
+            $scope.BridgeIP = MyHue.BridgeIP;
             if (!MyHue.BridgeUsernameWhitelisted) {
-              self.Status = 'Please press connect button on Bridge';
+              $scope.Status = 'Please press connect button on Bridge';
               $scope.$apply();
               MyHue.BridgeCreateUser().then(function ReReadBridgeConfiguration() {
                 return;
               }, function UnableToCreateUseronBridge() {
-                self.Status = 'Unable to Create User on Bridge';
+                $scope.Status = 'Unable to Create User on Bridge';
                 $scope.$apply();
                 return;
               });
             } else {
               localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
-              self.BridgeName = MyHue.BridgeName;
-              self.Status = 'Connected';
+              $scope.BridgeName = MyHue.BridgeName;
+              $scope.Status = 'Connected';
               $scope.$apply();
             }
           }, function UnableToRetreiveBridgeConfiguration() {
-            self.Status = 'Unable to Retreive Bridge Configuration';
+            $scope.Status = 'Unable to Retreive Bridge Configuration';
             $scope.$apply();
             return;
           });
         }, function UnableToDiscoverLocalBridgesViaPortal() {
-          self.Status = 'Unable to find Local Bridge via Portal';
+          $scope.Status = 'Unable to find Local Bridge via Portal';
           $scope.$apply();
           return;
         });
       } else {
         MyHue.BridgeIP = localStorage.MyHueBridgeIP;
-        self.BridgeIP = MyHue.BridgeIP;
+        $scope.BridgeIP = MyHue.BridgeIP;
         MyHue.BridgeGetData().then(function CheckWhitelisting() {
           if (MyHue.BridgeUsernameWhitelisted) {
-            self.BridgeName = MyHue.BridgeName;
-            self.Status = 'Connected';
+            $scope.BridgeName = MyHue.BridgeName;
+            $scope.Status = 'Connected';
             $scope.$apply();
           } else {
             delete localStorage.MyHueBridgeIP;
-            self.Status = 'Not Whitelisted anymore';
+            $scope.Status = 'Not Whitelisted anymore';
             $scope.$apply();
             return;
           }
         }, function ErrorGettingCachedBridgeData() {
           delete localStorage.MyHueBridgeIP;
-          self.Status = 'Not found anymore';
+          $scope.Status = 'Not found anymore';
           $scope.$apply();
           return;
         });
       }
     }
 
-    this.Update = function() {
+    $scope.Update = function() {
       var Result = MyHue.BridgeGetData();
       return Result;
     }
-  })
+  }]);
 
   function ToHexString(In) {
     var Result = Math.floor(In).toString(16);
@@ -92,13 +91,13 @@
   });
 
   app.controller('GroupsController', ['$scope', function($scope) {
-    this.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
+    $scope.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
 
-    this.Update = function() {
-      this.Groups = _.toArray(MyHue.Groups);
-      this.Groups.unshift({'name': 'All available lights'});
+    $scope.Update = function() {
+      $scope.Groups = _.toArray(MyHue.Groups);
+      $scope.Groups.unshift({'name': 'All available lights'});
 
-      _.each(this.Groups, function(Group) {
+      _.each($scope.Groups, function(Group) {
         var RGB;
         if (Group.action) { // Group 0 (All available lights) doesn't have properties
           if (Group.action.colormode === 'hs') {
@@ -127,11 +126,11 @@
   });
 
   app.controller('LightsController', ['$scope', function($scope) {
-    this.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
+    $scope.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
 
-    this.Update = function() {
-      this.Lights = _.toArray(MyHue.Lights);
-      _.each(this.Lights, function(Light) {
+    $scope.Update = function() {
+      $scope.Lights = _.toArray(MyHue.Lights);
+      _.each($scope.Lights, function(Light) {
         var RGB;
         if (Light.state.colormode === 'hs') {
           RGB = huepi.HelperHueAngSatBritoRGB(Light.state.hue * 360 / 65535, Light.state.sat / 255, Light.state.bri / 255);
@@ -151,7 +150,7 @@
   }]);
 
   app.controller('MenuController', ['$scope', function($scope) {
-    $scope.MenuItem ='';
+    $scope.MenuItem ='Connecting';
     
     $scope.SetMenuItem = function(NewItem, NewIndex) {
       //console.log('Menu->SetMenuItem '+NewItem+', '+NewIndex);

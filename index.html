@@ -38,7 +38,7 @@
 
 <body class="timebasedgradient" id='HueStatus' ng-controller='HueStatusController as HueStatusCtrl'>
 
-<div ng-controller='MenuController as MenuCtrl'>
+<div id='Menu' ng-controller='MenuController as MenuCtrl'>
   <div id="navcontainer">
     <div id="navbutton" class="glyphicon glyphicon-menu-hamburger"></div>
     <nav id="navdrawer">
@@ -53,6 +53,15 @@
       </ul>
     </nav>
   </div><!-- /navcontainer -->
+
+  <div class='overlay fading' id='Connecting' ng-show='Status == "!Connected"'>
+    <div class='inlay content timebasedgradient'>
+      <h3>Stand by while connecting...</h3>
+      <div></div>
+      <h4>{{Status}}</h4>
+    </div><!-- /inlay content -->
+    <div><br><br></div>
+  </div><!-- /overlay -->
 
   <div class='overlay fading' id='Group' ng-controller='GroupController as GroupCtrl' ng-show='MenuItem === "Group"'>
     <div class='inlay content timebasedgradient'>
@@ -115,30 +124,30 @@
   <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='MenuItem === "Bridge"'>
     <div class='inlay content timebasedgradient'>
       <h3>Bridge</h3>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
       <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
@@ -148,19 +157,19 @@
     <div class='content'>
       <h3>Groups</h3>
       <div class="list-group">
-        <div class="list-group-item" ng-repeat="Group in GroupsCtrl.Groups">
+        <div class="list-group-item" ng-repeat="Group in Groups">
           <huewi-group></huewi-group>
         </div>
       </div>
     </div><!-- /content -->
-    <div class="hideonportrait"><br><br></div>
+    <div class="hideonportrait"><br><br></div><!-- Spacing on Landscape after Groups -->
   </div><!-- /container -->
 
   <div class='container' id='Lights' ng-controller='LightsController as LightsCtrl'>
     <div class='content'>
       <h3>Lights</h3>
       <div class="list-group">
-        <div class="list-group-item" ng-repeat="Light in LightsCtrl.Lights" ng-class="{ grayed:!Light.state.reachable }">
+        <div class="list-group-item" ng-repeat="Light in Lights" ng-class="{ grayed:!Light.state.reachable }">
           <huewi-light></huewi-light>
         </div>
       </div>
@@ -174,12 +183,11 @@
     <h4>hue Web Interface</h4>
     <!-- Single button -->
     <div id='HueStatusbar'>
-      <div>Bridge IP: {{HueStatusCtrl.BridgeIP}}</div>
-      <div>Bridge Name: {{HueStatusCtrl.BridgeName}}</div>
-      <div>Status: {{HueStatusCtrl.Status}}</div>
+      <div>Bridge IP: {{BridgeIP}}</div>
+      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Status: {{Status}}</div>
     </div>
-  </div>
-  <!-- /status -->
+  </div><!-- /status -->
   
 </body>
   
