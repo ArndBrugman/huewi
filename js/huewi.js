@@ -163,10 +163,56 @@
     }
   }]);
 
+  app.controller('TabController', ['$scope', function($scope) {
+    $scope.Tab = 1;
+
+    $scope.TabIsSet = function(CheckTab) {
+      return $scope.Tab === CheckTab;
+    }
+    $scope.SetTab = function(SetTab) {
+      $scope.Tab = SetTab;
+    }
+    $scope.GetTab = function() {
+      return $scope.Tab;
+    }
+  }]);
+  
   app.controller('GroupController', ['$scope', function($scope) {
+    var hueImage = new Image();
+    hueImage.src = 'img/hue.png';
     $scope.Index = 0; // Zerobased Index, Group 0 is All
     $scope._Name = '';
     $scope.OrgName = $scope._Name;
+
+    hueImage.onload = function() {
+      angular.element(document.getElementById('Group')).scope().Redraw();
+    };
+
+    $(window).resize(function(){
+      angular.element(document.getElementById('Group')).scope().Redraw();
+    });
+
+    $scope.Redraw = function() {
+      var hueCanvas = document.getElementById('hueGroupCanvas');
+      var hueContext = hueCanvas.getContext('2d');
+      // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
+      if ($(window).width() > $(window).height()) {
+        hueCanvas.width = 0.45 * $(window).width(); // Landscape
+      } else {
+        hueCanvas.width = 0.45 * $(window).height(); // Portrait
+      }
+      hueCanvas.height = hueCanvas.width;
+      hueContext.drawImage(hueImage, 0, 0, hueCanvas.width, hueCanvas.height); // ReDraw
+    }
+
+    $('#hueGroupCanvas').on('click', function(event) {
+      var x = event.offsetX;
+      var y = event.offsetY;
+      var HueContext = document.getElementById('hueGroupCanvas').getContext('2d');
+      var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
+      var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
+      MyHue.GroupSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    });
 
     $scope.Update = function(NewGroupNr) {
       var GroupArray = _.toArray(MyHue.Groups);
@@ -190,10 +236,42 @@
   }]);
   
   app.controller('LightController', ['$scope', function($scope) {
+    var hueImage = new Image();
+    hueImage.src = 'img/hue.png';
     $scope.Index = 1; // Onebased Index, Light 0 doesn't exist
     $scope._Name = '';
     $scope.OrgName = $scope._Name;
     
+    hueImage.onload = function() {
+      angular.element(document.getElementById('Light')).scope().Redraw();
+    };
+
+    $(window).resize(function(){
+      angular.element(document.getElementById('Light')).scope().Redraw();
+    });
+
+    $scope.Redraw = function() {
+      var hueCanvas = document.getElementById('hueLightCanvas');
+      var hueContext = hueCanvas.getContext('2d');
+      // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
+      if ($(window).width() > $(window).height()) {
+        hueCanvas.width = 0.45 * $(window).width(); // Landscape
+      } else {
+        hueCanvas.width = 0.45 * $(window).height(); // Portrait
+      }
+      hueCanvas.height = hueCanvas.width;
+      hueContext.drawImage(hueImage, 0, 0, hueCanvas.width, hueCanvas.height); // ReDraw
+    }
+
+    $('#hueLightCanvas').on('click', function(event) {
+      var x = event.offsetX;
+      var y = event.offsetY;
+      var HueContext = document.getElementById('hueLightCanvas').getContext('2d');
+      var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
+      var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
+      MyHue.LightSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    });
+
     $scope.Update = function(NewLightNr) {
       var LightArray = _.toArray(MyHue.Lights);
       LightArray.unshift({'name': 'Onebased index'}); // Light 0 doesn't exist
