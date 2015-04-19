@@ -67,7 +67,6 @@
     <div class='inlay content timebasedgradient'>
       <h3>Group: {{OrgName}}</h3>
       <div ng-click="SetMenuItem('')">Close</div>
-      <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
       <section ng-controller="TabController as Tab">
         <ul class="nav nav-tabs">
           <li role="presentation" ng-class="{ active:TabIsSet(1) }"><a href ng-click="SetTab(1)">Color</a></li>
@@ -88,6 +87,7 @@
           Details
           <div></div>
           <span>new GroupName: </span>
+          <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
         </div>
       </section>
       <div ng-click="SetMenuItem('')">Close</div>
