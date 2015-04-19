@@ -200,6 +200,8 @@
         hueCanvas.width = 0.45 * $(window).width(); // Landscape
       } else {
         hueCanvas.width = 0.45 * $(window).height(); // Portrait
+        if (hueCanvas.width > 0.6 * $(window).width())
+          hueCanvas.width = 0.6 * $(window).width();
       }
       hueCanvas.height = hueCanvas.width;
       hueContext.drawImage(hueImage, 0, 0, hueCanvas.width, hueCanvas.height); // ReDraw
@@ -258,6 +260,8 @@
         hueCanvas.width = 0.45 * $(window).width(); // Landscape
       } else {
         hueCanvas.width = 0.45 * $(window).height(); // Portrait
+        if (hueCanvas.width > 0.6 * $(window).width())
+          hueCanvas.width = 0.6 * $(window).width();
       }
       hueCanvas.height = hueCanvas.width;
       hueContext.drawImage(hueImage, 0, 0, hueCanvas.width, hueCanvas.height); // ReDraw
