@@ -66,23 +66,20 @@
   <div class='overlay fading' id='Group' ng-controller='GroupController as GroupCtrl' ng-show='MenuItem === "Group"'>
     <div class='inlay content timebasedgradient'>
       <h3>Group: {{OrgName}}</h3>
+      <div ng-click="SetMenuItem('')">Close</div>
       <div></div>
       <span>new GroupName: </span>
       <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
       <section ng-controller="TabController as Tab">
-        <ul class="nav nav-tabs nav-justified">
+        <ul class="nav nav-tabs">
           <li role="presentation" ng-class="{ active:TabIsSet(1) }"><a href ng-click="SetTab(1)">Color</a></li>
           <li role="presentation" ng-class="{ active:TabIsSet(2) }"><a href ng-click="SetTab(2)">Tone</a></li>
-          <li role="presentation" ng-class="{ active:TabIsSet(3) }"><a href ng-click="SetTab(3)">..?..</a></li>
+          <li role="presentation" ng-class="{ active:TabIsSet(3) }"><a href ng-click="SetTab(3)">Details</a></li>
         </ul>
         <div ng-show='TabIsSet(1)'>
-          <br><br><br><br>
-          COLOR
           <div>
             <canvas id='hueGroupCanvas' width=32 height=32 >It seems your device doesn't support the required HTML5 Canvas</canvas>
-            PICKER
           </div>
-          <br><br><br><br>
         </div>
         <div ng-show='TabIsSet(2)'>
           <br><br><br><br>
@@ -91,7 +88,7 @@
         </div>
         <div ng-show='TabIsSet(3)'>
           <br><br><br><br>
-          ..???...
+          Details
           <br><br><br><br>
         </div>
       </section>
@@ -103,23 +100,20 @@
   <div class='overlay fading' id='Light' ng-controller='LightController as LightCtrl' ng-show='MenuItem === "Light"'>
     <div class='inlay content timebasedgradient'>
       <h3>Light: {{OrgName}}</h3>
+      <div ng-click="SetMenuItem('')">Close</div>
       <div></div>
       <span>new LightName: </span>
       <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
       <section ng-controller="TabController as Tab">
-        <ul class="nav nav-tabs nav-justified">
+        <ul class="nav nav-tabs">
           <li role="presentation" ng-class="{ active:TabIsSet(1) }"><a href ng-click="SetTab(1)">Color</a></li>
           <li role="presentation" ng-class="{ active:TabIsSet(2) }"><a href ng-click="SetTab(2)">Tone</a></li>
-          <li role="presentation" ng-class="{ active:TabIsSet(3) }"><a href ng-click="SetTab(3)">..?..</a></li>
+          <li role="presentation" ng-class="{ active:TabIsSet(3) }"><a href ng-click="SetTab(3)">Details</a></li>
         </ul>
         <div ng-show='TabIsSet(1)'>
-          <br><br><br><br>
-          COLOR
           <div>
             <canvas id='hueLightCanvas' width=32 height=32 >It seems your device doesn't support the required HTML5 Canvas</canvas>
-            PICKER
           </div>
-          <br><br><br><br>
         </div>
         <div ng-show='TabIsSet(2)'>
           <br><br><br><br>
@@ -128,7 +122,7 @@
         </div>
         <div ng-show='TabIsSet(3)'>
           <br><br><br><br>
-          ..???...
+          Details
           <br><br><br><br>
         </div>
       </section>
