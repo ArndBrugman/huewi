@@ -79,9 +79,15 @@
           </div>
         </div>
         <div ng-show='TabIsSet(2)'>
-          <br><br><br><br>
           Tone
-          <br><br><br><br>
+          <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetHSB(Index, 7000, 207, 207)">Feet Up</button>
+          <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetColortemperature(Index, 2500); MyHue.GroupSetBrightness(Index, 144)">Gold</button>
+          <div>
+            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 467); MyHue.GroupSetBrightness(Index, 144)">Relax</button>
+            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 156); MyHue.GroupSetBrightness(Index, 203)">Energize</button>
+            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 231); MyHue.GroupSetBrightness(Index, 219)">Concentrate</button>
+            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 343); MyHue.GroupSetBrightness(Index, 240)">Reading</button>
+          </div>    
         </div>
         <div ng-show='TabIsSet(3)'>
           Details
@@ -111,9 +117,15 @@
           </div>
         </div>
         <div ng-show='TabIsSet(2)'>
-          <br><br><br><br>
           Tone
-          <br><br><br><br>
+          <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetHSB(Index, 7000, 207, 207)">Feet Up</button>
+          <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetColortemperature(Index, 2500); MyHue.LightSetBrightness(Index, 144)">Gold</button>
+          <div>
+            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 467); MyHue.LightSetBrightness(Index, 144)">Relax</button>
+            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 156); MyHue.LightSetBrightness(Index, 203)">Energize</button>
+            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 231); MyHue.LightSetBrightness(Index, 219)">Concentrate</button>
+            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 343); MyHue.LightSetBrightness(Index, 240)">Reading</button>
+          </div>    
         </div>
         <div ng-show='TabIsSet(3)'>
           Details
