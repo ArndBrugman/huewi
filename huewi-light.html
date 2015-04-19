@@ -1,9 +1,9 @@
 <span left ng-click="SetMenuItem('Light', $index + 1)">{{Light.name}}</span>
 <span ng-class="{ hidden:!Light.state.reachable }">
-	<button type="button" class="btn btn-sm right" ng-click="HueStatusCtrl.MyHue.LightOff($index + 1);" ng-class="{ hidden:!Light.state.on }">
+	<button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff($index + 1);" ng-class="{ hidden:!Light.state.on }">
 		<span class="glyphicon glyphicon-off" style="color:{{Light.HTMLColor}}" aria-hidden="true"></span>
 	</button>
-	<button type="button" class="btn btn-sm right" ng-click="HueStatusCtrl.MyHue.LightOn($index + 1);" ng-class="{ hidden:Light.state.on }">
+	<button type="button" class="btn btn-sm right" ng-click="MyHue.LightOn($index + 1);" ng-class="{ hidden:Light.state.on }">
 		<span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
 	</button>
 </span>

@@ -7,7 +7,7 @@
   //delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges
 
   app.controller('HueStatusController', ['$scope', function($scope) {
-    //$scope.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatus')).scope().MyHue. in HTML
+    $scope.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatus')).scope().MyHue. in HTML
     $scope.BridgeIP = '';
     $scope.BridgeName = '';
     $scope.Status = '';
