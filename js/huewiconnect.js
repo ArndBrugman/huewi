@@ -57,7 +57,7 @@
           onResume();
         }, 1000);
       });
-    }
+    } else angular.element(document.getElementById('HueStatus')).scope().ConnectToHueBridge();
   }
 
 })();
