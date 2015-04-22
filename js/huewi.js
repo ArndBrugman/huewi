@@ -4,7 +4,7 @@
   var MyHue = new huepi();
   MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
 
-  //delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges
+//delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges TESTCODE.
 
   app.controller('HueStatusController', ['$scope', function($scope) {
     $scope.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatus')).scope().MyHue. in HTML
@@ -34,6 +34,7 @@
               $scope.BridgeName = MyHue.BridgeName;
               $scope.Status = 'Connected';
               $scope.$apply();
+//MyHue.BridgeDeleteUser(MyHue.Username); // Force buttonpress on next Startup TESTCODE.
             }
           }, function UnableToRetreiveBridgeConfiguration() {
             $scope.Status = 'Unable to Retreive Bridge Configuration';
