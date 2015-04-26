@@ -1,13 +1,21 @@
-(function() {
-
   var app = angular.module('huewi', ['ngAnimate']);
   var MyHue = new huepi();
   MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
 
+  angular.module('huewi').factory('Data', function () {
+    var _MyHue = new huepi();
+    _MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
+    return {
+        MyHue: function () {
+          return _MyHue;
+        }
+    }
+  });
+
 //delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges TESTCODE.
 
-  app.controller('HueStatusController', ['$scope', function($scope) {
-    $scope.MyHue = MyHue; // to be called via angular.element(document.getElementById('HueStatus')).scope().MyHue. in HTML
+  angular.module('huewi').controller('HueStatusController', ['$scope', function($scope) {
+    $scope.MyHue = MyHue; // to be called via $('#HueStatus').scope().MyHue. in HTML
     $scope.BridgeIP = '';
     $scope.BridgeName = '';
     $scope.Status = '';
@@ -80,14 +88,14 @@
     return Result.length == 1 ? "0" + Result : Result;
   }
 
-  app.directive("huewiGroup", function() {
+  angular.module('huewi').directive("huewiGroup", function() {
     return {
       restrict: 'E',
       templateUrl: "huewi-group.html"
     };
   });
 
-  app.controller('GroupsController', ['$scope', function($scope) {
+  angular.module('huewi').controller('GroupsController', ['$scope', function($scope) {
     $scope.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
 
     $scope.Update = function() {
@@ -115,14 +123,14 @@
     }
   }]);
 
-  app.directive("huewiLight", function() {
+  angular.module('huewi').directive("huewiLight", function() {
     return {
       restrict: 'E',
       templateUrl: "huewi-light.html"
     };
   });
 
-  app.controller('LightsController', ['$scope', function($scope) {
+  angular.module('huewi').controller('LightsController', ['$scope', function($scope) {
     $scope.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
 
     $scope.Update = function() {
@@ -146,7 +154,7 @@
     }
   }]);
 
-  app.controller('MenuController', ['$scope', function($scope) {
+  angular.module('huewi').controller('MenuController', ['$scope', function($scope) {
     $scope.MenuItem ='Connecting';
     
     $scope.SetMenuItem = function(NewItem, NewIndex) {
@@ -158,13 +166,13 @@
         $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
 
       if (NewItem === 'Group')
-        angular.element(document.getElementById('Group')).scope().Update(NewIndex);
+        $('#Group').scope().Update(NewIndex);
       else if (NewItem === 'Light')
-        angular.element(document.getElementById('Light')).scope().Update(NewIndex);
+        $('#Light').scope().Update(NewIndex);
     }
   }]);
 
-  app.controller('TabController', ['$scope', function($scope) {
+  angular.module('huewi').controller('TabController', ['$scope', function($scope) {
     $scope.Tab = 1;
 
     $scope.TabIsSet = function(CheckTab) {
@@ -178,34 +186,45 @@
     }
   }]);
   
-  app.controller('GroupController', ['$scope', function($scope) {
+  angular.module('huewi').controller('GroupController', ['$scope', function($scope) {
     var hueImage = new Image();
     hueImage.src = 'img/hue.png';
+    var ctImage = new Image();
+    ctImage.src = 'img/ct.png';
     $scope.Index = 0; // Zerobased Index, Group 0 is All
     $scope._Name = '';
     $scope.OrgName = $scope._Name;
 
     hueImage.onload = function() {
-      angular.element(document.getElementById('Group')).scope().Redraw();
+      $('#Group').scope().Redraw();
+    };
+
+    ctImage.onload = function() {
+      $('#Group').scope().Redraw();
     };
 
     $(window).resize(function(){
-      angular.element(document.getElementById('Group')).scope().Redraw();
+      $('#Group').scope().Redraw();
     });
 
     $scope.Redraw = function() {
       var hueCanvas = document.getElementById('hueGroupCanvas');
       var hueContext = hueCanvas.getContext('2d');
+      var ctCanvas = document.getElementById('ctGroupCanvas');
+      var ctContext = ctCanvas.getContext('2d');
       // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
       if ($(window).width() > $(window).height()) {
         hueCanvas.width = 0.45 * $(window).width(); // Landscape
       } else {
         hueCanvas.width = 0.45 * $(window).height(); // Portrait
-        if (hueCanvas.width > 0.6 * $(window).width())
-          hueCanvas.width = 0.6 * $(window).width();
+        if (hueCanvas.width > 0.75 * $(window).width())
+          hueCanvas.width = 0.75 * $(window).width();
       }
       hueCanvas.height = hueCanvas.width;
       hueContext.drawImage(hueImage, 0, 0, hueCanvas.width, hueCanvas.height); // ReDraw
+      ctCanvas.width = hueCanvas.width;
+      ctCanvas.height = ctCanvas.width / 2;
+      ctContext.drawImage(ctImage, 0, 0, ctCanvas.width, ctCanvas.height); // ReDraw
     }
 
     $('#hueGroupCanvas').on('click', function(event) {
@@ -215,6 +234,16 @@
       var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
       var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
       MyHue.GroupSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    });
+
+    $('#ctGroupCanvas').on('click', function(event) { // 2000..6500
+      var ctGroupCanvas = document.getElementById('ctGroupCanvas');
+      var x = event.offsetX;
+      var y = event.offsetY;
+      var ColorTemperature = 2000 + (6500-2000)*(x/ctGroupCanvas.width);
+      var Brightness = 255 - 255*(y/ctGroupCanvas.height);
+      MyHue.GroupSetColortemperature($scope.Index, ColorTemperature);
+      MyHue.GroupSetBrightness($scope.Index, Brightness);
     });
 
     $scope.Update = function(NewGroupNr) {
@@ -238,34 +267,45 @@
     }
   }]);
   
-  app.controller('LightController', ['$scope', function($scope) {
+  angular.module('huewi').controller('LightController', ['$scope', function($scope) {
     var hueImage = new Image();
     hueImage.src = 'img/hue.png';
+    var ctImage = new Image();
+    ctImage.src = 'img/ct.png';
     $scope.Index = 1; // Onebased Index, Light 0 doesn't exist
     $scope._Name = '';
     $scope.OrgName = $scope._Name;
     
     hueImage.onload = function() {
-      angular.element(document.getElementById('Light')).scope().Redraw();
+      $('#Light').scope().Redraw();
+    };
+
+    ctImage.onload = function() {
+      $('#Light').scope().Redraw();
     };
 
     $(window).resize(function(){
-      angular.element(document.getElementById('Light')).scope().Redraw();
+     $('#Light').scope().Redraw();
     });
 
     $scope.Redraw = function() {
       var hueCanvas = document.getElementById('hueLightCanvas');
       var hueContext = hueCanvas.getContext('2d');
+      var ctCanvas = document.getElementById('ctLightCanvas');
+      var ctContext = ctCanvas.getContext('2d');
       // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
       if ($(window).width() > $(window).height()) {
         hueCanvas.width = 0.45 * $(window).width(); // Landscape
       } else {
         hueCanvas.width = 0.45 * $(window).height(); // Portrait
-        if (hueCanvas.width > 0.6 * $(window).width())
-          hueCanvas.width = 0.6 * $(window).width();
+        if (hueCanvas.width > 0.75 * $(window).width())
+          hueCanvas.width = 0.75 * $(window).width();
       }
       hueCanvas.height = hueCanvas.width;
       hueContext.drawImage(hueImage, 0, 0, hueCanvas.width, hueCanvas.height); // ReDraw
+      ctCanvas.width = hueCanvas.width;
+      ctCanvas.height = ctCanvas.width / 2;
+      ctContext.drawImage(ctImage, 0, 0, ctCanvas.width, ctCanvas.height); // ReDraw
     }
 
     $('#hueLightCanvas').on('click', function(event) {
@@ -275,6 +315,16 @@
       var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
       var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
       MyHue.LightSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    });
+
+    $('#ctLightCanvas').on('click', function(event) { // 2000..6500
+      var ctLightCanvas = document.getElementById('ctLightCanvas');
+      var x = event.offsetX;
+      var y = event.offsetY;
+      var ColorTemperature = 2000 + (6500-2000)*(x/ctLightCanvas.width);
+      var Brightness = 255 - 255*(y/ctLightCanvas.height);
+      MyHue.LightSetColortemperature($scope.Index, ColorTemperature);
+      MyHue.LightSetBrightness($scope.Index, Brightness);
     });
 
     $scope.Update = function(NewLightNr) {
@@ -298,16 +348,16 @@
     }
   }]);
 
-  app.controller('SchedulesController', ['$scope', function($scope) {
+  angular.module('huewi').controller('SchedulesController', ['$scope', function($scope) {
   }]);
-  app.controller('ScenesController', ['$scope', function($scope) {
+  angular.module('huewi').controller('ScenesController', ['$scope', function($scope) {
   }]);
-  app.controller('SensorsController', ['$scope', function($scope) {
+  angular.module('huewi').controller('SensorsController', ['$scope', function($scope) {
   }]);
-  app.controller('RulesController', ['$scope', function($scope) {
+  angular.module('huewi').controller('RulesController', ['$scope', function($scope) {
   }]);
-  app.controller('BridgeController', ['$scope', function($scope) {
+  angular.module('huewi').controller('BridgeController', ['$scope', function($scope) {
   }]);
 
 
-})();
+
