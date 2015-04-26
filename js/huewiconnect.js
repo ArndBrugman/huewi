@@ -29,7 +29,7 @@
 
   function onResume() {
     TimeBasedGradientUpdate();
-    angular.element(document.getElementById('HueStatus')).scope().ConnectToHueBridge();
+    $('#HueStatus').scope().ConnectToHueBridge();
     HeartbeatInterval = window.setInterval(StatusHeartbeat, 2500);
     StatusHeartbeat(); // Execute Immediate Too!
   }
@@ -40,24 +40,24 @@
   }
 
   function StatusHeartbeat() {
-    if ((PrevStatus != angular.element(document.getElementById('HueStatus')).scope().Status) &
-      (angular.element(document.getElementById('HueStatus')).scope().Status === 'Connected')) {
+    if ((PrevStatus != $('#HueStatus').scope().Status) &
+      ($('#HueStatus').scope().Status === 'Connected')) {
       $('#HueStatusbar').slideUp(750);
     }
-    PrevStatus = angular.element(document.getElementById('HueStatus')).scope().Status;
+    PrevStatus = $('#HueStatus').scope().Status;
 
-    if (angular.element(document.getElementById('HueStatus')).scope().Status === 'Connected')
+    if ($('#HueStatus').scope().Status === 'Connected')
     {
-      angular.element(document.getElementById('HueStatus')).scope().Update().then(function UpdateUI() {
-        angular.element(document.getElementById('Groups')).scope().Update();
-        angular.element(document.getElementById('Lights')).scope().Update();
+      $('#HueStatus').scope().Update().then(function UpdateUI() {
+        $('#Groups').scope().Update();
+        $('#Lights').scope().Update();
       }, function BridgeGetDataFailed() {
         setTimeout(function() {
           onPause();
           onResume();
         }, 1000);
       });
-    } else angular.element(document.getElementById('HueStatus')).scope().ConnectToHueBridge();
+    } else $('#HueStatus').scope().ConnectToHueBridge();
   }
 
 })();
