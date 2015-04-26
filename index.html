@@ -54,7 +54,7 @@
     </nav>
   </div><!-- /navcontainer -->
 
-  <div class='overlay fading' id='Connecting' ng-show='Status == "!Connected"'>
+  <div class='overlay fading' id='Connecting' ng-show='Status == "!Connected"'> <!-- != vs ==! TESTCODE. -->
     <div class='inlay content timebasedgradient'>
       <h3>Stand by while connecting...</h3>
       <div></div>
@@ -79,18 +79,16 @@
           </div>
         </div>
         <div ng-show='TabIsSet(2)'>
-          Tone
-          <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetHSB(Index, 7000, 207, 207)">Feet Up</button>
-          <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetColortemperature(Index, 2500); MyHue.GroupSetBrightness(Index, 144)">Gold</button>
+          <canvas id='ctGroupCanvas' width=32 height=32 >It seems your device doesn't support the required HTML5 Canvas</canvas>
           <div>
             <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 467); MyHue.GroupSetBrightness(Index, 144)">Relax</button>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 156); MyHue.GroupSetBrightness(Index, 203)">Energize</button>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 231); MyHue.GroupSetBrightness(Index, 219)">Concentrate</button>
             <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 343); MyHue.GroupSetBrightness(Index, 240)">Reading</button>
-          </div>    
+            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 231); MyHue.GroupSetBrightness(Index, 219)">Concentrate</button>
+            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 156); MyHue.GroupSetBrightness(Index, 203)">Energize</button>
+          </div>
+          <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetColortemperature(Index, 2500); MyHue.GroupSetBrightness(Index, 144)">Gold</button>
         </div>
         <div ng-show='TabIsSet(3)'>
-          Details
           <div></div>
           <span>new GroupName: </span>
           <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
@@ -117,18 +115,16 @@
           </div>
         </div>
         <div ng-show='TabIsSet(2)'>
-          Tone
-          <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetHSB(Index, 7000, 207, 207)">Feet Up</button>
-          <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetColortemperature(Index, 2500); MyHue.LightSetBrightness(Index, 144)">Gold</button>
+          <canvas id='ctLightCanvas' width=32 height=32 >It seems your device doesn't support the required HTML5 Canvas</canvas>
           <div>
             <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 467); MyHue.LightSetBrightness(Index, 144)">Relax</button>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 156); MyHue.LightSetBrightness(Index, 203)">Energize</button>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 231); MyHue.LightSetBrightness(Index, 219)">Concentrate</button>
             <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 343); MyHue.LightSetBrightness(Index, 240)">Reading</button>
-          </div>    
+            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 231); MyHue.LightSetBrightness(Index, 219)">Concentrate</button>
+            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 156); MyHue.LightSetBrightness(Index, 203)">Energize</button> 
+          </div>
+          <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetColortemperature(Index, 2500); MyHue.LightSetBrightness(Index, 144)">Gold</button>  
         </div>
         <div ng-show='TabIsSet(3)'>
-          Details
           <div></div>
           <span>new LightName: </span>
           <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
