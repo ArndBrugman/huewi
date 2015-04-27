@@ -1,87 +1,121 @@
   var app = angular.module('huewi', ['ngAnimate']);
-  var MyHue = new huepi();
-  MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
+  
+  angular.module('huewi').factory('hueConnector', function () {
+    var MyHue = new huepi();
+    MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
+    var HeartbeatInterval;
+    var Status = '';
+    var PrevStatus = '';
 
-  angular.module('huewi').factory('Data', function () {
-    var _MyHue = new huepi();
-    _MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
-    return {
-        MyHue: function () {
-          return _MyHue;
-        }
+    if (window.isCordovaApp) {
+      document.addEventListener("deviceready", onStartup, false);
+      document.addEventListener("pause", onPause, false);
+      document.addEventListener("resume", onResume, false);
+    } else $(document).ready(onStartup);
+
+    function onStartup() {
+      onResume();
     }
-  });
+
+    function onResume() {
+      TimeBasedGradientUpdate();
+      //ConnectToHueBridge();
+      HeartbeatInterval = setInterval(StatusHeartbeat, 2500);
+      StatusHeartbeat(); // Execute Immediate Too!
+    }
+
+    function onPause() {
+      clearInterval(HeartbeatInterval);
+      $('#HueStatusbar').show(350);
+    }
 
 //delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges TESTCODE.
-
-  angular.module('huewi').controller('HueStatusController', ['$scope', function($scope) {
-    $scope.MyHue = MyHue; // to be called via $('#HueStatus').scope().MyHue. in HTML
-    $scope.BridgeIP = '';
-    $scope.BridgeName = '';
-    $scope.Status = '';
-
-    $scope.ConnectToHueBridge = function() {
+    function ConnectToHueBridge() {
       if (!localStorage.MyHueBridgeIP) { // No Cached BridgeIP?
-        $scope.Status = 'Trying to Discover Bridge via Portal';
-        $scope.$apply();
+        Status = 'Trying to Discover Bridge via Portal';
         MyHue.PortalDiscoverLocalBridges().then(function GetBridgeConfig() {
           MyHue.BridgeGetData().then(function EnsureWhitelisting() {
-            $scope.BridgeIP = MyHue.BridgeIP;
             if (!MyHue.BridgeUsernameWhitelisted) {
-              $scope.Status = 'Please press connect button on Bridge';
-              $scope.$apply();
+              Status = 'Please press connect button on Bridge';
               MyHue.BridgeCreateUser().then(function ReReadBridgeConfiguration() {
-                return;
+                Status = 'Connected';
               }, function UnableToCreateUseronBridge() {
-                $scope.Status = 'Unable to Create User on Bridge';
-                $scope.$apply();
-                return;
+                Status = 'Unable to Create User on Bridge';
               });
             } else {
               localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
-              $scope.BridgeName = MyHue.BridgeName;
-              $scope.Status = 'Connected';
-              $scope.$apply();
+              Status = 'Connected';
 //MyHue.BridgeDeleteUser(MyHue.Username); // Force buttonpress on next Startup TESTCODE.
             }
           }, function UnableToRetreiveBridgeConfiguration() {
-            $scope.Status = 'Unable to Retreive Bridge Configuration';
-            $scope.$apply();
-            return;
+            Status = 'Unable to Retreive Bridge Configuration';
           });
         }, function UnableToDiscoverLocalBridgesViaPortal() {
-          $scope.Status = 'Unable to find Local Bridge via Portal';
-          $scope.$apply();
-          return;
+          Status = 'Unable to find Local Bridge via Portal';
         });
       } else {
         MyHue.BridgeIP = localStorage.MyHueBridgeIP;
-        $scope.BridgeIP = MyHue.BridgeIP;
         MyHue.BridgeGetData().then(function CheckWhitelisting() {
           if (MyHue.BridgeUsernameWhitelisted) {
-            $scope.BridgeName = MyHue.BridgeName;
-            $scope.Status = 'Connected';
-            $scope.$apply();
+            Status = 'Connected';
           } else {
             delete localStorage.MyHueBridgeIP;
-            $scope.Status = 'Not Whitelisted anymore';
-            $scope.$apply();
-            return;
+            Status = 'Not Whitelisted anymore';
           }
         }, function ErrorGettingCachedBridgeData() {
           delete localStorage.MyHueBridgeIP;
-          $scope.Status = 'Not found anymore';
-          $scope.$apply();
-          return;
+          Status = 'Not found anymore';
         });
       }
     }
 
+    function StatusHeartbeat() {
+      $('#HueStatus').scope().Update();
+      
+      if ((PrevStatus != Status) & (Status === 'Connected')) {
+        $('#HueStatusbar').slideUp(750);
+      }
+      PrevStatus = Status;
+
+      if (Status === 'Connected')
+      {
+        MyHue.BridgeGetData().then(function UpdateUI() {
+          $('#Groups').scope().Update();
+          $('#Lights').scope().Update();
+          $('#Bridge').scope().Update();
+        }, function BridgeGetDataFailed() {
+          setTimeout(function() {
+            onPause();
+            onResume();
+          }, 1000);
+        });
+      } else ConnectToHueBridge();
+    }
+
+  return {
+      MyHue: function () {
+        return MyHue;
+      },
+      Status: function() {
+        return Status;
+      }
+    }
+  });
+
+
+
+  angular.module('huewi').controller('HueStatusController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+    $scope.MyHue = hueConnector.MyHue(); // For usage in HTML
+
     $scope.Update = function() {
-      var Result = MyHue.BridgeGetData();
-      return Result;
+      $scope.BridgeIP = $scope.MyHue.BridgeIP;
+      $scope.BridgeName = $scope.MyHue.BridgeName;
+      $scope.Status = hueConnector.Status();
     }
   }]);
+
+
+
 
   function ToHexString(In) {
     var Result = Math.floor(In).toString(16);
@@ -95,11 +129,11 @@
     };
   });
 
-  angular.module('huewi').controller('GroupsController', ['$scope', function($scope) {
+  angular.module('huewi').controller('GroupsController', ['$scope', 'hueConnector', function($scope, hueConnector) {
     $scope.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
 
     $scope.Update = function() {
-      $scope.Groups = _.toArray(MyHue.Groups);
+      $scope.Groups = _.toArray(hueConnector.MyHue().Groups);
       $scope.Groups.unshift({'name': 'All available lights'});
 
       _.each($scope.Groups, function(Group) {
@@ -123,6 +157,8 @@
     }
   }]);
 
+
+
   angular.module('huewi').directive("huewiLight", function() {
     return {
       restrict: 'E',
@@ -130,11 +166,11 @@
     };
   });
 
-  angular.module('huewi').controller('LightsController', ['$scope', function($scope) {
+  angular.module('huewi').controller('LightsController', ['$scope', 'hueConnector', function($scope, hueConnector) {
     $scope.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
 
     $scope.Update = function() {
-      $scope.Lights = _.toArray(MyHue.Lights);
+      $scope.Lights = _.toArray(hueConnector.MyHue().Lights);
       _.each($scope.Lights, function(Light) {
         var RGB;
         if (Light.state.colormode === 'hs') {
@@ -154,6 +190,8 @@
     }
   }]);
 
+
+
   angular.module('huewi').controller('MenuController', ['$scope', function($scope) {
     $scope.MenuItem ='Connecting';
     
@@ -172,6 +210,8 @@
     }
   }]);
 
+
+
   angular.module('huewi').controller('TabController', ['$scope', function($scope) {
     $scope.Tab = 1;
 
@@ -186,7 +226,9 @@
     }
   }]);
   
-  angular.module('huewi').controller('GroupController', ['$scope', function($scope) {
+
+
+  angular.module('huewi').controller('GroupController', ['$scope', 'hueConnector', function($scope, hueConnector) {
     var hueImage = new Image();
     hueImage.src = 'img/hue.png';
     var ctImage = new Image();
@@ -233,7 +275,7 @@
       var HueContext = document.getElementById('hueGroupCanvas').getContext('2d');
       var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
       var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
-      MyHue.GroupSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+      hueConnector.MyHue().GroupSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
     });
 
     $('#ctGroupCanvas').on('click', function(event) { // 2000..6500
@@ -242,12 +284,12 @@
       var y = event.offsetY;
       var ColorTemperature = 2000 + (6500-2000)*(x/ctGroupCanvas.width);
       var Brightness = 255 - 255*(y/ctGroupCanvas.height);
-      MyHue.GroupSetColortemperature($scope.Index, ColorTemperature);
-      MyHue.GroupSetBrightness($scope.Index, Brightness);
+      hueConnector.MyHue().GroupSetColortemperature($scope.Index, ColorTemperature);
+      hueConnector.MyHue().GroupSetBrightness($scope.Index, Brightness);
     });
 
     $scope.Update = function(NewGroupNr) {
-      var GroupArray = _.toArray(MyHue.Groups);
+      var GroupArray = _.toArray(hueConnector.MyHue().Groups);
       GroupArray.unshift({'name': 'All available lights'}); // Group 0 is All
       $scope.Index = NewGroupNr;
       //console.log('Group->Update '+$scope.Index);
@@ -267,7 +309,9 @@
     }
   }]);
   
-  angular.module('huewi').controller('LightController', ['$scope', function($scope) {
+
+
+  angular.module('huewi').controller('LightController', ['$scope', 'hueConnector', function($scope, hueConnector) {
     var hueImage = new Image();
     hueImage.src = 'img/hue.png';
     var ctImage = new Image();
@@ -314,7 +358,7 @@
       var HueContext = document.getElementById('hueLightCanvas').getContext('2d');
       var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
       var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
-      MyHue.LightSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+      hueConnector.MyHue().LightSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
     });
 
     $('#ctLightCanvas').on('click', function(event) { // 2000..6500
@@ -323,12 +367,12 @@
       var y = event.offsetY;
       var ColorTemperature = 2000 + (6500-2000)*(x/ctLightCanvas.width);
       var Brightness = 255 - 255*(y/ctLightCanvas.height);
-      MyHue.LightSetColortemperature($scope.Index, ColorTemperature);
-      MyHue.LightSetBrightness($scope.Index, Brightness);
+      hueConnector.MyHue().LightSetColortemperature($scope.Index, ColorTemperature);
+      hueConnector.MyHue().LightSetBrightness($scope.Index, Brightness);
     });
 
     $scope.Update = function(NewLightNr) {
-      var LightArray = _.toArray(MyHue.Lights);
+      var LightArray = _.toArray(hueConnector.MyHue().Lights);
       LightArray.unshift({'name': 'Onebased index'}); // Light 0 doesn't exist
       $scope.Index = NewLightNr;
       //console.log('Light->Update '+$scope.Index);
@@ -348,16 +392,34 @@
     }
   }]);
 
-  angular.module('huewi').controller('SchedulesController', ['$scope', function($scope) {
-  }]);
-  angular.module('huewi').controller('ScenesController', ['$scope', function($scope) {
-  }]);
-  angular.module('huewi').controller('SensorsController', ['$scope', function($scope) {
-  }]);
-  angular.module('huewi').controller('RulesController', ['$scope', function($scope) {
-  }]);
-  angular.module('huewi').controller('BridgeController', ['$scope', function($scope) {
+
+
+  angular.module('huewi').controller('SchedulesController', ['$scope', 'hueConnector', function($scope, hueConnector) {
   }]);
 
+
+
+  angular.module('huewi').controller('ScenesController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  }]);
+
+
+
+  angular.module('huewi').controller('SensorsController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  }]);
+
+
+
+  angular.module('huewi').controller('RulesController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  }]);
+
+
+
+  angular.module('huewi').controller('BridgeController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+    $scope.Whitelist = [];
+
+    $scope.Update = function() {
+      $scope.Whitelist = hueConnector.MyHue().BridgeConfig.whitelist;      
+    }
+  }]);
 
 

@@ -174,27 +174,9 @@
   <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='MenuItem === "Bridge"'>
     <div class='inlay content timebasedgradient'>
       <h3>Bridge</h3>
-      <div>Bridge IP: {{BridgeIP}}</div>
-      <div>Bridge Name: {{BridgeName}}</div>
-      <div>Status: {{Status}}</div>
-      <div>Bridge IP: {{BridgeIP}}</div>
-      <div>Bridge Name: {{BridgeName}}</div>
-      <div>Status: {{Status}}</div>
-      <div>Bridge IP: {{BridgeIP}}</div>
-      <div>Bridge Name: {{BridgeName}}</div>
-      <div>Status: {{Status}}</div>
-      <div>Bridge IP: {{BridgeIP}}</div>
-      <div>Bridge Name: {{BridgeName}}</div>
-      <div>Status: {{Status}}</div>
-      <div>Bridge IP: {{BridgeIP}}</div>
-      <div>Bridge Name: {{BridgeName}}</div>
-      <div>Status: {{Status}}</div>
-      <div>Bridge IP: {{BridgeIP}}</div>
-      <div>Bridge Name: {{BridgeName}}</div>
-      <div>Status: {{Status}}</div>
-      <div>Bridge IP: {{BridgeIP}}</div>
-      <div>Bridge Name: {{BridgeName}}</div>
-      <div>Status: {{Status}}</div>
+      <div class="list-group-item" ng-repeat="(Key, Value) in Whitelist">
+          {{Key}} - {{Value.name}}
+      </div>
       <div>Bridge IP: {{BridgeIP}}</div>
       <div>Bridge Name: {{BridgeName}}</div>
       <div>Status: {{Status}}</div>
