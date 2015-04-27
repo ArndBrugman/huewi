@@ -1,0 +1,12 @@
+<h3>Groups</h3>
+<div class="list-group">
+  <div class="list-group-item" ng-repeat="Group in Groups">
+    <span left ng-click="SetMenuItem('Group', $index)">{{Group.name}}</span>
+    <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff($index);" ng-class="{ hidden: !((Group.action.on) || ($index == 0)) }">
+      <span class="glyphicon glyphicon-off" style="color:{{Group.HTMLColor}}" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn($index);" ng-class="{ hidden:Group.action.on }">
+      <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
+    </button>
+  </div>
+</div>

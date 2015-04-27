@@ -186,38 +186,14 @@
 
   <div class='container' id='Groups' ng-controller='GroupsController as GroupsCtrl'>
     <div class='content'>
-      <h3>Groups</h3>
-      <div class="list-group">
-        <div class="list-group-item" ng-repeat="Group in Groups">
-          <span left ng-click="SetMenuItem('Group', $index)">{{Group.name}}</span>
-          <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff($index);" ng-class="{ hidden: !((Group.action.on) || ($index == 0)) }">
-            <span class="glyphicon glyphicon-off" style="color:{{Group.HTMLColor}}" aria-hidden="true"></span>
-          </button>
-          <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn($index);" ng-class="{ hidden:Group.action.on }">
-            <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-          </button>
-        </div>
-      </div>
+      <huewi-groups></huewi-groups>
     </div><!-- /content -->
     <div class="hideonportrait"><br><br></div><!-- Spacing on Landscape after Groups -->
   </div><!-- /container -->
 
   <div class='container' id='Lights' ng-controller='LightsController as LightsCtrl'>
     <div class='content'>
-      <h3>Lights</h3>
-      <div class="list-group">
-        <div class="list-group-item" ng-repeat="Light in Lights" ng-class="{ grayed:!Light.state.reachable }">
-          <span left ng-click="SetMenuItem('Light', $index + 1)">{{Light.name}}</span>
-          <span ng-class="{ hidden:!Light.state.reachable }">
-            <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff($index + 1);" ng-class="{ hidden:!Light.state.on }">
-              <span class="glyphicon glyphicon-off" style="color:{{Light.HTMLColor}}" aria-hidden="true"></span>
-            </button>
-            <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOn($index + 1);" ng-class="{ hidden:Light.state.on }">
-              <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
-            </button>
-          </span>
-        </div>
-      </div>
+      <huewi-lights></huewi-lights>
     </div><!-- /content -->
     <div><br><br></div>
   </div><!-- /container -->
