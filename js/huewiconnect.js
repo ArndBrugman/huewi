@@ -1,4 +1,5 @@
 (function() {
+  /*
   var HeartbeatInterval;
   var PrevStatus;
 
@@ -30,7 +31,7 @@
   function onResume() {
     TimeBasedGradientUpdate();
     $('#HueStatus').scope().ConnectToHueBridge();
-    HeartbeatInterval = window.setInterval(StatusHeartbeat, 2500);
+    HeartbeatInterval = setInterval(StatusHeartbeat, 2500);
     StatusHeartbeat(); // Execute Immediate Too!
   }
 
@@ -51,6 +52,7 @@
       $('#HueStatus').scope().Update().then(function UpdateUI() {
         $('#Groups').scope().Update();
         $('#Lights').scope().Update();
+        $('#Bridge').scope().Update();
       }, function BridgeGetDataFailed() {
         setTimeout(function() {
           onPause();
@@ -59,5 +61,5 @@
       });
     } else $('#HueStatus').scope().ConnectToHueBridge();
   }
-
+  */
 })();
