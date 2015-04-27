@@ -129,7 +129,7 @@ return {
 
 
 app.controller('HueStatusController', ['$scope', 'hueConnector', function($scope, hueConnector) {
-  $scope.MyHue = hueConnector.MyHue(); // For usage in HTML
+  $scope.MyHue = hueConnector.MyHue(); // For usage of MyHue in HTML within this $scope
 
   $scope.Update = function() {
     $scope.BridgeIP = $scope.MyHue.BridgeIP;
@@ -225,7 +225,7 @@ app.controller('GroupController', ['$scope', 'hueConnector', function($scope, hu
   hueImage.src = 'img/hue.png';
   var ctImage = new Image();
   ctImage.src = 'img/ct.png';
-  $scope.Index = 0; // Zerobased Index, Group 0 is All
+  $scope.GroupNr = 0; // Zerobased Index, Group 0 is All
   $scope._Name = '';
   $scope.OrgName = $scope._Name;
 
@@ -267,7 +267,7 @@ app.controller('GroupController', ['$scope', 'hueConnector', function($scope, hu
     var HueContext = document.getElementById('hueGroupCanvas').getContext('2d');
     var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
-    hueConnector.MyHue().GroupSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    hueConnector.MyHue().GroupSetRGB($scope.GroupNr, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
   });
 
   $('#ctGroupCanvas').on('click', function(event) { // 2000..6500
@@ -276,18 +276,17 @@ app.controller('GroupController', ['$scope', 'hueConnector', function($scope, hu
     var y = event.offsetY;
     var ColorTemperature = 2000 + (6500-2000)*(x/ctGroupCanvas.width);
     var Brightness = 255 - 255*(y/ctGroupCanvas.height);
-    hueConnector.MyHue().GroupSetColortemperature($scope.Index, ColorTemperature);
-    hueConnector.MyHue().GroupSetBrightness($scope.Index, Brightness);
+    hueConnector.MyHue().GroupSetColortemperature($scope.GroupNr, ColorTemperature);
+    hueConnector.MyHue().GroupSetBrightness($scope.GroupNr, Brightness);
   });
 
   $scope.Update = function(NewGroupNr) {
     var GroupArray = _.toArray(hueConnector.MyHue().Groups);
     GroupArray.unshift({'name': 'All available lights'}); // Group 0 is All
-    $scope.Index = NewGroupNr;
-    //console.log('Group->Update '+$scope.Index);
-    if ($scope.Index < GroupArray.length)
-      $scope.OrgName = $scope._Name = GroupArray[$scope.Index].name;
-    else $scope._Name = "Group" + $scope.Index;
+    $scope.GroupNr = NewGroupNr;
+    if ($scope.GroupNr < GroupArray.length)
+      $scope.OrgName = $scope._Name = GroupArray[$scope.GroupNr].name;
+    else $scope.OrgName = $scope._Name = "Group" + $scope.GroupNr;
   }
 
   $scope.Name = function(NewName) { // Getter/Setter function
@@ -308,7 +307,7 @@ app.controller('LightController', ['$scope', 'hueConnector', function($scope, hu
   hueImage.src = 'img/hue.png';
   var ctImage = new Image();
   ctImage.src = 'img/ct.png';
-  $scope.Index = 1; // Onebased Index, Light 0 doesn't exist
+  $scope.LightNr = 1; // Onebased Index, Light 0 doesn't exist
   $scope._Name = '';
   $scope.OrgName = $scope._Name;
   
@@ -350,7 +349,7 @@ app.controller('LightController', ['$scope', 'hueConnector', function($scope, hu
     var HueContext = document.getElementById('hueLightCanvas').getContext('2d');
     var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
-    hueConnector.MyHue().LightSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    hueConnector.MyHue().LightSetRGB($scope.LightNr, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
   });
 
   $('#ctLightCanvas').on('click', function(event) { // 2000..6500
@@ -359,18 +358,17 @@ app.controller('LightController', ['$scope', 'hueConnector', function($scope, hu
     var y = event.offsetY;
     var ColorTemperature = 2000 + (6500-2000)*(x/ctLightCanvas.width);
     var Brightness = 255 - 255*(y/ctLightCanvas.height);
-    hueConnector.MyHue().LightSetColortemperature($scope.Index, ColorTemperature);
-    hueConnector.MyHue().LightSetBrightness($scope.Index, Brightness);
+    hueConnector.MyHue().LightSetColortemperature($scope.LightNr, ColorTemperature);
+    hueConnector.MyHue().LightSetBrightness($scope.LightNr, Brightness);
   });
 
   $scope.Update = function(NewLightNr) {
     var LightArray = _.toArray(hueConnector.MyHue().Lights);
     LightArray.unshift({'name': 'Onebased index'}); // Light 0 doesn't exist
-    $scope.Index = NewLightNr;
-    //console.log('Light->Update '+$scope.Index);
-    if ($scope.Index < LightArray.length)
-      $scope.OrgName = $scope._Name = LightArray[$scope.Index].name;
-    else $scope._Name = "Light" + $scope.Index;
+    $scope.LightNr = NewLightNr;
+    if ($scope.LightNr < LightArray.length)
+      $scope.OrgName = $scope._Name = LightArray[$scope.LightNr].name;
+    else $scope.OrgName = $scope._Name = "Light" + $scope.LightNr;
   }
 
   $scope.Name = function(NewName) { // Getter/Setter function
