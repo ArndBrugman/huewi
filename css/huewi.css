@@ -109,10 +109,17 @@ button, .btn {
   background: rgba(200, 200, 250, 0.60);
   border-radius: 5px;
   padding: 25px;
-  margin-top: 15%;
-  margin-left: 15%;
-  margin-bottom: 15%;
-  width: 70%;
+  margin-top: 5%;
+  margin-left: 5%;
+  margin-bottom: 5%;
+  width: 90%;
+}
+canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 .content { }
 .left {
