@@ -1,6 +1,6 @@
   var app = angular.module('huewi', ['ngAnimate']);
   
-  angular.module('huewi').factory('hueConnector', function () {
+  app.factory('hueConnector', function () {
     var MyHue = new huepi();
     MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
     var HeartbeatInterval;
@@ -19,7 +19,6 @@
 
     function onResume() {
       TimeBasedGradientUpdate();
-      //ConnectToHueBridge();
       HeartbeatInterval = setInterval(StatusHeartbeat, 2500);
       StatusHeartbeat(); // Execute Immediate Too!
     }
@@ -70,15 +69,14 @@
     }
 
     function StatusHeartbeat() {
-      $('#HueStatus').scope().Update();
-      
-      if ((PrevStatus != Status) & (Status === 'Connected')) {
-        $('#HueStatusbar').slideUp(750);
-      }
-      PrevStatus = Status;
+      $('#HueStatus').scope().Update();     
 
-      if (Status === 'Connected')
-      {
+      if (Status != 'Connected') {
+        ConnectToHueBridge();
+      } else {
+        if (PrevStatus != Status) {
+          $('#HueStatusbar').slideUp(750);
+        }
         MyHue.BridgeGetData().then(function UpdateUI() {
           $('#Groups').scope().Update();
           $('#Lights').scope().Update();
@@ -89,7 +87,8 @@
             onResume();
           }, 1000);
         });
-      } else ConnectToHueBridge();
+      }
+      PrevStatus = Status;
     }
 
   return {
@@ -104,13 +103,14 @@
 
 
 
-  angular.module('huewi').controller('HueStatusController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  app.controller('HueStatusController', ['$scope', 'hueConnector', function($scope, hueConnector) {
     $scope.MyHue = hueConnector.MyHue(); // For usage in HTML
 
     $scope.Update = function() {
       $scope.BridgeIP = $scope.MyHue.BridgeIP;
       $scope.BridgeName = $scope.MyHue.BridgeName;
       $scope.Status = hueConnector.Status();
+      $scope.$apply();
     }
   }]);
 
@@ -122,14 +122,14 @@
     return Result.length == 1 ? "0" + Result : Result;
   }
 
-  angular.module('huewi').directive("huewiGroup", function() {
+  app.directive("huewiGroup", function() {
     return {
       restrict: 'E',
       templateUrl: "huewi-group.html"
     };
   });
 
-  angular.module('huewi').controller('GroupsController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  app.controller('GroupsController', ['$scope', 'hueConnector', function($scope, hueConnector) {
     $scope.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
 
     $scope.Update = function() {
@@ -159,14 +159,14 @@
 
 
 
-  angular.module('huewi').directive("huewiLight", function() {
+  app.directive("huewiLight", function() {
     return {
       restrict: 'E',
       templateUrl: "huewi-light.html"
     };
   });
 
-  angular.module('huewi').controller('LightsController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  app.controller('LightsController', ['$scope', 'hueConnector', function($scope, hueConnector) {
     $scope.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
 
     $scope.Update = function() {
@@ -192,7 +192,7 @@
 
 
 
-  angular.module('huewi').controller('MenuController', ['$scope', function($scope) {
+  app.controller('MenuController', ['$scope', function($scope) {
     $scope.MenuItem ='Connecting';
     
     $scope.SetMenuItem = function(NewItem, NewIndex) {
@@ -212,7 +212,7 @@
 
 
 
-  angular.module('huewi').controller('TabController', ['$scope', function($scope) {
+  app.controller('TabController', ['$scope', function($scope) {
     $scope.Tab = 1;
 
     $scope.TabIsSet = function(CheckTab) {
@@ -228,7 +228,7 @@
   
 
 
-  angular.module('huewi').controller('GroupController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  app.controller('GroupController', ['$scope', 'hueConnector', function($scope, hueConnector) {
     var hueImage = new Image();
     hueImage.src = 'img/hue.png';
     var ctImage = new Image();
@@ -311,7 +311,7 @@
   
 
 
-  angular.module('huewi').controller('LightController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  app.controller('LightController', ['$scope', 'hueConnector', function($scope, hueConnector) {
     var hueImage = new Image();
     hueImage.src = 'img/hue.png';
     var ctImage = new Image();
@@ -394,27 +394,27 @@
 
 
 
-  angular.module('huewi').controller('SchedulesController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  app.controller('SchedulesController', ['$scope', 'hueConnector', function($scope, hueConnector) {
   }]);
 
 
 
-  angular.module('huewi').controller('ScenesController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  app.controller('ScenesController', ['$scope', 'hueConnector', function($scope, hueConnector) {
   }]);
 
 
 
-  angular.module('huewi').controller('SensorsController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  app.controller('SensorsController', ['$scope', 'hueConnector', function($scope, hueConnector) {
   }]);
 
 
 
-  angular.module('huewi').controller('RulesController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  app.controller('RulesController', ['$scope', 'hueConnector', function($scope, hueConnector) {
   }]);
 
 
 
-  angular.module('huewi').controller('BridgeController', ['$scope', 'hueConnector', function($scope, hueConnector) {
+  app.controller('BridgeController', ['$scope', 'hueConnector', function($scope, hueConnector) {
     $scope.Whitelist = [];
 
     $scope.Update = function() {
