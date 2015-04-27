@@ -186,24 +186,14 @@
 
   <div class='container' id='Groups' ng-controller='GroupsController as GroupsCtrl'>
     <div class='content'>
-      <h3>Groups</h3>
-      <div class="list-group">
-        <div class="list-group-item" ng-repeat="Group in Groups">
-          <huewi-group></huewi-group>
-        </div>
-      </div>
+      <huewi-groups></huewi-groups>
     </div><!-- /content -->
     <div class="hideonportrait"><br><br></div><!-- Spacing on Landscape after Groups -->
   </div><!-- /container -->
 
   <div class='container' id='Lights' ng-controller='LightsController as LightsCtrl'>
     <div class='content'>
-      <h3>Lights</h3>
-      <div class="list-group">
-        <div class="list-group-item" ng-repeat="Light in Lights" ng-class="{ grayed:!Light.state.reachable }">
-          <huewi-light></huewi-light>
-        </div>
-      </div>
+      <huewi-lights></huewi-lights>
     </div><!-- /content -->
     <div><br><br></div>
   </div><!-- /container -->
