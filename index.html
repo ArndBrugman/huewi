@@ -137,7 +137,9 @@
   <div class='overlay fading' id='Schedules' ng-controller='SchedulesController as SchedulesCtrl' ng-show='MenuItem === "Schedules"'>
     <div class='inlay content timebasedgradient'>
       <h3>Schedules</h3>
-      <div></div>
+      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Schedules">
+          {{Key}} - {{Value.name}}
+      </div>
       <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
@@ -146,7 +148,9 @@
   <div class='overlay fading' id='Scenes' ng-controller='ScenesController as ScenesCtrl' ng-show='MenuItem === "Scenes"'>
     <div class='inlay content timebasedgradient'>
       <h3>Scenes</h3>
-      <div></div>
+      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Scenes">
+          {{Key}} - {{Value.name}}
+      </div>
       <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
@@ -155,7 +159,9 @@
   <div class='overlay fading' id='Sensors' ng-controller='SensorsController as SensorsCtrl' ng-show='MenuItem === "Sensors"'>
     <div class='inlay content timebasedgradient'>
       <h3>Sensors</h3>
-      <div></div>
+      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Sensors">
+          {{Key}} - {{Value.name}}
+      </div>
       <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
@@ -164,7 +170,9 @@
   <div class='overlay fading' id='Rules' ng-controller='RulesController as RulesCtrl' ng-show='MenuItem === "Rules"'>
     <div class='inlay content timebasedgradient'>
       <h3>Rules</h3>
-      <div></div>
+      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Rules">
+          {{Key}} - {{Value.name}}
+      </div>
       <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
@@ -173,11 +181,11 @@
   <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='MenuItem === "Bridge"'>
     <div class='inlay content timebasedgradient'>
       <h3>Bridge</h3>
-      <div class="list-group-item" ng-repeat="(Key, Value) in Whitelist">
+      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist">
           {{Key}} - {{Value.name}}
       </div>
-      <div>Bridge IP: {{BridgeIP}}</div>
-      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Bridge IP: {{MyHue.BridgeIP}}</div>
+      <div>Bridge Name: {{MyHue.BridgeName}}</div>
       <div>Status: {{Status}}</div>
       <div ng-click="SetMenuItem('')">Close</div>
     </div><!-- /inlay content -->
@@ -204,8 +212,8 @@
     <h4>hue Web Interface</h4>
     <!-- Single button -->
     <div id='HueStatusbar'>
-      <div>Bridge IP: {{BridgeIP}}</div>
-      <div>Bridge Name: {{BridgeName}}</div>
+      <div>Bridge IP: {{MyHue.BridgeIP}}</div>
+      <div>Bridge Name: {{MyHue.BridgeName}}</div>
       <div>Status: {{Status}}</div>
     </div>
   </div><!-- /status -->
