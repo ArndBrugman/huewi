@@ -260,7 +260,7 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
   var ctImage = new Image();
   ctImage.src = 'img/ct.png';
   var GroupArray = _.toArray(hueConnector.MyHue().Groups);
-  var Index = 0;
+  $scope.Index = 0;
   $scope._Name = '';
   $scope.OrgName = $scope._Name;
 
@@ -302,7 +302,7 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
     var HueContext = document.getElementById('hueGroupCanvas').getContext('2d');
     var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
-    hueConnector.MyHue().GroupSetRGB(Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    hueConnector.MyHue().GroupSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
   });
 
   $('#ctGroupCanvas').on('click', function(event) { // 2000..6500
@@ -311,8 +311,8 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
     var y = event.offsetY;
     var ColorTemperature = 2000 + (6500-2000)*(x/ctGroupCanvas.width);
     var Brightness = 255 - 255*(y/ctGroupCanvas.height);
-    hueConnector.MyHue().GroupSetColortemperature(Index, ColorTemperature);
-    hueConnector.MyHue().GroupSetBrightness(Index, Brightness);
+    hueConnector.MyHue().GroupSetColortemperature($scope.Index, ColorTemperature);
+    hueConnector.MyHue().GroupSetBrightness($scope.Index, Brightness);
   });
 
   $rootScope.$on('huewiUpdate', function(event, data) {
@@ -321,10 +321,10 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
   });
 
   $scope.$on('MenuUpdate', function(event, data) {
-    Index = data;
-    if (Index < GroupArray.length)
-      $scope.OrgName = $scope._Name = GroupArray[Index].name;
-    else $scope.OrgName = $scope._Name = "Group" + Index;
+    $scope.Index = data;
+    if ($scope.Index < GroupArray.length)
+      $scope.OrgName = $scope._Name = GroupArray[$scope.Index].name;
+    else $scope.OrgName = $scope._Name = "Group" + $scope.Index;
   });
 
   $scope.Name = function(NewName) { // Getter/Setter function
@@ -352,7 +352,7 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
   var ctImage = new Image();
   ctImage.src = 'img/ct.png';
   var LightArray = _.toArray(hueConnector.MyHue().Lights);
-  var Index = 1;
+  $scope.Index = 1;
   $scope._Name = '';
   $scope.OrgName = $scope._Name;
   
@@ -394,8 +394,8 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
     var HueContext = document.getElementById('hueLightCanvas').getContext('2d');
     var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
-    hueConnector.MyHue().LightSetRGB(Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
-    console.log(hueConnector.MyHue().Lights[Index]);
+    hueConnector.MyHue().LightSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    console.log(hueConnector.MyHue().Lights[$scope.Index]);
   });
 
   $('#ctLightCanvas').on('click', function(event) { // 2000..6500
@@ -404,8 +404,8 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
     var y = event.offsetY;
     var ColorTemperature = 2000 + (6500-2000)*(x/ctLightCanvas.width);
     var Brightness = 255 - 255*(y/ctLightCanvas.height);
-    hueConnector.MyHue().LightSetColortemperature(Index, ColorTemperature);
-    hueConnector.MyHue().LightSetBrightness(Index, Brightness);
+    hueConnector.MyHue().LightSetColortemperature($scope.Index, ColorTemperature);
+    hueConnector.MyHue().LightSetBrightness($scope.Index, Brightness);
   });
 
   $rootScope.$on('huewiUpdate', function(event, data) {
@@ -414,10 +414,10 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
   });
 
   $scope.$on('MenuUpdate', function(event, data) {
-    Index = data;
-    if (Index < LightArray.length)
-      $scope.OrgName = $scope._Name = LightArray[Index].name;
-    else $scope.OrgName = $scope._Name = "Light" + Index;
+    $scope.Index = data;
+    if ($scope.Index < LightArray.length)
+      $scope.OrgName = $scope._Name = LightArray[$scope.Index].name;
+    else $scope.OrgName = $scope._Name = "Light" + $scope.Index;
   });
 
   $scope.Name = function(NewName) { // Getter/Setter function
