@@ -10,15 +10,17 @@ function StateToHTMLColor(State, Model)
   if (State) { // Group 0 (All available lights) doesn't have properties
     Model = Model || "LCT001";
     var RGB;
+    var xy;
+
     if (State.colormode === 'hs') {
       RGB = huepi.HelperHueAngSatBritoRGB(State.hue * 360 / 65535, State.sat / 255, State.bri / 255);
-      var xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
+      xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
       RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, Model, State.bri / 255);
     } else if (State.colormode === 'xy') {
       RGB = huepi.HelperXYtoRGBforModel(State.xy[0], State.xy[1], Model, State.bri / 255);
     } else if (State.colormode === 'ct') {
       RGB = huepi.HelperColortemperaturetoRGB(Math.round(1000000 / State.ct));
-      var xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
+      xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
       RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, Model, State.bri / 255);
     }
     return "#" + ToHexString(RGB.Red * 255) + ToHexString(RGB.Green * 255) + ToHexString(RGB.Blue * 255);
@@ -125,7 +127,7 @@ return {
     Status: function() {
       return Status;
     }
-  }
+  };
 });
 
 
@@ -143,7 +145,7 @@ angular.module('huewi').controller('HueStatusController', function($rootScope, $
     $scope.Status = hueConnector.Status();
     
     $scope.$apply(); 
-  })
+  });
 
 });
 
@@ -166,7 +168,7 @@ angular.module('huewi').controller('MenuController', function($rootScope, $scope
     else
       $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
     $scope.$broadcast('MenuUpdate', NewIndex);
-  }
+  };
 });
 
 
@@ -182,13 +184,13 @@ angular.module('huewi').controller('TabController', function($scope) {
 
   $scope.TabIsSet = function(CheckTab) {
     return $scope.Tab === CheckTab;
-  }
+  };
   $scope.SetTab = function(SetTab) {
     $scope.Tab = SetTab;
-  }
+  };
   $scope.GetTab = function() {
     return $scope.Tab;
-  }
+  };
 });
 
 
@@ -215,8 +217,8 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
     _.each($scope.Groups, function(Group) {
       Group.HTMLColor = StateToHTMLColor(Group.action);
     $scope.$apply();
-    })
-  })
+    });
+  });
 });
 
 
@@ -242,8 +244,8 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
     _.each($scope.Lights, function(Light) {
       Light.HTMLColor = StateToHTMLColor(Light.state, Light.modelid);
       $scope.$apply();
-    })
-  })
+    });
+  });
 });
 
 
@@ -294,7 +296,7 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
     ctCanvas.width = hueCanvas.width;
     ctCanvas.height = ctCanvas.width / 2;
     ctContext.drawImage(ctImage, 0, 0, ctCanvas.width, ctCanvas.height); // ReDraw
-  }
+  };
 
   $('#hueGroupCanvas').on('click', function(event) {
     var x = event.offsetX;
@@ -328,14 +330,10 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
   });
 
   $scope.Name = function(NewName) { // Getter/Setter function
-    if (angular.isDefined(NewName)) { // Setter
-      //console.log('Group.Name.SETter');
-      return $scope._Name = NewName;
-    } else { // Getter
-      //console.log('Group.Name.geTTer');
-      return $scope._Name;
-    }
-  }
+    if (angular.isDefined(NewName))
+      $scope._Name = NewName;
+    return $scope._Name;
+  };
 });
 
 
@@ -386,7 +384,7 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
     ctCanvas.width = hueCanvas.width;
     ctCanvas.height = ctCanvas.width / 2;
     ctContext.drawImage(ctImage, 0, 0, ctCanvas.width, ctCanvas.height); // ReDraw
-  }
+  };
 
   $('#hueLightCanvas').on('click', function(event) {
     var x = event.offsetX;
@@ -421,14 +419,10 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
   });
 
   $scope.Name = function(NewName) { // Getter/Setter function
-    if (angular.isDefined(NewName)) { // Setter
-      //console.log('Light.Name.SETter');
-      return $scope._Name = NewName;
-    } else { // Getter
-      //console.log('Light.Name.geTTer');
-      return $scope._Name;
-    }
-  }
+    if (angular.isDefined(NewName))
+      $scope._Name = NewName;
+    return $scope._Name;
+  };
 });
 
 
@@ -443,7 +437,7 @@ angular.module('huewi').controller('SchedulesController', function($rootScope, $
 
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
-  })
+  });
 });
 
 
@@ -458,7 +452,7 @@ angular.module('huewi').controller('ScenesController', function($rootScope, $sco
 
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
-  })
+  });
 });
 
 
@@ -473,7 +467,7 @@ angular.module('huewi').controller('SensorsController', function($rootScope, $sc
 
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
-  })
+  });
 });
 
 
@@ -488,7 +482,7 @@ angular.module('huewi').controller('RulesController', function($rootScope, $scop
 
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
-  })
+  });
 });
 
 
@@ -503,7 +497,7 @@ angular.module('huewi').controller('BridgeController', function($rootScope, $sco
   
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
-  })
+  });
 });
 
 
