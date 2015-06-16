@@ -15,13 +15,13 @@ function StateToHTMLColor(State, Model)
     if (State.colormode === 'hs') {
       RGB = huepi.HelperHueAngSatBritoRGB(State.hue * 360 / 65535, State.sat / 255, State.bri / 255);
       xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
-      RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, Model, State.bri / 255);
+      RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, State.bri / 255, Model);
     } else if (State.colormode === 'xy') {
-      RGB = huepi.HelperXYtoRGBforModel(State.xy[0], State.xy[1], Model, State.bri / 255);
+      RGB = huepi.HelperXYtoRGBforModel(State.xy[0], State.xy[1], State.bri / 255, Model);
     } else if (State.colormode === 'ct') {
       RGB = huepi.HelperColortemperaturetoRGB(Math.round(1000000 / State.ct));
       xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
-      RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, Model, State.bri / 255);
+      RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, State.bri / 255, Model);
     }
     return "#" + ToHexString(RGB.Red * 255) + ToHexString(RGB.Green * 255) + ToHexString(RGB.Blue * 255);
   } else return "#ffcc88"; 
@@ -140,7 +140,7 @@ return {
   
 angular.module('huewi').controller('HueStatusController', function($rootScope, $scope, hueConnector) {
   $scope.MyHue = hueConnector.MyHue(); // For conveinient usage of MyHue in HTML within this controllers $scope
-
+window.MyHue = hueConnector.MyHue(); // For Debugging TESTCODE
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.Status = hueConnector.Status();
     
@@ -393,7 +393,6 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
     var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
     hueConnector.MyHue().LightSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
-    console.log(hueConnector.MyHue().Lights[$scope.Index]);
   });
 
   $('#ctLightCanvas').on('click', function(event) { // 2000..6500
