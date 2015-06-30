@@ -49,6 +49,8 @@
         <li class="list-group-item" ng-click="SetMenuItem('Rules')">Rules</li>
         <li class="list-group-item"></li>
         <li class="list-group-item" ng-click="SetMenuItem('Bridge')">Bridge</li>
+        <li class="list-group-item"></li>
+        <li class="list-group-item" onclick="delete localStorage.MyHueBridgeIP;window.location.reload(true);">Refreshed Reload</li>
       </ul>
     </nav>
   </div><!-- /navcontainer -->
@@ -65,7 +67,7 @@
   <div class='overlay fading' id='Group' ng-controller='GroupController as GroupCtrl' ng-show='MenuItem === "Group"'>
     <div class='inlay content timebasedgradient'>
       <h3>Group: {{OrgName}}</h3>
-      <div ng-click="SetMenuItem('')">Close</div>
+      <div ng-click="SetMenuItem('')">Close<br></div>
       <section ng-controller="TabController as Tab">
         <ul class="nav nav-tabs">
           <li role="presentation" ng-class="{ active:TabIsSet(1) }"><a href ng-click="SetTab(1)">Color</a></li>
@@ -93,7 +95,7 @@
           <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
         </div>
       </section>
-      <div ng-click="SetMenuItem('')">Close</div>
+      <div ng-click="SetMenuItem('')"><br>Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -101,7 +103,7 @@
   <div class='overlay fading' id='Light' ng-controller='LightController as LightCtrl' ng-show='MenuItem === "Light"'>
     <div class='inlay content timebasedgradient'>
       <h3>Light: {{OrgName}}</h3>
-      <div ng-click="SetMenuItem('')">Close</div>
+      <div ng-click="SetMenuItem('')">Close<br></div>
       <section ng-controller="TabController as Tab">
         <ul class="nav nav-tabs">
           <li role="presentation" ng-class="{ active:TabIsSet(1) }"><a href ng-click="SetTab(1)">Color</a></li>
@@ -129,7 +131,7 @@
           <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
         </div>
       </section>
-      <div ng-click="SetMenuItem('')">Close</div>
+      <div ng-click="SetMenuItem('')"><br>Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -137,10 +139,11 @@
   <div class='overlay fading' id='Schedules' ng-controller='SchedulesController as SchedulesCtrl' ng-show='MenuItem === "Schedules"'>
     <div class='inlay content timebasedgradient'>
       <h3>Schedules</h3>
+      <div ng-click="SetMenuItem('')">Close<br></div>
       <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Schedules">
           {{Key}} - {{Value.name}}
       </div>
-      <div ng-click="SetMenuItem('')">Close</div>
+      <div ng-click="SetMenuItem('')"><br>Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -148,10 +151,11 @@
   <div class='overlay fading' id='Scenes' ng-controller='ScenesController as ScenesCtrl' ng-show='MenuItem === "Scenes"'>
     <div class='inlay content timebasedgradient'>
       <h3>Scenes</h3>
+      <div ng-click="SetMenuItem('')">Close<br></div>
       <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Scenes">
           {{Key}} - {{Value.name}}
       </div>
-      <div ng-click="SetMenuItem('')">Close</div>
+      <div ng-click="SetMenuItem('')"><br>Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -159,10 +163,11 @@
   <div class='overlay fading' id='Sensors' ng-controller='SensorsController as SensorsCtrl' ng-show='MenuItem === "Sensors"'>
     <div class='inlay content timebasedgradient'>
       <h3>Sensors</h3>
+      <div ng-click="SetMenuItem('')">Close<br></div>
       <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Sensors">
           {{Key}} - {{Value.name}}
       </div>
-      <div ng-click="SetMenuItem('')">Close</div>
+      <div ng-click="SetMenuItem('')"><br>Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -170,10 +175,11 @@
   <div class='overlay fading' id='Rules' ng-controller='RulesController as RulesCtrl' ng-show='MenuItem === "Rules"'>
     <div class='inlay content timebasedgradient'>
       <h3>Rules</h3>
+      <div ng-click="SetMenuItem('')">Close<br></div>
       <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Rules">
           {{Key}} - {{Value.name}}
       </div>
-      <div ng-click="SetMenuItem('')">Close</div>
+      <div ng-click="SetMenuItem('')"><br>Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->
@@ -181,13 +187,14 @@
   <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='MenuItem === "Bridge"'>
     <div class='inlay content timebasedgradient'>
       <h3>Bridge</h3>
+      <div ng-click="SetMenuItem('')">Close<br></div>
       <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist">
           {{Key}} - {{Value.name}}
       </div>
       <div>Bridge IP: {{MyHue.BridgeIP}}</div>
       <div>Bridge Name: {{MyHue.BridgeName}}</div>
       <div>Status: {{Status}}</div>
-      <div ng-click="SetMenuItem('')">Close</div>
+      <div ng-click="SetMenuItem('')"><br>Close</div>
     </div><!-- /inlay content -->
     <div><br><br></div>
   </div><!-- /overlay -->

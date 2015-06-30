@@ -2,12 +2,12 @@
   'use strict';
 
   function closeNavdrawer() {
-    $('#navdrawer').hide(750);
+    $('#navdrawer').hide(450);
     return false;
   }
 
   function toggleNavdrawer() {
-    $('#navdrawer').toggle(350);
+    $('#navdrawer').toggle(200);
     return false;
   }
 

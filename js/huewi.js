@@ -46,7 +46,7 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
   } else $(document).ready(onStartup);
 
   function onStartup() {
-    onResume();
+    setTimeout(onResume(), 50);
   }
 
   function onResume() {
