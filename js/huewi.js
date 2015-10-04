@@ -167,7 +167,7 @@ window.MyHue = hueConnector.MyHue(); // For Debugging TESTCODE
 (function () {
 
 
-angular.module('huewi').controller('MenuController', function($rootScope, $scope) {
+angular.module('huewi').controller('MenuController', function($rootScope, $scope, hueConnector) {
   $scope.MenuItem = 'Connecting';
   
   $scope.SetMenuItem = function(NewItem, NewIndex) {
@@ -175,8 +175,13 @@ angular.module('huewi').controller('MenuController', function($rootScope, $scope
     $scope.MenuItem = NewItem;
     if ($scope.MenuItem === '') // No Overlay selected
       $('body').css('overflow', 'initial'); // Enable scrolling of the <Body>
-    else
-      $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
+    else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
+
+    if ($scope.MenuItem === 'Group')
+      hueConnector.MyHue().GroupAlertSelect(NewIndex);
+    if ($scope.MenuItem === 'Light')
+      hueConnector.MyHue().LightAlertSelect(NewIndex);
+    
     $scope.$broadcast('MenuUpdate', NewIndex);
   };
 });
