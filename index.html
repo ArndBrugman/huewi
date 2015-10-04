@@ -43,19 +43,23 @@
     <nav id="navdrawer">
       <h4>Settings</h4>
       <ul class="list-group">
-        <li class="list-group-item" ng-click="SetMenuItem('Schedules')">Schedules</li>
-        <li class="list-group-item" ng-click="SetMenuItem('Scenes')">Scenes</li>
-        <li class="list-group-item" ng-click="SetMenuItem('Sensors')">Sensors</li>
-        <li class="list-group-item" ng-click="SetMenuItem('Rules')">Rules</li>
-        <li class="list-group-item"></li>
-        <li class="list-group-item" ng-click="SetMenuItem('Bridge')">Bridge</li>
-        <li class="list-group-item"></li>
-        <li class="list-group-item" onclick="delete localStorage.MyHueBridgeIP;window.location.reload(true);">Refreshed Reload</li>
+        <div class="list-group">
+          <li class="list-group-item" ng-click="SetMenuItem('Schedules')">Schedules</li>
+          <li class="list-group-item" ng-click="SetMenuItem('Scenes')">Scenes</li>
+          <li class="list-group-item" ng-click="SetMenuItem('Sensors')">Sensors</li>
+          <li class="list-group-item" ng-click="SetMenuItem('Rules')">Rules</li>
+        </div>
+        <div class="list-group">
+          <li class="list-group-item" ng-click="SetMenuItem('Bridge')">Bridge</li>
+        </div>
+        <div class="list-group">
+          <li class="list-group-item" onclick="delete localStorage.MyHueBridgeIP;window.location.reload(true);">Refreshed Reload</li>
+        </div>
       </ul>
     </nav>
   </div><!-- /navcontainer -->
 
-  <div class='overlay fading' id='Connecting' ng-show='Status == "!Connected"'> <!-- != vs ==! TESTCODE. -->
+  <div class='overlay fading' id='Connecting' ng-show='Status == "!Connected"'> <!-- == "!" vs !== "" TESTCODE. -->
     <div class='inlay content timebasedgradient'>
       <h3>Stand by while connecting...</h3>
       <div></div>
@@ -86,8 +90,8 @@
             <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 343); MyHue.GroupSetBrightness(Index, 240)">Reading</button>
             <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 231); MyHue.GroupSetBrightness(Index, 219)">Concentrate</button>
             <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 156); MyHue.GroupSetBrightness(Index, 203)">Energize</button>
+            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetColortemperature(Index, 2500); MyHue.GroupSetBrightness(Index, 144)">Gold</button>
           </div>
-          <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetColortemperature(Index, 2500); MyHue.GroupSetBrightness(Index, 144)">Gold</button>
         </div>
         <div ng-show='TabIsSet(3)'>
           <div></div>
@@ -122,8 +126,8 @@
             <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 343); MyHue.LightSetBrightness(Index, 240)">Reading</button>
             <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 231); MyHue.LightSetBrightness(Index, 219)">Concentrate</button>
             <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 156); MyHue.LightSetBrightness(Index, 203)">Energize</button> 
+            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetColortemperature(Index, 2500); MyHue.LightSetBrightness(Index, 144)">Gold</button> 
           </div>
-          <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetColortemperature(Index, 2500); MyHue.LightSetBrightness(Index, 144)">Gold</button>  
         </div>
         <div ng-show='TabIsSet(3)'>
           <div></div>

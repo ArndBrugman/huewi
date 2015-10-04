@@ -46,7 +46,8 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
   } else $(document).ready(onStartup);
 
   function onStartup() {
-    setTimeout(onResume(), 50);
+    //setTimeout(onResume(), 50);
+    onResume();
   }
 
   function onResume() {
@@ -64,38 +65,48 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
   function ConnectToHueBridge() {
     if (!localStorage.MyHueBridgeIP) { // No Cached BridgeIP?
       Status = 'Trying to Discover Bridge via Portal';
+      $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
       MyHue.PortalDiscoverLocalBridges().then(function GetBridgeConfig() {
         MyHue.BridgeGetData().then(function EnsureWhitelisting() {
           if (!MyHue.BridgeUsernameWhitelisted) {
             Status = 'Please press connect button on Bridge';
+            $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
             MyHue.BridgeCreateUser().then(function ReReadBridgeConfiguration() {
               Status = 'Connected';
+              $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
             }, function UnableToCreateUseronBridge() {
               Status = 'Unable to Create User on Bridge';
+              $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
             });
           } else {
             localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
             Status = 'Connected';
+            $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
 //MyHue.BridgeDeleteUser(MyHue.Username); // Force buttonpress on next Startup TESTCODE.
           }
         }, function UnableToRetreiveBridgeConfiguration() {
           Status = 'Unable to Retreive Bridge Configuration';
+          $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
         });
       }, function UnableToDiscoverLocalBridgesViaPortal() {
         Status = 'Unable to find Local Bridge via Portal';
+        $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
       });
     } else {
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
       MyHue.BridgeGetData().then(function CheckWhitelisting() {
         if (MyHue.BridgeUsernameWhitelisted) {
           Status = 'Connected';
+          $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
         } else {
           delete localStorage.MyHueBridgeIP;
           Status = 'Not Whitelisted anymore';
+          $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
         }
       }, function ErrorGettingCachedBridgeData() {
         delete localStorage.MyHueBridgeIP;
         Status = 'Not found anymore';
+        $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
       });
     }
   }
@@ -108,7 +119,7 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
         $('#HueStatusbar').slideUp(750);
       }
       MyHue.BridgeGetData().then(function UpdateUI() {
-        $rootScope.$emit('huewiUpdate');
+        $rootScope.$emit('huewiUpdate'); // huewiUpdate as in new data from Bridge.
       }, function BridgeGetDataFailed() {
         setTimeout(function() {
           Status = 'Disconnected';
@@ -143,7 +154,6 @@ angular.module('huewi').controller('HueStatusController', function($rootScope, $
 window.MyHue = hueConnector.MyHue(); // For Debugging TESTCODE
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.Status = hueConnector.Status();
-    
     $scope.$apply(); 
   });
 
@@ -216,8 +226,8 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
     $scope.Groups.unshift({'name': 'All available lights'});
     _.each($scope.Groups, function(Group) {
       Group.HTMLColor = StateToHTMLColor(Group.action);
-    $scope.$apply();
     });
+    $scope.$apply();
   });
 });
 
@@ -243,8 +253,8 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
     $scope.Lights = _.toArray(hueConnector.MyHue().Lights);
     _.each($scope.Lights, function(Light) {
       Light.HTMLColor = StateToHTMLColor(Light.state, Light.modelid);
-      $scope.$apply();
     });
+    $scope.$apply();
   });
 });
 
@@ -320,6 +330,7 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
   $rootScope.$on('huewiUpdate', function(event, data) {
     GroupArray = _.toArray(hueConnector.MyHue().Groups);
     GroupArray.unshift({'name': 'All available lights'}); // Group 0 is All
+    $scope.$apply();
   });
 
   $scope.$on('MenuUpdate', function(event, data) {
@@ -331,7 +342,10 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
 
   $scope.Name = function(NewName) { // Getter/Setter function
     if (angular.isDefined(NewName))
+    {
       $scope._Name = NewName;
+      hueConnector.MyHue().GroupSetName($scope.Index ,$scope._Name);
+    }
     return $scope._Name;
   };
 });
@@ -408,6 +422,7 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
   $rootScope.$on('huewiUpdate', function(event, data) {
     LightArray = _.toArray(hueConnector.MyHue().Lights);
     LightArray.unshift({'name': 'Onebased index'}); // Light 0 doesn't exist
+    $scope.$apply();
   });
 
   $scope.$on('MenuUpdate', function(event, data) {
@@ -419,7 +434,10 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
 
   $scope.Name = function(NewName) { // Getter/Setter function
     if (angular.isDefined(NewName))
+    {
       $scope._Name = NewName;
+      hueConnector.MyHue().LightSetName($scope.Index ,$scope._Name);
+    }
     return $scope._Name;
   };
 });
@@ -433,7 +451,6 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
 
   
 angular.module('huewi').controller('SchedulesController', function($rootScope, $scope, hueConnector) {
-
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
   });
@@ -448,7 +465,6 @@ angular.module('huewi').controller('SchedulesController', function($rootScope, $
 
   
 angular.module('huewi').controller('ScenesController', function($rootScope, $scope, hueConnector) {
-
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
   });
@@ -463,7 +479,6 @@ angular.module('huewi').controller('ScenesController', function($rootScope, $sco
 
   
 angular.module('huewi').controller('SensorsController', function($rootScope, $scope, hueConnector) {
-
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
   });
@@ -478,7 +493,6 @@ angular.module('huewi').controller('SensorsController', function($rootScope, $sc
 
   
 angular.module('huewi').controller('RulesController', function($rootScope, $scope, hueConnector) {
-
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
   });
@@ -493,7 +507,6 @@ angular.module('huewi').controller('RulesController', function($rootScope, $scop
 
   
 angular.module('huewi').controller('BridgeController', function($rootScope, $scope, hueConnector) {
-  
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
   });

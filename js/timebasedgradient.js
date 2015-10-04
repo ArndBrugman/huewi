@@ -31,20 +31,20 @@ var timebasedcolors = [
   "#faf0e6",
   "#faf0e6",
   "#faf0e6",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
-  "#3a3a52",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
+  "#faf0e6",
   "#faf0e6",
   "#faf0e6",
   "#faf0e6",
@@ -54,7 +54,7 @@ var timebasedcolors = [
 
 var TimeBasedGradientUpdateInterval = setInterval(TimeBasedGradientUpdate, 5 * 60 * 1000); // Update Every 5 Minute
 
-function TimeBasedGradientUpdate(){
+function TimeBasedGradientUpdate() {
   var index = new Date().getHours();
   var timebasedgradient = timebasedgradients[index%24] +' no-repeat left top fixed ';
 
