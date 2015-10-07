@@ -58,10 +58,10 @@ function TimeBasedGradientUpdate() {
   var timebasedgradient = timebasedgradients[index%24] +' no-repeat left top fixed ';
 
   $(".timebasedgradient").css("background", timebasedgradient);
-  $(".timebasedgradient").css("background-image:", timebasedgradients[index]);
-  $(".timebasedgradient").css("background-image:", "-webkit-" + timebasedgradients[index]);
-  $(".timebasedgradient").css("background-image:", "-moz-" + timebasedgradients[index]);
-  $(".timebasedgradient").css("background-image:", "-o-background: " + timebasedgradients[index]);
+  //$(".timebasedgradient").css("background-image:", timebasedgradients[index]);
+  //$(".timebasedgradient").css("background-image:", "-webkit-" + timebasedgradients[index]);
+  //$(".timebasedgradient").css("background-image:", "-moz-" + timebasedgradients[index]);
+  //$(".timebasedgradient").css("background-image:", "-o-background: " + timebasedgradients[index]);
 
   $(".timebasedgradient").css("color", timebasedcolors[index%24]);
 
