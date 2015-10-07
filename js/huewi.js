@@ -227,12 +227,14 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
   $scope.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
 
   $rootScope.$on('huewiUpdate', function(event, data) {
-    $scope.Groups = _.toArray(hueConnector.MyHue().Groups);
-    $scope.Groups.unshift({'name': 'All available lights'});
-    _.each($scope.Groups, function(Group) {
-      Group.HTMLColor = StateToHTMLColor(Group.action);
-    });
-    $scope.$apply();
+    if (hueConnector.MyHue().Groups.length) {
+      $scope.Groups = _.toArray(hueConnector.MyHue().Groups);
+      $scope.Groups.unshift({'name': 'All available lights'});
+      _.each($scope.Groups, function(Group) {
+        Group.HTMLColor = StateToHTMLColor(Group.action);
+      });
+      $scope.$apply();
+    }
   });
 });
 
@@ -255,11 +257,13 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
   $scope.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
 
   $rootScope.$on('huewiUpdate', function(event, data) {
-    $scope.Lights = _.toArray(hueConnector.MyHue().Lights);
-    _.each($scope.Lights, function(Light) {
-      Light.HTMLColor = StateToHTMLColor(Light.state, Light.modelid);
-    });
-    $scope.$apply();
+    if (hueConnector.MyHue().Lights.length) {
+      $scope.Lights = _.toArray(hueConnector.MyHue().Lights);
+      _.each($scope.Lights, function(Light) {
+        Light.HTMLColor = StateToHTMLColor(Light.state, Light.modelid);
+      });
+      $scope.$apply();
+    }
   });
 });
 
@@ -301,6 +305,8 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
     // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
     if ($(window).width() > $(window).height()) {
       hueCanvas.width = 0.45 * $(window).width(); // Landscape
+      if (hueCanvas.width > 0.75 * $(window).height())
+        hueCanvas.width = 0.75 * $(window).height();
     } else {
       hueCanvas.width = 0.45 * $(window).height(); // Portrait
       if (hueCanvas.width > 0.75 * $(window).width())
@@ -393,6 +399,8 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
     // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
     if ($(window).width() > $(window).height()) {
       hueCanvas.width = 0.45 * $(window).width(); // Landscape
+      if (hueCanvas.width > 0.75 * $(window).height())
+        hueCanvas.width = 0.75 * $(window).height();
     } else {
       hueCanvas.width = 0.45 * $(window).height(); // Portrait
       if (hueCanvas.width > 0.75 * $(window).width())
