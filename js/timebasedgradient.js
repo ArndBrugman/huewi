@@ -63,8 +63,10 @@ function TimeBasedGradientUpdate() {
   //$(".timebasedgradient").css("background-image:", "-moz-" + timebasedgradients[index]);
   //$(".timebasedgradient").css("background-image:", "-o-background: " + timebasedgradients[index]);
 
-  $(".timebasedgradient").css("color", timebasedcolors[index%24]);
-
-  $(document).ready(TimeBasedGradientUpdate); // Run On Startup
-  var TimeBasedGradientUpdateInterval = setInterval(TimeBasedGradientUpdate, 5 * 60 * 1000); // Update Every 5 Minutes
+  $(".timebasedgradient").css("color", timebasedcolors[index%24]);  
 }
+
+$(document).ready(TimeBasedGradientUpdate); // Run On Startup
+var TimeBasedGradientUpdateInterval = setInterval(TimeBasedGradientUpdate, 5 * 60 * 1000); // Update Every 5 Minutes
+
+

@@ -227,7 +227,7 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
   $scope.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
 
   $rootScope.$on('huewiUpdate', function(event, data) {
-    if (hueConnector.MyHue().Groups.length) {
+    if (hueConnector.MyHue().GroupIds.length >0) {
       $scope.Groups = _.toArray(hueConnector.MyHue().Groups);
       $scope.Groups.unshift({'name': 'All available lights'});
       _.each($scope.Groups, function(Group) {
@@ -236,7 +236,7 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
       $scope.$apply();
     }
   });
-});
+ });
 
 
 })();
@@ -257,7 +257,7 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
   $scope.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
 
   $rootScope.$on('huewiUpdate', function(event, data) {
-    if (hueConnector.MyHue().Lights.length) {
+    if (hueConnector.MyHue().LightIds.length >0) {
       $scope.Lights = _.toArray(hueConnector.MyHue().Lights);
       _.each($scope.Lights, function(Light) {
         Light.HTMLColor = StateToHTMLColor(Light.state, Light.modelid);
