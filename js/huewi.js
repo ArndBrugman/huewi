@@ -34,11 +34,10 @@ function StateToHTMLColor(State, Model)
 
 angular.module('huewi').factory('hueConnector', function ($rootScope) {
   var MyHue = new huepi();
-  MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
+  // No Longer possible to create custom values -> MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
   var HeartbeatInterval;
   var Status = '';
-  var PrevStatus = '';
-
+  
   if (window.isCordovaApp) {
     document.addEventListener("deviceready", onStartup, false);
     document.addEventListener("pause", onPause, false);
@@ -46,14 +45,14 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
   } else $(document).ready(onStartup);
 
   function onStartup() {
-    //setTimeout(onResume(), 50);
     onResume();
   }
 
   function onResume() {
     TimeBasedGradientUpdate();
+    ConnectToHueBridge();
     HeartbeatInterval = setInterval(StatusHeartbeat, 2500);
-    StatusHeartbeat(); // Execute Immediate Too!
+    //StatusHeartbeat(); // Execute Immediate Too!
   }
 
   function onPause() {
@@ -61,29 +60,44 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
     $('#HueStatusbar').show(350);
   }
 
+  function StatusHeartbeat() {
+    MyHue.BridgeGetData().then(function UpdateUI() {
+      $rootScope.$emit('huewiUpdate'); // huewiUpdate as in new data from Bridge.
+      $('#HueStatusbar').slideUp(750);
+    }, function BridgeGetDataFailed() {
+      Status = 'Disconnected';
+      setTimeout(function() {
+        onPause();
+        onResume();
+      }, 100);
+    });
+  }
+
 //delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges TESTCODE.
   function ConnectToHueBridge() {
     if (!localStorage.MyHueBridgeIP) { // No Cached BridgeIP?
       Status = 'Trying to Discover Bridge via Portal';
       $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
-      MyHue.PortalDiscoverLocalBridges().then(function GetBridgeConfig() {
-        MyHue.BridgeGetData().then(function EnsureWhitelisting() {
-          if (!MyHue.BridgeUsernameWhitelisted) {
-            Status = 'Please press connect button on Bridge';
-            $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
-            MyHue.BridgeCreateUser().then(function ReReadBridgeConfiguration() {
-              Status = 'Connected';
-              $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
-            }, function UnableToCreateUseronBridge() {
-              Status = 'Unable to Create User on Bridge';
-              $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
-            });
-          } else {
+      MyHue.PortalDiscoverLocalBridges().then(function BridgesDiscovered() {
+        $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
+        MyHue.BridgeGetConfig().then(function BridgeConfigReceived() {
+          $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
+          MyHue.BridgeGetData().then(function BridgeDataReceived() {
             localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
             Status = 'Connected';
             $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
 //MyHue.BridgeDeleteUser(MyHue.Username); // Force buttonpress on next Startup TESTCODE.
-          }
+          }, function UnableToRetreiveBridgeData() {
+            Status = 'Please press connect button on the hue Bridge';
+            $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
+            MyHue.BridgeCreateUser('huewi').then(function BridegeUserCreated() {
+              Status = 'Connected';
+              $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
+            }, function UnableToCreateUseronBridge() {
+              Status = '.Please press connect button on the hue Bridge.';
+              $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
+            });  
+          });
         }, function UnableToRetreiveBridgeConfiguration() {
           Status = 'Unable to Retreive Bridge Configuration';
           $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
@@ -93,42 +107,25 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
         $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
       });
     } else {
+      Status = 'Using Cached Bridge IP';
+      $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
-      MyHue.BridgeGetData().then(function CheckWhitelisting() {
-        if (MyHue.BridgeUsernameWhitelisted) {
+      MyHue.BridgeGetConfig().then(function CachedBridgeConfigReceived() {
+        $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
+        MyHue.BridgeGetData().then(function CachedBridgeDataReceived() {
           Status = 'Connected';
           $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
-        } else {
+        }, function UnableToRetreiveCachedBridgeData() {
           delete localStorage.MyHueBridgeIP;
-          Status = 'Not Whitelisted anymore';
+          Status = 'Unable to Retreive Cached Bridge Data';
           $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
-        }
-      }, function ErrorGettingCachedBridgeData() {
+        });
+      }, function UnableToRetreiveCachedBridgeConfig() {
         delete localStorage.MyHueBridgeIP;
-        Status = 'Not found anymore';
+        Status = 'Unable to Retreive Cached Bridge Configuration';
         $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
       });
     }
-  }
-
-  function StatusHeartbeat() {
-    if (Status != 'Connected') {
-      ConnectToHueBridge();
-    } else {
-      if (PrevStatus != Status) {
-        $('#HueStatusbar').slideUp(750);
-      }
-      MyHue.BridgeGetData().then(function UpdateUI() {
-        $rootScope.$emit('huewiUpdate'); // huewiUpdate as in new data from Bridge.
-      }, function BridgeGetDataFailed() {
-        setTimeout(function() {
-          Status = 'Disconnected';
-          onPause();
-          onResume();
-        }, 1000);
-      });
-    }
-    PrevStatus = Status;
   }
 
 return {
