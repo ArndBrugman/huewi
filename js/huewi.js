@@ -82,6 +82,7 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
         $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
         MyHue.BridgeGetConfig().then(function BridgeConfigReceived() {
           $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
+//MyHue.BridgeIP = "127.0.0.1:8000"; // Test On SteveyO/Hue-Emulator  TESTCODE.
           MyHue.BridgeGetData().then(function BridgeDataReceived() {
             localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
             Status = 'Connected';
@@ -91,6 +92,7 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
             Status = 'Please press connect button on the hue Bridge';
             $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
             MyHue.BridgeCreateUser('huewi').then(function BridegeUserCreated() {
+              localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
               Status = 'Connected';
               $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
             }, function UnableToCreateUseronBridge() {
@@ -225,11 +227,14 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
 
   $rootScope.$on('huewiUpdate', function(event, data) {
     if (hueConnector.MyHue().GroupIds.length >0) {
-      $scope.Groups = _.toArray(hueConnector.MyHue().Groups);
-      $scope.Groups.unshift({'name': 'All available lights'});
-      _.each($scope.Groups, function(Group) {
-        Group.HTMLColor = StateToHTMLColor(Group.action);
-      });
+      $scope.Groups = [];
+      $scope.Groups[0] = {'name': 'All available lights'};
+      var GroupNr = 1;
+      for (var Key in hueConnector.MyHue().Groups) {
+        $scope.Groups[GroupNr] = hueConnector.MyHue().Groups[Key];
+        $scope.Groups[GroupNr].HTMLColor = StateToHTMLColor($scope.Groups[GroupNr].action);
+        GroupNr ++;
+      }
       $scope.$apply();
     }
   });
@@ -255,10 +260,13 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
 
   $rootScope.$on('huewiUpdate', function(event, data) {
     if (hueConnector.MyHue().LightIds.length >0) {
-      $scope.Lights = _.toArray(hueConnector.MyHue().Lights);
-      _.each($scope.Lights, function(Light) {
-        Light.HTMLColor = StateToHTMLColor(Light.state, Light.modelid);
-      });
+      $scope.Lights = [];
+      var LightNr = 0;
+      for (var Key in hueConnector.MyHue().Lights) {
+        $scope.Lights[LightNr] = hueConnector.MyHue().Lights[Key];
+        $scope.Lights[LightNr].HTMLColor = StateToHTMLColor($scope.Lights[LightNr].action);
+        LightNr ++;
+      }      
       $scope.$apply();
     }
   });
@@ -277,7 +285,6 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
   hueImage.src = 'img/hue.png';
   var ctImage = new Image();
   ctImage.src = 'img/ct.png';
-  var GroupArray = _.toArray(hueConnector.MyHue().Groups);
   $scope.Index = 0;
   $scope._Name = '';
   $scope.OrgName = $scope._Name;
@@ -335,17 +342,13 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
     hueConnector.MyHue().GroupSetBrightness($scope.Index, Brightness);
   });
 
-  $rootScope.$on('huewiUpdate', function(event, data) {
-    GroupArray = _.toArray(hueConnector.MyHue().Groups);
-    GroupArray.unshift({'name': 'All available lights'}); // Group 0 is All
-    $scope.$apply();
-  });
-
   $scope.$on('MenuUpdate', function(event, data) {
     $scope.Index = data;
-    if ($scope.Index < GroupArray.length)
-      $scope.OrgName = $scope._Name = GroupArray[$scope.Index].name;
-    else $scope.OrgName = $scope._Name = "Group" + $scope.Index;
+    if ($scope.Index === 0)
+      $scope.OrgName = $scope._Name = 'All Available Lights';
+    else if ($scope.Index <= hueConnector.MyHue().GroupIds.length)
+      $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].name;
+    //else $scope.OrgName = $scope._Name = "Group" + $scope.Index;
   });
 
   $scope.Name = function(NewName) { // Getter/Setter function
@@ -371,7 +374,6 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
   hueImage.src = 'img/hue.png';
   var ctImage = new Image();
   ctImage.src = 'img/ct.png';
-  var LightArray = _.toArray(hueConnector.MyHue().Lights);
   $scope.Index = 1;
   $scope._Name = '';
   $scope.OrgName = $scope._Name;
@@ -429,17 +431,11 @@ angular.module('huewi').controller('LightController', function($rootScope, $scop
     hueConnector.MyHue().LightSetBrightness($scope.Index, Brightness);
   });
 
-  $rootScope.$on('huewiUpdate', function(event, data) {
-    LightArray = _.toArray(hueConnector.MyHue().Lights);
-    LightArray.unshift({'name': 'Onebased index'}); // Light 0 doesn't exist
-    $scope.$apply();
-  });
-
   $scope.$on('MenuUpdate', function(event, data) {
     $scope.Index = data;
-    if ($scope.Index < LightArray.length)
-      $scope.OrgName = $scope._Name = LightArray[$scope.Index].name;
-    else $scope.OrgName = $scope._Name = "Light" + $scope.Index;
+    if ($scope.Index <= hueConnector.MyHue().LightIds.length)
+      $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[hueConnector.MyHue().LightGetId($scope.Index)].name;
+    //else $scope.OrgName = $scope._Name = "Light " + $scope.Index;
   });
 
   $scope.Name = function(NewName) { // Getter/Setter function
@@ -515,7 +511,24 @@ angular.module('huewi').controller('RulesController', function($rootScope, $scop
 
 (function () {
 
-  
+
+angular.module('huewi').filter('orderObjectBy', function() {
+  return function(items, field, reverse) {
+    var filtered = [];
+    for (var key in items) {
+      var item = items[key];
+      item['key'] = key;
+      filtered.push(item);
+    };
+    filtered.sort(function (a, b) {
+      return (a[field] > b[field] ? 1 : -1);
+    });
+    if(reverse) filtered.reverse();
+    return filtered;
+  };
+});
+
+
 angular.module('huewi').controller('BridgeController', function($rootScope, $scope, hueConnector) {
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
