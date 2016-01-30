@@ -264,7 +264,7 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
       var LightNr = 0;
       for (var Key in hueConnector.MyHue().Lights) {
         $scope.Lights[LightNr] = hueConnector.MyHue().Lights[Key];
-        $scope.Lights[LightNr].HTMLColor = StateToHTMLColor($scope.Lights[LightNr].action);
+        $scope.Lights[LightNr].HTMLColor = StateToHTMLColor($scope.Lights[LightNr].state);
         LightNr ++;
       }      
       $scope.$apply();
