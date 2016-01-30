@@ -111,6 +111,7 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
     } else {
       Status = 'Using Cached Bridge IP';
       $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
+      MyHue.PortalDiscoverLocalBridges(); // Parallel search for LocalBridges
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
       MyHue.BridgeGetConfig().then(function CachedBridgeConfigReceived() {
         $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
