@@ -111,6 +111,7 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
     } else {
       Status = 'Using Cached Bridge IP';
       $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
+      MyHue.PortalDiscoverLocalBridges(); // Parallel search for LocalBridges
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
       MyHue.BridgeGetConfig().then(function CachedBridgeConfigReceived() {
         $rootScope.$emit('huewiUpdate'); // huewiUpdate as Status Update
@@ -264,7 +265,7 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
       var LightNr = 0;
       for (var Key in hueConnector.MyHue().Lights) {
         $scope.Lights[LightNr] = hueConnector.MyHue().Lights[Key];
-        $scope.Lights[LightNr].HTMLColor = StateToHTMLColor($scope.Lights[LightNr].action);
+        $scope.Lights[LightNr].HTMLColor = StateToHTMLColor($scope.Lights[LightNr].state);
         LightNr ++;
       }      
       $scope.$apply();

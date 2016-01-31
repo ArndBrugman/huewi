@@ -191,6 +191,11 @@
     <div class='inlay content timebasedgradient'>
       <h3>Bridge</h3>
       <div ng-click="SetMenuItem('')">Close<br></div>
+      <strong>Local Brides</strong>
+      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges">
+        {{Value.internalipaddress}} : {{Value.id}}<br>
+      </div>
+      <br>
       <div>Bridge IP: {{MyHue.BridgeIP}}</div>
       <div>Bridge Name: {{MyHue.BridgeName}}</div>
       <div> {{Status}}</div>
@@ -198,7 +203,7 @@
         {{Value.key}} : {{Value.name}}<br>
         Created: {{Value['create date']}}, 
         LastUsed: {{Value['last use date']}}
-        <div ng-click="MyHue.BridgeDeleteUser(Value.key)">Delete this Key {{Value.key}}</div>
+        <div ng-click="MyHue.BridgeDeleteUser(Value.key)">Delete this Key</div>
       </div>
       <div ng-click="SetMenuItem('')"><br>Close</div>
     </div><!-- /inlay content -->
