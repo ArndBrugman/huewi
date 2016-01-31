@@ -67,9 +67,9 @@
     <div><br><br></div>
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Group' ng-controller='GroupController as GroupCtrl' ng-show='MenuItem === "Group"'>
+  <div class='overlay fading' id='GroupAndLight' ng-controller='GroupAndLightController as GroupCtrl' ng-show='MenuItem === "Group" || MenuItem === "Light"'>
     <div class='inlay content timebasedgradient'>
-      <h3>Group: {{OrgName}}</h3>
+      <h3>{{OrgName}}</h3>
       <div ng-click="SetMenuItem('')">Close<br></div>
       <section ng-controller="TabController as Tab">
         <ul class="nav nav-tabs">
@@ -79,58 +79,22 @@
         </ul>
         <div ng-show='TabIsSet(1)'>
           <div>
-            <canvas id='hueGroupCanvas' width=32 height=32 >It seems your device doesn't support the required HTML5 Canvas</canvas>
+            <canvas id='hueCanvas' width=32 height=32 >It seems your device doesn't support the required HTML5 Canvas</canvas>
           </div>
         </div>
         <div ng-show='TabIsSet(2)'>
-          <canvas id='ctGroupCanvas' width=32 height=32 >It seems your device doesn't support the required HTML5 Canvas</canvas>
+          <canvas id='ctCanvas' width=32 height=32 >It seems your device doesn't support the required HTML5 Canvas</canvas>
           <div>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 467); MyHue.GroupSetBrightness(Index, 144)">Relax</button>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 343); MyHue.GroupSetBrightness(Index, 240)">Reading</button>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 231); MyHue.GroupSetBrightness(Index, 219)">Concentrate</button>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetCT(Index, 156); MyHue.GroupSetBrightness(Index, 203)">Energize</button>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.GroupSetColortemperature(Index, 2500); MyHue.GroupSetBrightness(Index, 144)">Gold</button>
+            <button type="button" class="btn btn-sm" ng-click="Relax()">Relax</button>
+            <button type="button" class="btn btn-sm" ng-click="Reading()">Reading</button>
+            <button type="button" class="btn btn-sm" ng-click="Concentrate()">Concentrate</button>
+            <button type="button" class="btn btn-sm" ng-click="Energize()">Energize</button>
+            <button type="button" class="btn btn-sm" ng-click="GoldenHour()">Gold</button>
           </div>
         </div>
         <div ng-show='TabIsSet(3)'>
           <div></div>
-          <span>new GroupName: </span>
-          <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
-        </div>
-      </section>
-      <div ng-click="SetMenuItem('')"><br>Close</div>
-    </div><!-- /inlay content -->
-    <div><br><br></div>
-  </div><!-- /overlay -->
-
-  <div class='overlay fading' id='Light' ng-controller='LightController as LightCtrl' ng-show='MenuItem === "Light"'>
-    <div class='inlay content timebasedgradient'>
-      <h3>Light: {{OrgName}}</h3>
-      <div ng-click="SetMenuItem('')">Close<br></div>
-      <section ng-controller="TabController as Tab">
-        <ul class="nav nav-tabs">
-          <li role="presentation" ng-class="{ active:TabIsSet(1) }"><a href ng-click="SetTab(1)">Color</a></li>
-          <li role="presentation" ng-class="{ active:TabIsSet(2) }"><a href ng-click="SetTab(2)">Tone</a></li>
-          <li role="presentation" ng-class="{ active:TabIsSet(3) }"><a href ng-click="SetTab(3)">Details</a></li>
-        </ul>
-        <div ng-show='TabIsSet(1)'>
-          <div>
-            <canvas id='hueLightCanvas' width=32 height=32 >It seems your device doesn't support the required HTML5 Canvas</canvas>
-          </div>
-        </div>
-        <div ng-show='TabIsSet(2)'>
-          <canvas id='ctLightCanvas' width=32 height=32 >It seems your device doesn't support the required HTML5 Canvas</canvas>
-          <div>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 467); MyHue.LightSetBrightness(Index, 144)">Relax</button>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 343); MyHue.LightSetBrightness(Index, 240)">Reading</button>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 231); MyHue.LightSetBrightness(Index, 219)">Concentrate</button>
-            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetCT(Index, 156); MyHue.LightSetBrightness(Index, 203)">Energize</button> 
-            <button type="button" class="btn btn-sm" ng-click="MyHue.LightSetColortemperature(Index, 2500); MyHue.LightSetBrightness(Index, 144)">Gold</button> 
-          </div>
-        </div>
-        <div ng-show='TabIsSet(3)'>
-          <div></div>
-          <span>new LightName: </span>
+          <span>new Name: </span>
           <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
         </div>
       </section>
