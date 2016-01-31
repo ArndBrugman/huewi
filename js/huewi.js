@@ -286,15 +286,15 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
   $scope.OrgName = $scope._Name;
 
   hueImage.onload = function() {
-    $('#GroupAndLight').scope().Redraw();
+    $scope.Redraw();
   };
 
   ctImage.onload = function() {
-    $('#GroupAndLight').scope().Redraw();
+    $scope.Redraw();
   };
 
   $(window).resize(function(){
-    $('#GroupAndLight').scope().Redraw();
+    $scope.Redraw();
   });
 
   $scope.Redraw = function() {
