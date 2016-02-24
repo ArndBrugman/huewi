@@ -1,14 +1,19 @@
 <h3>Lights</h3>
 <div class="list-group">
   <div class="list-group-item" ng-repeat="Light in Lights" ng-class="{ grayed:!Light.state.reachable }">
-    <span left ng-click="SetMenuItem('Light', $index + 1)">{{Light.name}}</span>
-    <span ng-class="{ hidden:!Light.state.reachable }">
+    <div style='display:inline-block; width:29%' ng-click="SetMenuItem('Light', $index + 1)">
+      {{Light.name}}
+    </div>
+    <div style='display:inline-block; width:49%' >
+    <input id='LightSlider-{{$index}}' type='range' min='0' max='255' value='{{Light.state.bri}}' onchange='angular.element(this).scope().SetBrightness(this)'/>
+    </div>
+    <div style='display:inline-block; width:19%' class='right'ng-class="{ hidden:!Light.state.reachable }">
       <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff($index + 1);" ng-class="{ hidden:!Light.state.on }">
         <span class="glyphicon glyphicon-off" style="color:{{Light.HTMLColor}}" aria-hidden="true"></span>
       </button>
       <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOn($index + 1);" ng-class="{ hidden:Light.state.on }">
         <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
       </button>
-    </span>
+    </div>
   </div>
 </div>

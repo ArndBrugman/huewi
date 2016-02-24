@@ -177,12 +177,7 @@ angular.module('huewi').controller('MenuController', function($rootScope, $scope
       $('body').css('overflow', 'initial'); // Enable scrolling of the <Body>
     else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
 
-    if ($scope.MenuItem === 'Group')
-      hueConnector.MyHue().GroupAlertSelect(NewIndex);
-    if ($scope.MenuItem === 'Light')
-      hueConnector.MyHue().LightAlertSelect(NewIndex);
-    
-    $scope.$broadcast('MenuUpdate', NewIndex);
+    $scope.$broadcast('MenuUpdate', NewItem, NewIndex);
   };
 });
 
@@ -239,7 +234,13 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
       $scope.$apply();
     }
   });
- });
+
+  $scope.SetBrightness = function(target) {
+    var element = angular.element(target);
+    hueConnector.MyHue().GroupSetBrightness(parseInt(element[0].id.split('-')[1]), element[0].value);
+  };
+
+});
 
 
 })();
@@ -271,6 +272,12 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
       $scope.$apply();
     }
   });
+
+  $scope.SetBrightness = function(target) {
+    var element = angular.element(target);
+    hueConnector.MyHue().LightSetBrightness(1+parseInt(element[0].id.split('-')[1]), element[0].value);
+  };
+
 });
 
 
@@ -281,7 +288,7 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
 (function () {
 
   
-angular.module('huewi').controller('GroupController', function($rootScope, $scope, hueConnector) {
+angular.module('huewi').controller('GroupAndLightController', function($rootScope, $scope, hueConnector) {
   var hueImage = new Image();
   hueImage.src = 'img/hue.png';
   var ctImage = new Image();
@@ -291,21 +298,21 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
   $scope.OrgName = $scope._Name;
 
   hueImage.onload = function() {
-    $('#Group').scope().Redraw();
+    $scope.Redraw();
   };
 
   ctImage.onload = function() {
-    $('#Group').scope().Redraw();
+    $scope.Redraw();
   };
 
   $(window).resize(function(){
-    $('#Group').scope().Redraw();
+    $scope.Redraw();
   });
 
   $scope.Redraw = function() {
-    var hueCanvas = document.getElementById('hueGroupCanvas');
+    var hueCanvas = document.getElementById('hueCanvas');
     var hueContext = hueCanvas.getContext('2d');
-    var ctCanvas = document.getElementById('ctGroupCanvas');
+    var ctCanvas = document.getElementById('ctCanvas');
     var ctContext = ctCanvas.getContext('2d');
     // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
     if ($(window).width() > $(window).height()) {
@@ -324,126 +331,116 @@ angular.module('huewi').controller('GroupController', function($rootScope, $scop
     ctContext.drawImage(ctImage, 0, 0, ctCanvas.width, ctCanvas.height); // ReDraw
   };
 
-  $('#hueGroupCanvas').on('click', function(event) {
+  $('#hueCanvas').on('click', function(event) {
     var x = event.offsetX;
     var y = event.offsetY;
-    var HueContext = document.getElementById('hueGroupCanvas').getContext('2d');
+    var HueContext = document.getElementById('hueCanvas').getContext('2d');
     var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
-    hueConnector.MyHue().GroupSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    if ($scope.Item === 'Group') {
+      hueConnector.MyHue().GroupSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    } else if ($scope.Item === 'Light') {
+      hueConnector.MyHue().LightSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    }
   });
 
-  $('#ctGroupCanvas').on('click', function(event) { // 2000..6500
-    var ctGroupCanvas = document.getElementById('ctGroupCanvas');
+  $('#ctCanvas').on('click', function(event) { // 2000..6500
+    var ctGroupCanvas = document.getElementById('ctCanvas');
     var x = event.offsetX;
     var y = event.offsetY;
     var ColorTemperature = 2000 + (6500-2000)*(x/ctGroupCanvas.width);
     var Brightness = 255 - 255*(y/ctGroupCanvas.height);
-    hueConnector.MyHue().GroupSetColortemperature($scope.Index, ColorTemperature);
-    hueConnector.MyHue().GroupSetBrightness($scope.Index, Brightness);
+    if ($scope.Item === 'Group') {
+      hueConnector.MyHue().GroupSetColortemperature($scope.Index, ColorTemperature);
+      hueConnector.MyHue().GroupSetBrightness($scope.Index, Brightness);
+    } else if ($scope.Item === 'Light') {
+      hueConnector.MyHue().LightSetColortemperature($scope.Index, ColorTemperature);
+      hueConnector.MyHue().LightSetBrightness($scope.Index, Brightness);
+    }
   });
 
-  $scope.$on('MenuUpdate', function(event, data) {
-    $scope.Index = data;
-    if ($scope.Index === 0)
-      $scope.OrgName = $scope._Name = 'All Available Lights';
-    else if ($scope.Index <= hueConnector.MyHue().GroupIds.length)
-      $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].name;
-    //else $scope.OrgName = $scope._Name = "Group" + $scope.Index;
+  $scope.$on('MenuUpdate', function(event, NewItem, NewIndex) {
+    $scope.Item = NewItem;
+    $scope.Index = NewIndex;
+    
+    // AlertSelect -> Flash Once.
+    if ($scope.Item === 'Group')
+      hueConnector.MyHue().GroupAlertSelect($scope.Index);
+    if ($scope.Item === 'Light')
+      hueConnector.MyHue().LightAlertSelect($scope.Index);
+
+    if ($scope.Item === 'Group') {
+      if ($scope.Index === 0)
+        $scope.OrgName = $scope._Name = 'All Available Lights';
+      else if ($scope.Index <= hueConnector.MyHue().GroupIds.length)
+        $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].name;
+      //else $scope.OrgName = $scope._Name = "Group" + $scope.Index;
+    } else if ($scope.Item === 'Light') {
+      if ($scope.Index <= hueConnector.MyHue().LightIds.length)
+        $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[hueConnector.MyHue().LightGetId($scope.Index)].name;
+      //else $scope.OrgName = $scope._Name = "Light " + $scope.Index;
+    }
   });
 
+  $scope.Relax = function(NewName) {
+    if ($scope.Item === 'Group') {
+      MyHue.GroupSetCT($scope.Index, 467);
+      MyHue.GroupSetBrightness($scope.Index, 144);
+    } else if ($scope.Item === 'Light') {
+      MyHue.LightSetCT($scope.Index, 467);
+      MyHue.LightSetBrightness($scope.Index, 144);
+    }
+  }
+  
+  $scope.Reading = function(NewName) {
+    if ($scope.Item === 'Group') {
+      MyHue.GroupSetCT($scope.Index, 343);
+      MyHue.GroupSetBrightness($scope.Index, 240);
+    } else if ($scope.Item === 'Light') {
+      MyHue.LightSetCT($scope.Index, 343);
+      MyHue.LightSetBrightness($scope.Index, 240);
+    }
+  }
+  
+  $scope.Concentrate = function(NewName) {
+    if ($scope.Item === 'Group') {
+      MyHue.GroupSetCT($scope.Index, 231);
+      MyHue.GroupSetBrightness($scope.Index, 219);
+    } else if ($scope.Item === 'Light') {
+      MyHue.LightSetCT($scope.Index, 231);
+      MyHue.LightSetBrightness($scope.Index, 219); 
+    }
+  }
+  
+  $scope.Energize = function(NewName) {
+    if ($scope.Item === 'Group') {
+      MyHue.GroupSetCT($scope.Index, 156);
+      MyHue.GroupSetBrightness($scope.Index, 203);
+    } else if ($scope.Item === 'Light') {
+      MyHue.LightSetCT($scope.Index, 156);
+      MyHue.LightSetBrightness($scope.Index, 203);
+    }
+  }
+  
+  $scope.GoldenHour = function(NewName) {
+    if ($scope.Item === 'Group') {
+      MyHue.GroupSetColortemperature($scope.Index, 2500);
+      MyHue.GroupSetBrightness($scope.Index, 144);
+    } else if ($scope.Item === 'Light') {
+      MyHue.LightSetColortemperature($scope.Index, 2500);
+      MyHue.LightSetBrightness($scope.Index, 144);
+    }
+  }
+  
   $scope.Name = function(NewName) { // Getter/Setter function
     if (angular.isDefined(NewName))
-    {
+    { // Set
       $scope._Name = NewName;
-      hueConnector.MyHue().GroupSetName($scope.Index ,$scope._Name);
-    }
-    return $scope._Name;
-  };
-});
-
-
-})();
-
-
-
-(function () {
-
-  
-angular.module('huewi').controller('LightController', function($rootScope, $scope, hueConnector) {
-  var hueImage = new Image();
-  hueImage.src = 'img/hue.png';
-  var ctImage = new Image();
-  ctImage.src = 'img/ct.png';
-  $scope.Index = 1;
-  $scope._Name = '';
-  $scope.OrgName = $scope._Name;
-  
-  hueImage.onload = function() {
-    $('#Light').scope().Redraw();
-  };
-
-  ctImage.onload = function() {
-    $('#Light').scope().Redraw();
-  };
-
-  $(window).resize(function(){
-   $('#Light').scope().Redraw();
-  });
-
-  $scope.Redraw = function() {
-    var hueCanvas = document.getElementById('hueLightCanvas');
-    var hueContext = hueCanvas.getContext('2d');
-    var ctCanvas = document.getElementById('ctLightCanvas');
-    var ctContext = ctCanvas.getContext('2d');
-    // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
-    if ($(window).width() > $(window).height()) {
-      hueCanvas.width = 0.45 * $(window).width(); // Landscape
-      if (hueCanvas.width > 0.75 * $(window).height())
-        hueCanvas.width = 0.75 * $(window).height();
-    } else {
-      hueCanvas.width = 0.45 * $(window).height(); // Portrait
-      if (hueCanvas.width > 0.75 * $(window).width())
-        hueCanvas.width = 0.75 * $(window).width();
-    }
-    hueCanvas.height = hueCanvas.width;
-    hueContext.drawImage(hueImage, 0, 0, hueCanvas.width, hueCanvas.height); // ReDraw
-    ctCanvas.width = hueCanvas.width;
-    ctCanvas.height = ctCanvas.width / 2;
-    ctContext.drawImage(ctImage, 0, 0, ctCanvas.width, ctCanvas.height); // ReDraw
-  };
-
-  $('#hueLightCanvas').on('click', function(event) {
-    var x = event.offsetX;
-    var y = event.offsetY;
-    var HueContext = document.getElementById('hueLightCanvas').getContext('2d');
-    var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
-    var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
-    hueConnector.MyHue().LightSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
-  });
-
-  $('#ctLightCanvas').on('click', function(event) { // 2000..6500
-    var ctLightCanvas = document.getElementById('ctLightCanvas');
-    var x = event.offsetX;
-    var y = event.offsetY;
-    var ColorTemperature = 2000 + (6500-2000)*(x/ctLightCanvas.width);
-    var Brightness = 255 - 255*(y/ctLightCanvas.height);
-    hueConnector.MyHue().LightSetColortemperature($scope.Index, ColorTemperature);
-    hueConnector.MyHue().LightSetBrightness($scope.Index, Brightness);
-  });
-
-  $scope.$on('MenuUpdate', function(event, data) {
-    $scope.Index = data;
-    if ($scope.Index <= hueConnector.MyHue().LightIds.length)
-      $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[hueConnector.MyHue().LightGetId($scope.Index)].name;
-    //else $scope.OrgName = $scope._Name = "Light " + $scope.Index;
-  });
-
-  $scope.Name = function(NewName) { // Getter/Setter function
-    if (angular.isDefined(NewName))
-    {
-      $scope._Name = NewName;
-      hueConnector.MyHue().LightSetName($scope.Index ,$scope._Name);
+      if ($scope.Item === 'Group') {
+        hueConnector.MyHue().GroupSetName($scope.Index ,$scope._Name);
+      } else if ($scope.Item === 'Light') {
+        hueConnector.MyHue().LightSetName($scope.Index ,$scope._Name);
+      }
     }
     return $scope._Name;
   };
