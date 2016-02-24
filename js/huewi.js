@@ -234,7 +234,13 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
       $scope.$apply();
     }
   });
- });
+
+  $scope.SetBrightness = function(target) {
+    var element = angular.element(target);
+    hueConnector.MyHue().GroupSetBrightness(parseInt(element[0].id.split('-')[1]), element[0].value);
+  };
+
+});
 
 
 })();
@@ -266,6 +272,12 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
       $scope.$apply();
     }
   });
+
+  $scope.SetBrightness = function(target) {
+    var element = angular.element(target);
+    hueConnector.MyHue().LightSetBrightness(1+parseInt(element[0].id.split('-')[1]), element[0].value);
+  };
+
 });
 
 
