@@ -235,9 +235,11 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
     }
   });
 
-  $scope.SetBrightness = function(target) {
-    var element = angular.element(target);
-    hueConnector.MyHue().GroupSetBrightness(parseInt(element[0].id.split('-')[1]), element[0].value);
+  $scope.SetBrightness = function(DomElement) {
+    var Element = angular.element(DomElement);
+    var Name = Element.attr('id');
+    var GroupNr = parseInt(Name.split('-')[1]);
+    hueConnector.MyHue().GroupSetBrightness(GroupNr, Element.prop('value'));
   };
 
 });
@@ -273,9 +275,11 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
     }
   });
 
-  $scope.SetBrightness = function(target) {
-    var element = angular.element(target);
-    hueConnector.MyHue().LightSetBrightness(1+parseInt(element[0].id.split('-')[1]), element[0].value);
+  $scope.SetBrightness = function(DomElement) {
+    var Element = angular.element(DomElement);
+    var Name = Element.attr('id');
+    var LightNr = 1+parseInt(Name.split('-')[1]);
+    hueConnector.MyHue().LightSetBrightness(LightNr, Element.prop('value'));
   };
 
 });
