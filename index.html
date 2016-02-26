@@ -73,18 +73,18 @@
       <div ng-click="SetMenuItem('')">Close<br></div>
       <section ng-controller="TabController as Tab">
         <ul class="nav nav-tabs">
-          <li role="presentation" ng-class="{ active:TabIsSet(1) }"><a href ng-click="SetTab(1)">Tone</a></li>
-          <li role="presentation" ng-class="{ active:TabIsSet(2) }"><a href ng-click="SetTab(2)">Color</a></li>
-          <li role="presentation" ng-class="{ active:TabIsSet(3) }"><a href ng-click="SetTab(3)">Details</a></li>
+          <li role="presentation" style='width:19%' ng-class="{ active:TabIsSet(1) }"><a href ng-click="SetTab(1)">Tone</a></li>
+          <li role="presentation" style='width:19%' ng-class="{ active:TabIsSet(2) }"><a href ng-click="SetTab(2)">Color</a></li>
+          <li role="presentation" style='width:19%' ng-class="{ active:TabIsSet(3) }"><a href ng-click="SetTab(3)">Settings</a></li>
         </ul>
         <div ng-show='TabIsSet(1)'>
           <canvas id='ctCanvas' width=32 height=32 >It seems your device doesn't support the required HTML5 Canvas</canvas>
           <div>
-            <button type="button" class="btn btn-sm" ng-click="Relax()">Relax</button>
-            <button type="button" class="btn btn-sm" ng-click="Reading()">Reading</button>
-            <button type="button" class="btn btn-sm" ng-click="Concentrate()">Concentrate</button>
-            <button type="button" class="btn btn-sm" ng-click="Energize()">Energize</button>
-            <button type="button" class="btn btn-sm" ng-click="GoldenHour()">Gold</button>
+            <button type="button" class="btn btn-sm preset" ng-click="Relax()">Relax</button>
+            <button type="button" class="btn btn-sm preset" ng-click="Reading()">Reading</button>
+            <button type="button" class="btn btn-sm preset" ng-click="Concentrate()">Concentrate</button>
+            <button type="button" class="btn btn-sm preset" ng-click="Energize()">Energize</button>
+            <button type="button" class="btn btn-sm preset" ng-click="GoldenHour()">Gold</button>
           </div>
         </div>
         <div ng-show='TabIsSet(2)'>
@@ -97,7 +97,7 @@
           <span>new Name: </span>
           <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }" class='timebasedgradient'>
           <div ng-show='MenuItem === "Group"' >
-            Edit Group...
+            Edit Group... Comes Here ;)
           </div>
         </div>
       </section>

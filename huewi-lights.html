@@ -5,9 +5,9 @@
       {{Light.name}}
     </div>
     <div style='display:inline-block; width:49%' >
-    <input id='LightSlider-{{$index}}' type='range' min='0' max='255' value='{{Light.state.bri}}' onchange='angular.element(this).scope().SetBrightness(this)'/>
+    <input id='LightSlider-{{$index}}' type='range' min='0' max='255' ng-model='Light.state.bri' onchange='angular.element(this).scope().SetBrightness(this)'/>
     </div>
-    <div style='display:inline-block; width:19%' class='right'ng-class="{ hidden:!Light.state.reachable }">
+    <div style='display:inline-block; width:19%' class='right' ng-class="{ hidden:!Light.state.reachable }">
       <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff($index + 1);" ng-class="{ hidden:!Light.state.on }">
         <span class="glyphicon glyphicon-off" style="color:{{Light.HTMLColor}}" aria-hidden="true"></span>
       </button>

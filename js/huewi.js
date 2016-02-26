@@ -171,14 +171,21 @@ angular.module('huewi').controller('MenuController', function($rootScope, $scope
   $scope.MenuItem = 'Connecting';
   
   $scope.SetMenuItem = function(NewItem, NewIndex) {
-
     $scope.MenuItem = NewItem;
     if ($scope.MenuItem === '') // No Overlay selected
       $('body').css('overflow', 'initial'); // Enable scrolling of the <Body>
     else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
-
     $scope.$broadcast('MenuUpdate', NewItem, NewIndex);
   };
+
+  document.onkeyup = function(Event) {
+    console.log(Event.keyCode);
+    if ((Event.keyCode === 27) || (Event.keyCode === 13)) {
+      angular.element("#Menu").scope().MenuItem = '';
+      angular.element("#Menu").scope().$broadcast('MenuUpdate', '', Event.keyCode);
+    }
+  }
+
 });
 
 
@@ -364,9 +371,14 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
   });
 
   $scope.$on('MenuUpdate', function(event, NewItem, NewIndex) {
+    // Is Ecape Hit?
+    if ((NewItem === '') && (NewIndex ===27)) {
+      if ($scope.Name() != $scope.OrgName)
+        $scope.Name($scope.OrgName);
+    }
+ 
     $scope.Item = NewItem;
     $scope.Index = NewIndex;
-    
     // AlertSelect -> Flash Once.
     if ($scope.Item === 'Group')
       hueConnector.MyHue().GroupAlertSelect($scope.Index);
@@ -448,6 +460,7 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
     }
     return $scope._Name;
   };
+
 });
 
 
@@ -534,7 +547,7 @@ angular.module('huewi').filter('orderObjectBy', function() {
 angular.module('huewi').controller('BridgeController', function($rootScope, $scope, hueConnector) {
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.$apply();
-  });
+  });  
 });
 
 
