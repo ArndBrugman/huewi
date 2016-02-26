@@ -84,6 +84,9 @@ button, .btn {
   .hideonportrait {
     display:all;
   }
+  .preset {
+    width: 19%;
+  }
 }
 @media screen and (orientation:portrait) {
   .container {
@@ -93,6 +96,9 @@ button, .btn {
   }
   .hideonportrait {
     display:none;
+  }
+  .preset {
+    width: 32%;
   }
 }
 .overlay {

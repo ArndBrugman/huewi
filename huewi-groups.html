@@ -5,7 +5,7 @@
     	{{Group.name}}
     </div>
     <div style='display:inline-block; width:49%' >
-    <input id='GroupSlider-{{$index}}' type='range' min='0' max='255' value='{{Group.action.bri}}' onchange='angular.element(this).scope().SetBrightness(this)'/>
+    <input id='GroupSlider-{{$index}}' type='range' min='0' max='255' ng-model='Group.action.bri' onchange='angular.element(this).scope().SetBrightness(this)'/>
     </div>
     <div style='display:inline-block; width:19%' class='right'>
     <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff($index);" ng-class="{ hidden: !((Group.action.on) || ($index == 0)) }">
