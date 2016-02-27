@@ -179,7 +179,7 @@ angular.module('huewi').controller('MenuController', function($rootScope, $scope
   };
 
   document.onkeyup = function(Event) {
-    console.log(Event.keyCode);
+    // Escape & Enter will close open Overlays.
     if ((Event.keyCode === 27) || (Event.keyCode === 13)) {
       angular.element("#Menu").scope().MenuItem = '';
       angular.element("#Menu").scope().$broadcast('MenuUpdate', '', Event.keyCode);
@@ -227,14 +227,22 @@ angular.module('huewi').directive("huewiGroups", function() {
 
 angular.module('huewi').controller('GroupsController', function($rootScope, $scope, hueConnector) {
   $scope.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
-
+  $scope.Active = -1;
+  $scope.Cache = [];
+  $scope.UpdateScheduled = false;
+  
   $rootScope.$on('huewiUpdate', function(event, data) {
     if (hueConnector.MyHue().GroupIds.length >0) {
+      if ($scope.Active >= 0) // Cache Active
+        $scope.Cache = $scope.Groups[$scope.Active];
       $scope.Groups = [];
       $scope.Groups[0] = {'name': 'All available lights'};
       var GroupNr = 1;
       for (var Key in hueConnector.MyHue().Groups) {
-        $scope.Groups[GroupNr] = hueConnector.MyHue().Groups[Key];
+        if (GroupNr !== $scope.Active)
+          $scope.Groups[GroupNr] = hueConnector.MyHue().Groups[Key];
+        else
+          $scope.Groups[GroupNr] = $scope.Cache; // Use Cached Active
         $scope.Groups[GroupNr].HTMLColor = StateToHTMLColor($scope.Groups[GroupNr].action);
         GroupNr ++;
       }
@@ -242,11 +250,19 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
     }
   });
 
-  $scope.SetBrightness = function(DomElement) {
-    var Element = angular.element(DomElement);
-    var Name = Element.attr('id');
-    var GroupNr = parseInt(Name.split('-')[1]);
-    hueConnector.MyHue().GroupSetBrightness(GroupNr, Element.prop('value'));
+  $scope.SetActive = function(GroupNr) {
+    $scope.Active = GroupNr;
+  };
+
+  $scope.SetBrightness = function(GroupNr) {
+    if ($scope.UpdateScheduled === false)
+    { 
+      $scope.UpdateScheduled = true;
+      setTimeout(function(){
+        hueConnector.MyHue().GroupSetBrightness(GroupNr, $scope.Groups[GroupNr].action.bri);
+        $scope.UpdateScheduled = false;
+      }, 200);
+    }
   };
 
 });
@@ -268,13 +284,21 @@ angular.module('huewi').directive("huewiLights", function() {
 
 angular.module('huewi').controller('LightsController', function($rootScope, $scope, hueConnector) {
   $scope.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
+  $scope.Active = -1;
+  $scope.Cache = [];
+  $scope.UpdateScheduled = false;
 
   $rootScope.$on('huewiUpdate', function(event, data) {
     if (hueConnector.MyHue().LightIds.length >0) {
+      if ($scope.Active >= 0) // Cache Active
+        $scope.Cache = $scope.Lights[$scope.Active];
       $scope.Lights = [];
       var LightNr = 0;
       for (var Key in hueConnector.MyHue().Lights) {
-        $scope.Lights[LightNr] = hueConnector.MyHue().Lights[Key];
+        if (LightNr !== $scope.Active)
+          $scope.Lights[LightNr] = hueConnector.MyHue().Lights[Key];
+        else
+          $scope.Lights[LightNr] = $scope.Cache; // Use Cached Active
         $scope.Lights[LightNr].HTMLColor = StateToHTMLColor($scope.Lights[LightNr].state);
         LightNr ++;
       }      
@@ -282,11 +306,19 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
     }
   });
 
-  $scope.SetBrightness = function(DomElement) {
-    var Element = angular.element(DomElement);
-    var Name = Element.attr('id');
-    var LightNr = 1+parseInt(Name.split('-')[1]);
-    hueConnector.MyHue().LightSetBrightness(LightNr, Element.prop('value'));
+  $scope.SetActive = function(LightNr) {
+    $scope.Active = LightNr;
+  };
+
+  $scope.SetBrightness = function(LightNr) {
+    if ($scope.UpdateScheduled === false)
+    { 
+      $scope.UpdateScheduled = true;
+      setTimeout(function(){
+        hueConnector.MyHue().LightSetBrightness(LightNr + 1, $scope.Lights[LightNr].state.bri);
+        $scope.UpdateScheduled = false;
+      }, 200);
+    }
   };
 
 });
@@ -371,8 +403,8 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
   });
 
   $scope.$on('MenuUpdate', function(event, NewItem, NewIndex) {
-    // Is Ecape Hit?
-    if ((NewItem === '') && (NewIndex ===27)) {
+    // Is Ecape Hit? Reset Name to OrgName
+    if ((NewItem === '') && (NewIndex === 27)) {
       if ($scope.Name() != $scope.OrgName)
         $scope.Name($scope.OrgName);
     }
