@@ -178,11 +178,22 @@ angular.module('huewi').controller('MenuController', function($rootScope, $scope
     $scope.$broadcast('MenuUpdate', NewItem, NewIndex);
   };
 
-  document.onkeyup = function(Event) {
-    // Escape & Enter will close open Overlays.
-    if ((Event.keyCode === 27) || (Event.keyCode === 13)) {
+  document.addEventListener('backbutton', function(event) { // Cordova/PhoneGap only.
+    if (angular.element("#Menu").scope().MenuItem !== '') {
       angular.element("#Menu").scope().MenuItem = '';
-      angular.element("#Menu").scope().$broadcast('MenuUpdate', '', Event.keyCode);
+      angular.element("#Menu").scope().$broadcast('MenuUpdate', '', 27);
+      event.preventDefault();
+    }
+  });
+
+  document.onkeyup = function(event) {
+    if (angular.element("#Menu").scope().MenuItem !== '') {
+      // Escape & Enter will close open Overlays.
+      if ((event.keyCode === 27) || (event.keyCode === 13)) {
+        angular.element("#Menu").scope().MenuItem = '';
+        angular.element("#Menu").scope().$broadcast('MenuUpdate', '', event.keyCode);
+        event.preventDefault();
+      }
     }
   }
 
@@ -358,15 +369,9 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
     var ctCanvas = document.getElementById('ctCanvas');
     var ctContext = ctCanvas.getContext('2d');
     // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
-    if ($(window).width() > $(window).height()) {
-      hueCanvas.width = 0.45 * $(window).width(); // Landscape
-      if (hueCanvas.width > 0.75 * $(window).height())
-        hueCanvas.width = 0.75 * $(window).height();
-    } else {
-      hueCanvas.width = 0.45 * $(window).height(); // Portrait
-      if (hueCanvas.width > 0.75 * $(window).width())
-        hueCanvas.width = 0.75 * $(window).width();
-    }
+    hueCanvas.width = 0.35 * $(window).width();
+    if (hueCanvas.width > 0.75 * $(window).height())
+      hueCanvas.width = 0.75 * $(window).height();
     hueCanvas.height = hueCanvas.width;
     hueContext.drawImage(hueImage, 0, 0, hueCanvas.width, hueCanvas.height); // ReDraw
     ctCanvas.width = hueCanvas.width;
@@ -473,10 +478,10 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
   $scope.GoldenHour = function(NewName) {
     if ($scope.Item === 'Group') {
       MyHue.GroupSetColortemperature($scope.Index, 2500);
-      MyHue.GroupSetBrightness($scope.Index, 144);
+      MyHue.GroupSetBrightness($scope.Index, 125);
     } else if ($scope.Item === 'Light') {
       MyHue.LightSetColortemperature($scope.Index, 2500);
-      MyHue.LightSetBrightness($scope.Index, 144);
+      MyHue.LightSetBrightness($scope.Index, 125);
     }
   }
   
