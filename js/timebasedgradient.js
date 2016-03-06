@@ -1,67 +1,67 @@
 function TimeBasedGradientUpdate() {
 
   var timebasedgradients = [ // from http://codepen.io/zessx/pen/rDEAl
-    "linear-gradient(to bottom, #00000c 0%,#00000c 0%)",
-    "linear-gradient(to bottom, #020111 85%,#191621 100%)",
-    "linear-gradient(to bottom, #020111 60%,#20202c 100%)",
-    "linear-gradient(to bottom, #020111 10%,#3a3a52 100%)",
-    "linear-gradient(to bottom, #20202c 0%,#515175 100%)",
-    "linear-gradient(to bottom, #40405c 0%,#6f71aa 80%,#8a76ab 100%)",
-    "linear-gradient(to bottom, #4a4969 0%,#7072ab 50%,#cd82a0 100%)",
-    "linear-gradient(to bottom, #757abf 0%,#8583be 60%,#eab0d1 100%)",
-    "linear-gradient(to bottom, #82addb 0%,#ebb2b1 100%)",
-    "linear-gradient(to bottom, #94c5f8 1%,#a6e6ff 70%,#b1b5ea 100%)",
-    "linear-gradient(to bottom, #b7eaff 0%,#94dfff 100%)",
-    "linear-gradient(to bottom, #9be2fe 0%,#67d1fb 100%)",
-    "linear-gradient(to bottom, #90dffe 0%,#38a3d1 100%)",
-    "linear-gradient(to bottom, #57c1eb 0%,#246fa8 100%)",
-    "linear-gradient(to bottom, #2d91c2 0%,#1e528e 100%)",
-    "linear-gradient(to bottom, #2473ab 0%,#1e528e 70%,#5b7983 100%)",
-    "linear-gradient(to bottom, #1e528e 0%,#265889 50%,#9da671 100%)",
-    "linear-gradient(to bottom, #1e528e 0%,#728a7c 50%,#e9ce5d 100%)",
-    "linear-gradient(to bottom, #154277 0%,#576e71 30%,#e1c45e 70%,#b26339 100%)",
-    "linear-gradient(to bottom, #163c52 0%,#4f4f47 30%,#c5752d 60%,#b7490f 80%,#2f1107 100%)",
-    "linear-gradient(to bottom, #071b26 0%,#071b26 30%,#8a3b12 80%,#240e03 100%)",
-    "linear-gradient(to bottom, #010a10 30%,#59230b 80%,#2f1107 100%)",
-    "linear-gradient(to bottom, #090401 50%,#4b1d06 100%)",
-    "linear-gradient(to bottom, #00000c 80%,#150800 100%)"
+    "linear-gradient(to bottom, rgba(0, 0, 12, 0.80) 0%, rgba(0, 0, 12, 0.80) 0%)",
+    "linear-gradient(to bottom, rgba(2, 1, 17, 0.80) 85%, rgba(25, 22, 33, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(2, 1, 17, 0.80) 60%, rgba(32, 32, 44, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(2, 1, 17, 0.80) 10%, rgba(58, 58, 82, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(32, 32, 44, 0.80) 0%, rgba(81, 81, 117, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(64, 64, 92, 0.80) 0%, rgba(111, 113, 170, 0.80) 80%, rgba(138, 118, 171, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(74, 73, 105, 0.80) 0%, rgba(112, 114, 171, 0.80) 50%, rgba(205, 130, 160, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(117, 122, 191, 0.80) 0%, rgba(133, 131, 190, 0.80) 60%, rgba(234, 176, 209, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(130, 173, 219, 0.80) 0%, rgba(235, 178, 177, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(148, 197, 248, 0.80) 1%, rgba(166, 230, 255, 0.80) 70%, rgba(177, 181, 234, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(183, 234, 255, 0.80) 0%, rgba(148, 223, 255, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(155, 226, 254, 0.80) 0%, rgba(103, 209, 251, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(144, 223, 254, 0.80) 0%, rgba(56, 163, 209, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(87, 193, 235, 0.80) 0%, rgba(36, 111, 168, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(45, 145, 194, 0.80) 0%, rgba(30, 82, 142, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(36, 115, 171, 0.80) 0%, rgba(30, 82, 142, 0.80) 70%, rgba(91, 121, 131, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(30, 82, 142, 0.80) 0%, rgba(38, 88, 137, 0.80) 50%, rgba(157, 166, 113, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(30, 82, 142, 0.80) 0%, rgba(114, 138, 124, 0.80) 50%, rgba(233, 206, 93, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(21, 66, 119, 0.80) 0%, rgba(87, 110, 113, 0.80) 30%, rgba(225, 196, 94, 0.80) 70%, rgba(178, 99, 57, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(22, 60, 82, 0.80) 0%, rgba(79, 79, 71, 0.80) 30%, rgba(197, 117, 45, 0.80) 60%, rgba(183, 73, 15, 0.80) 80%, rgba(47, 17, 7, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(7, 27, 38, 0.80) 0%, rgba(7, 27, 38, 0.80) 30%, rgba(138, 59, 18, 0.80) 80%, rgba(36, 14, 3, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(1, 10, 16, 0.80) 30%, rgba(89, 35, 11, 0.80) 80%, rgba(47, 17, 7, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(9, 4, 1, 0.80) 50%, rgba(75, 29, 6, 0.80) 100%)",
+    "linear-gradient(to bottom, rgba(0, 0, 12, 0.80) 80%, rgba(21, 8, 0, 0.80) 100%)"
   ];
 
   var timebasedcolors = [
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
-    "#faf0e6",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
+    "rgba(250, 240, 230, 0.85)",
   ];
 
   var index = new Date().getHours();
-  var timebasedgradient = timebasedgradients[index%24] +' no-repeat left top fixed ';
+  var timebasedgradient = timebasedgradients[index%24];
 
-  $(".timebasedgradient").css("background", timebasedgradient);
-  //$(".timebasedgradient").css("background-image:", timebasedgradients[index]);
-  //$(".timebasedgradient").css("background-image:", "-webkit-" + timebasedgradients[index]);
-  //$(".timebasedgradient").css("background-image:", "-moz-" + timebasedgradients[index]);
-  //$(".timebasedgradient").css("background-image:", "-o-background: " + timebasedgradients[index]);
+  $(".timebasedgradient").css("background-image", timebasedgradient);
+  //$(".timebasedgradient").css("background-image", timebasedgradients[index]);
+  //$(".timebasedgradient").css("background-image", "-webkit-" + timebasedgradients[index]);
+  //$(".timebasedgradient").css("background-image", "-moz-" + timebasedgradients[index]);
+  //$(".timebasedgradient").css("background-image", "-o-background: " + timebasedgradients[index]);
 
   $(".timebasedgradient").css("color", timebasedcolors[index%24]);  
 }
