@@ -154,7 +154,7 @@ angular.module('huewi').controller('HueStatusController', function($rootScope, $
 window.MyHue = hueConnector.MyHue(); // For Debugging TESTCODE
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.Status = hueConnector.Status();
-    $scope.$apply(); 
+    $scope.$apply();
   });
 
 });
@@ -178,11 +178,24 @@ angular.module('huewi').controller('MenuController', function($rootScope, $scope
     $scope.$broadcast('MenuUpdate', NewItem, NewIndex);
   };
 
-  document.onkeyup = function(Event) {
-    // Escape & Enter will close open Overlays.
-    if ((Event.keyCode === 27) || (Event.keyCode === 13)) {
+  document.addEventListener('backbutton', function(event) { // Cordova/PhoneGap only.
+    if (angular.element("#Menu").scope().MenuItem !== '') {
       angular.element("#Menu").scope().MenuItem = '';
-      angular.element("#Menu").scope().$broadcast('MenuUpdate', '', Event.keyCode);
+      angular.element("#Menu").scope().$broadcast('MenuUpdate', '', 27);
+      event.preventDefault();
+    }
+  });
+
+  document.onkeyup = function(event) {
+    if (angular.element("#Menu").scope().MenuItem !== '') {
+      // Escape & Enter will close open Overlays.
+      if ((event.keyCode === 27) || (event.keyCode === 13)) {
+        angular.element("#Menu").scope().MenuItem = '';
+        angular.element("#Menu").scope().$broadcast('MenuUpdate', '', event.keyCode);
+        event.preventDefault();
+      }
+      if (event.keyCode === 27)
+        $('body').trigger('click'); // Close navdrawer
     }
   }
 
@@ -226,7 +239,7 @@ angular.module('huewi').directive("huewiGroups", function() {
 });
 
 angular.module('huewi').controller('GroupsController', function($rootScope, $scope, hueConnector) {
-  $scope.Groups = [{'name': 'All available lights', HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
+  $scope.Groups = [{'name': 'All available lights', type: "LightGroup", HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
   $scope.Active = -1;
   $scope.Cache = [];
   $scope.UpdateScheduled = false;
@@ -236,7 +249,7 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
       if ($scope.Active >= 0) // Cache Active
         $scope.Cache = $scope.Groups[$scope.Active];
       $scope.Groups = [];
-      $scope.Groups[0] = {'name': 'All available lights'};
+      $scope.Groups[0] = {'name': 'All available lights', type: "LightGroup", HTMLColor: "#ffcc88"};
       var GroupNr = 1;
       for (var Key in hueConnector.MyHue().Groups) {
         if (GroupNr !== $scope.Active)
@@ -358,15 +371,9 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
     var ctCanvas = document.getElementById('ctCanvas');
     var ctContext = ctCanvas.getContext('2d');
     // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
-    if ($(window).width() > $(window).height()) {
-      hueCanvas.width = 0.45 * $(window).width(); // Landscape
-      if (hueCanvas.width > 0.75 * $(window).height())
-        hueCanvas.width = 0.75 * $(window).height();
-    } else {
-      hueCanvas.width = 0.45 * $(window).height(); // Portrait
-      if (hueCanvas.width > 0.75 * $(window).width())
-        hueCanvas.width = 0.75 * $(window).width();
-    }
+    hueCanvas.width = 0.35 * $(window).width();
+    if (hueCanvas.width > 0.75 * $(window).height())
+      hueCanvas.width = 0.75 * $(window).height();
     hueCanvas.height = hueCanvas.width;
     hueContext.drawImage(hueImage, 0, 0, hueCanvas.width, hueCanvas.height); // ReDraw
     ctCanvas.width = hueCanvas.width;
@@ -407,27 +414,28 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
     if ((NewItem === '') && (NewIndex === 27)) {
       if ($scope.Name() != $scope.OrgName)
         $scope.Name($scope.OrgName);
-    }
- 
-    $scope.Item = NewItem;
-    $scope.Index = NewIndex;
-    // AlertSelect -> Flash Once.
-    if ($scope.Item === 'Group')
-      hueConnector.MyHue().GroupAlertSelect($scope.Index);
-    if ($scope.Item === 'Light')
-      hueConnector.MyHue().LightAlertSelect($scope.Index);
+    } else {
+      $scope.Item = NewItem;
+      $scope.Index = NewIndex;
+      // AlertSelect -> Flash Once.
+      if ($scope.Item === 'Group')
+        hueConnector.MyHue().GroupAlertSelect($scope.Index);
+      if ($scope.Item === 'Light')
+        hueConnector.MyHue().LightAlertSelect($scope.Index);
 
-    if ($scope.Item === 'Group') {
-      if ($scope.Index === 0)
-        $scope.OrgName = $scope._Name = 'All Available Lights';
-      else if ($scope.Index <= hueConnector.MyHue().GroupIds.length)
-        $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].name;
-      //else $scope.OrgName = $scope._Name = "Group" + $scope.Index;
-    } else if ($scope.Item === 'Light') {
-      if ($scope.Index <= hueConnector.MyHue().LightIds.length)
-        $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[hueConnector.MyHue().LightGetId($scope.Index)].name;
-      //else $scope.OrgName = $scope._Name = "Light " + $scope.Index;
+      if ($scope.Item === 'Group') {
+        if ($scope.Index === 0)
+          $scope.OrgName = $scope._Name = 'All Available Lights';
+        else if ($scope.Index <= hueConnector.MyHue().GroupIds.length)
+          $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].name;
+        //else $scope.OrgName = $scope._Name = "Group" + $scope.Index;
+      } else if ($scope.Item === 'Light') {
+        if ($scope.Index <= hueConnector.MyHue().LightIds.length)
+          $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[hueConnector.MyHue().LightGetId($scope.Index)].name;
+        //else $scope.OrgName = $scope._Name = "Light " + $scope.Index;
+      }
     }
+    $scope.$apply();
   });
 
   $scope.Relax = function(NewName) {
@@ -473,10 +481,10 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
   $scope.GoldenHour = function(NewName) {
     if ($scope.Item === 'Group') {
       MyHue.GroupSetColortemperature($scope.Index, 2500);
-      MyHue.GroupSetBrightness($scope.Index, 144);
+      MyHue.GroupSetBrightness($scope.Index, 125);
     } else if ($scope.Item === 'Light') {
       MyHue.LightSetColortemperature($scope.Index, 2500);
-      MyHue.LightSetBrightness($scope.Index, 144);
+      MyHue.LightSetBrightness($scope.Index, 125);
     }
   }
   

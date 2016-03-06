@@ -1,6 +1,7 @@
 <h3>Groups</h3>
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="Group in Groups">
+  <div class="list-group-item" ng-repeat="Group in Groups"> <!-- | filter : {type: 'LightGroup'} | orderBy : 'name'"-->
+    <!-- LightGroup Room -->
     <div style='display:inline-block; width:29%' ng-click="SetMenuItem('Group', $index)">
     	{{Group.name}}
     </div>
