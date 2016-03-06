@@ -151,7 +151,7 @@ return {
   
 angular.module('huewi').controller('HueStatusController', function($rootScope, $scope, hueConnector) {
   $scope.MyHue = hueConnector.MyHue(); // For conveinient usage of MyHue in HTML within this controllers $scope
-window.MyHue = hueConnector.MyHue(); // For Debugging TESTCODE
+window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
   $rootScope.$on('huewiUpdate', function(event, data) {
     $scope.Status = hueConnector.Status();
     $scope.$apply();
@@ -176,6 +176,7 @@ angular.module('huewi').controller('MenuController', function($rootScope, $scope
       $('body').css('overflow', 'initial'); // Enable scrolling of the <Body>
     else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
     $scope.$broadcast('MenuUpdate', NewItem, NewIndex);
+    //$scope.$apply();
   };
 
   document.addEventListener('backbutton', function(event) { // Cordova/PhoneGap only.
@@ -190,8 +191,7 @@ angular.module('huewi').controller('MenuController', function($rootScope, $scope
     if (angular.element("#Menu").scope().MenuItem !== '') {
       // Escape & Enter will close open Overlays.
       if ((event.keyCode === 27) || (event.keyCode === 13)) {
-        angular.element("#Menu").scope().MenuItem = '';
-        angular.element("#Menu").scope().$broadcast('MenuUpdate', '', event.keyCode);
+        angular.element("#Menu").scope().SetMenuItem('', event.keyCode);
         event.preventDefault();
       }
       if (event.keyCode === 27)
@@ -352,6 +352,13 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
   $scope.Index = 0;
   $scope._Name = '';
   $scope.OrgName = $scope._Name;
+  
+  $rootScope.$on('huewiUpdate', function(event, data) {
+    if ($scope.Item === 'Group') {
+      console.log('tick', $scope.Index);
+    }
+    $scope.$apply();
+  });
 
   hueImage.onload = function() {
     $scope.Redraw();
@@ -371,9 +378,15 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
     var ctCanvas = document.getElementById('ctCanvas');
     var ctContext = ctCanvas.getContext('2d');
     // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
-    hueCanvas.width = 0.35 * $(window).width();
-    if (hueCanvas.width > 0.75 * $(window).height())
-      hueCanvas.width = 0.75 * $(window).height();
+    if ($(window).width() > $(window).height()) {
+      hueCanvas.width = 0.35 * $(window).width();
+      if (hueCanvas.width > 0.75 * $(window).height())
+        hueCanvas.width = 0.75 * $(window).height();
+    } else {
+      hueCanvas.width = 0.55 * $(window).width();
+      if (hueCanvas.width > 0.95 * $(window).height())
+        hueCanvas.width = 0.95 * $(window).height
+    }
     hueCanvas.height = hueCanvas.width;
     hueContext.drawImage(hueImage, 0, 0, hueCanvas.width, hueCanvas.height); // ReDraw
     ctCanvas.width = hueCanvas.width;
@@ -410,10 +423,11 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
   });
 
   $scope.$on('MenuUpdate', function(event, NewItem, NewIndex) {
-    // Is Ecape Hit? Reset Name to OrgName
-    if ((NewItem === '') && (NewIndex === 27)) {
-      if ($scope.Name() != $scope.OrgName)
-        $scope.Name($scope.OrgName);
+    if (NewItem === '') { // Key is Hit.
+      if (NewIndex === 27) { // Is Ecape Hit? Reset Name to OrgName
+        if ($scope.Name() != $scope.OrgName)
+          $scope.Name($scope.OrgName);
+      }
     } else {
       $scope.Item = NewItem;
       $scope.Index = NewIndex;
@@ -435,71 +449,74 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
         //else $scope.OrgName = $scope._Name = "Light " + $scope.Index;
       }
     }
-    $scope.$apply();
   });
+
+  $scope.Name = function(NewName) { // Getter/Setter function
+    if (angular.isDefined(NewName))
+    { // Set
+      if ($scope.Item === 'Group') {
+        hueConnector.MyHue().GroupSetName($scope.Index, NewName);
+      } else if ($scope.Item === 'Light') {
+        hueConnector.MyHue().LightSetName($scope.Index, NewName);
+      }
+      $scope._Name = NewName;
+    }
+    return $scope._Name;
+  };
 
   $scope.Relax = function(NewName) {
     if ($scope.Item === 'Group') {
-      MyHue.GroupSetCT($scope.Index, 467);
-      MyHue.GroupSetBrightness($scope.Index, 144);
+      hueConnector.MyHue().GroupSetCT($scope.Index, 467);
+      hueConnector.MyHue().GroupSetBrightness($scope.Index, 144);
     } else if ($scope.Item === 'Light') {
-      MyHue.LightSetCT($scope.Index, 467);
-      MyHue.LightSetBrightness($scope.Index, 144);
+      hueConnector.MyHue().LightSetCT($scope.Index, 467);
+      hueConnector.MyHue().LightSetBrightness($scope.Index, 144);
     }
   }
   
   $scope.Reading = function(NewName) {
     if ($scope.Item === 'Group') {
-      MyHue.GroupSetCT($scope.Index, 343);
-      MyHue.GroupSetBrightness($scope.Index, 240);
+      hueConnector.MyHue().GroupSetCT($scope.Index, 343);
+      hueConnector.MyHue().GroupSetBrightness($scope.Index, 240);
     } else if ($scope.Item === 'Light') {
-      MyHue.LightSetCT($scope.Index, 343);
-      MyHue.LightSetBrightness($scope.Index, 240);
+      hueConnector.MyHue().LightSetCT($scope.Index, 343);
+      hueConnector.MyHue().LightSetBrightness($scope.Index, 240);
     }
   }
   
   $scope.Concentrate = function(NewName) {
     if ($scope.Item === 'Group') {
-      MyHue.GroupSetCT($scope.Index, 231);
-      MyHue.GroupSetBrightness($scope.Index, 219);
+      hueConnector.MyHue().GroupSetCT($scope.Index, 231);
+      hueConnector.MyHue().GroupSetBrightness($scope.Index, 219);
     } else if ($scope.Item === 'Light') {
-      MyHue.LightSetCT($scope.Index, 231);
-      MyHue.LightSetBrightness($scope.Index, 219); 
+      hueConnector.MyHue().LightSetCT($scope.Index, 231);
+      hueConnector.MyHue().LightSetBrightness($scope.Index, 219); 
     }
   }
   
   $scope.Energize = function(NewName) {
     if ($scope.Item === 'Group') {
-      MyHue.GroupSetCT($scope.Index, 156);
-      MyHue.GroupSetBrightness($scope.Index, 203);
+      hueConnector.MyHue().GroupSetCT($scope.Index, 156);
+      hueConnector.MyHue().GroupSetBrightness($scope.Index, 203);
     } else if ($scope.Item === 'Light') {
-      MyHue.LightSetCT($scope.Index, 156);
-      MyHue.LightSetBrightness($scope.Index, 203);
+      hueConnector.MyHue().LightSetCT($scope.Index, 156);
+      hueConnector.MyHue().LightSetBrightness($scope.Index, 203);
     }
   }
   
   $scope.GoldenHour = function(NewName) {
     if ($scope.Item === 'Group') {
-      MyHue.GroupSetColortemperature($scope.Index, 2500);
-      MyHue.GroupSetBrightness($scope.Index, 125);
+      hueConnector.MyHue().GroupSetColortemperature($scope.Index, 2500);
+      hueConnector.MyHue().GroupSetBrightness($scope.Index, 125);
     } else if ($scope.Item === 'Light') {
-      MyHue.LightSetColortemperature($scope.Index, 2500);
-      MyHue.LightSetBrightness($scope.Index, 125);
+      hueConnector.MyHue().LightSetColortemperature($scope.Index, 2500);
+      hueConnector.MyHue().LightSetBrightness($scope.Index, 125);
     }
   }
   
-  $scope.Name = function(NewName) { // Getter/Setter function
-    if (angular.isDefined(NewName))
-    { // Set
-      $scope._Name = NewName;
-      if ($scope.Item === 'Group') {
-        hueConnector.MyHue().GroupSetName($scope.Index ,$scope._Name);
-      } else if ($scope.Item === 'Light') {
-        hueConnector.MyHue().LightSetName($scope.Index ,$scope._Name);
-      }
-    }
-    return $scope._Name;
-  };
+  $scope.SetGroupLight = function(LightNr) {
+
+  }
 
 });
 
