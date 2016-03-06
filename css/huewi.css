@@ -18,6 +18,9 @@ html, body {
 .fading.ng-hide {
   opacity: 0;
 }
+nav {
+  display: inline;
+}
 #navcontainer {
   position: fixed;
   left: -1px;
@@ -27,36 +30,19 @@ html, body {
   color: rgba(250, 240, 230, 1);
   border-style: solid;
   border-width: 1px;
-  border-color: rgba(250, 240, 230, 0.65);
+  border-color: rgba(250, 240, 230, 0.50);
   border-bottom-right-radius: 5px;
-}
-#navbutton
-{
-  float: right;
-  padding: 12px;
+  padding: 5px;
 }
 #navdrawer {
   padding-left: 20px;
   padding-bottom: 8px;
   display: none;
 }
-nav {
-  display: inline;
-}
-.status {
-  position: fixed;
-  left: 0px;
-  bottom: -1px;
-  height: auto;
-  width: 100%;
-  text-align: center;
-  background: rgba(250, 240, 230, 0.10);
-  color: rgba(250, 240, 230, 0.85);
-  border-style: solid;
-  border-width: 1px;
-  border-color: rgba(250, 240, 230, 0.35);
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
+#navbutton
+{
+  float: right;
+  padding: 5px;
 }
 h3 {
   text-align: center;
@@ -65,22 +51,6 @@ h3 {
 h4 {
   text-align: center;
   margin-bottom: 6px;
-}
-.list-group-item {
-  left: 0px;
-  bottom: 0px;
-  height: auto;
-  width: 100%;
-  background: rgba(100, 100, 100, 0.3);
-}
-.list-group-item.grayed {
-  background: rgba(50, 50, 50, 0.5);
-}
-button, .btn {
-  background: rgba(100, 100, 100, 0.5);
-}
-.preset {
-  width: 32%;
 }
 @media screen and (orientation:landscape) {
   .container {
@@ -121,23 +91,72 @@ button, .btn {
   background: rgba(200, 200, 200, 0.60);
   border-radius: 5px;
   padding: 25px;
-  margin-top: 5%;
-  margin-left: 5%;
-  margin-bottom: 5%;
-  width: 90%;
+  margin-top: 16px;
+  margin-left: 16px;
+  margin-right: 16px;
+  margin-bottom: 16px;
+}
+.content {
+  padding-bottom: 16px;
+}
+input[type="text"] {
+    text-align: center;
+    background: rgba(250, 240, 230, 0.05);
+    border-style: none;
+    width: 100%;
+    border-radius: 5px;
+}
+input[type="range"] {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.list-group-item {
+  left: 0px;
+  bottom: 0px;
+  height: auto;
+  width: 100%;
+  background: rgba(250, 240, 230, 0.10);
+}
+.list-group-item.grayed {
+  background: rgba(50, 40, 30, 0.35);
+  color: rgba(50, 40, 30, 0.35);
+}
+button, .btn, .btn-sm {
+  background: rgba(250, 240, 230, 0.15);
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+.preset {
+  width: 32.5%;
 }
 canvas {
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-top: 8px;
+  margin-bottom: 8px;
   margin-left: auto;
   margin-right: auto;
   display: block;
-}
-.content {
+  border-radius: 8px;
 }
 .left {
   float: left;
 }
 .right {
   float: right;
+}
+.status {
+  position: fixed;
+  left: 0px;
+  bottom: -1px;
+  height: auto;
+  width: 100%;
+  text-align: center;
+  background: rgba(250, 240, 230, 0.10);
+  color: rgba(250, 240, 230, 0.85);
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(250, 240, 230, 0.35);
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
 }
