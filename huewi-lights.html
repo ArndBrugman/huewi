@@ -5,7 +5,7 @@
       {{Light.name}}
     </div>
     <div style='display:inline-block; width:49%' >
-    <input id='LightSlider-{{$index}}' type='range' min='0' max='255' ng-model='Light.state.bri' ng-change='SetBrightness($index)' ng-mousedown='SetActive($index)' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+      <input type='range' min='0' max='255' ng-model='Light.state.bri' ng-change='SetBrightness($index)' ng-mousedown='SetActive($index)' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
     </div>
     <div style='display:inline-block; width:19%' class='right' ng-class="{ hidden:!Light.state.reachable }">
       <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff($index + 1);" ng-class="{ hidden:!Light.state.on }">
