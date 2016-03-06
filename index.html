@@ -34,47 +34,29 @@
   <!--script src='js/cordova.js' type='text/javascript' onload="javascript:window.isCordovaApp = true;"></script-->
 </head>
 
-<body class="timebasedgradient" id='HueStatus' ng-controller='HueStatusController as HueStatusCtrl'>
+<body id='HueStatus' ng-controller='HueStatusController as HueStatusCtrl'>
 
 <div id='Menu' ng-controller='MenuController as MenuCtrl'>
-  <div id="navcontainer">
-    <div id="navbutton" class="glyphicon glyphicon-menu-hamburger"></div>
-    <nav id="navdrawer">
-      <h4>Settings</h4>
-      <ul class="list-group">
-        <div class="list-group">
-          <li class="list-group-item" ng-click="SetMenuItem('Schedules')">Schedules</li>
-          <li class="list-group-item" ng-click="SetMenuItem('Scenes')">Scenes</li>
-          <li class="list-group-item" ng-click="SetMenuItem('Sensors')">Sensors</li>
-          <li class="list-group-item" ng-click="SetMenuItem('Rules')">Rules</li>
-        </div>
-        <div class="list-group">
-          <li class="list-group-item" ng-click="SetMenuItem('Bridge')">Bridge</li>
-        </div>
-        <div class="list-group">
-          <li class="list-group-item" onclick="delete localStorage.MyHueBridgeIP;window.location.reload(true);">Refreshed Reload</li>
-        </div>
-      </ul>
-    </nav>
-  </div><!-- /navcontainer -->
 
-  <div class='container' id='Groups' ng-controller='GroupsController as GroupsCtrl'>
-    <div class='content'>
-      <huewi-groups></huewi-groups>
-    </div><!-- /content -->
-    <div class="onlandscape"><br><br></div><!-- Spacing on Landscape after Groups -->
-  </div><!-- /container -->
+  <div class='overlay timebasedgradient'>
+    <div class='container' id='Groups' ng-controller='GroupsController as GroupsCtrl'>
+      <div class='content'>
+        <huewi-groups></huewi-groups>
+      </div><!-- /content -->
+      <div class="onlandscape"><br><br></div><!-- Spacing on Landscape after Groups -->
+    </div><!-- /container -->
 
-  <div class='container' id='Lights' ng-controller='LightsController as LightsCtrl'>
-    <div class='content'>
-      <huewi-lights></huewi-lights>
-    </div><!-- /content -->
-    <div><br><br></div>
-  </div><!-- /container -->
+    <div class='container' id='Lights' ng-controller='LightsController as LightsCtrl'>
+      <div class='content'>
+        <huewi-lights></huewi-lights>
+      </div><!-- /content -->
+      <div><br><br></div>
+    </div><!-- /container -->
+  </div>
 
   <div class='overlay fading' id='GroupAndLight' ng-controller='GroupAndLightController as GroupCtrl' ng-show='MenuItem === "Group" || MenuItem === "Light"'>
     <div class='inlay content timebasedgradient'>
-      <h3>{{OrgName}}</h3>
+      <h3>{{_Name}}</h3>
       <div>
       <div class='container' id='ColorTemp'>
         <div class='content'>
@@ -116,8 +98,10 @@
   <div class='overlay fading' id='Schedules' ng-controller='SchedulesController as SchedulesCtrl' ng-show='MenuItem === "Schedules"'>
     <div class='inlay content timebasedgradient'>
       <h3>Schedules</h3>
-      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Schedules">
-          {{Key}} - {{Value.name}}
+      <div class='list-group'>
+        <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Schedules">
+            {{Key}} - {{Value.name}}
+        </div>
       </div>
       <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
     </div><!-- /inlay content -->
@@ -127,8 +111,10 @@
   <div class='overlay fading' id='Scenes' ng-controller='ScenesController as ScenesCtrl' ng-show='MenuItem === "Scenes"'>
     <div class='inlay content timebasedgradient'>
       <h3>Scenes</h3>
-      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Scenes">
-          {{Key}} - {{Value.name}}
+      <div class='list-group'>
+        <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Scenes">
+            {{Key}} - {{Value.name}}
+        </div>
       </div>
       <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
     </div><!-- /inlay content -->
@@ -138,8 +124,10 @@
   <div class='overlay fading' id='Sensors' ng-controller='SensorsController as SensorsCtrl' ng-show='MenuItem === "Sensors"'>
     <div class='inlay content timebasedgradient'>
       <h3>Sensors</h3>
-      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Sensors">
-          {{Key}} - {{Value.name}}
+      <div class='list-group'>
+        <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Sensors">
+            {{Key}} - {{Value.name}}
+        </div>
       </div>
       <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
     </div><!-- /inlay content -->
@@ -149,8 +137,10 @@
   <div class='overlay fading' id='Rules' ng-controller='RulesController as RulesCtrl' ng-show='MenuItem === "Rules"'>
     <div class='inlay content timebasedgradient'>
       <h3>Rules</h3>
-      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Rules">
-          {{Key}} - {{Value.name}}
+      <div class='list-group'>
+        <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Rules">
+            {{Key}} - {{Value.name}}
+        </div>
       </div>
       <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
     </div><!-- /inlay content -->
@@ -161,18 +151,23 @@
     <div class='inlay content timebasedgradient'>
       <h3>Bridge</h3>
       <strong>Local Brides</strong>
-      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges">
-        {{Value.internalipaddress}} : {{Value.id}}<br>
+      <div class='list-group'>
+        <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges">
+          {{Value.internalipaddress}} : {{Value.id}}<br>
+        </div>
       </div>
       <br>
       <div>Bridge IP: {{MyHue.BridgeIP}}</div><div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
       <div>Bridge Name: {{MyHue.BridgeName}}</div>
       <div> {{Status}}</div>
-      <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist | orderObjectBy : 'last use date' : true">
-        {{Value.key}} : {{Value.name}}<br>
-        Created: {{Value['create date']}}, 
-        LastUsed: {{Value['last use date']}}
-        <div ng-click="MyHue.BridgeDeleteUser(Value.key)">Delete this Key</div>
+      <div class='list-group'>
+        <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist | orderObjectBy : 'last use date' : true">
+          {{Value.key}} : {{Value.name}}<br>
+          Created: {{Value['create date']}}, 
+          LastUsed: {{Value['last use date']}}
+          <div ng-click="MyHue.BridgeDeleteUser(Value.key)" ng-show="Value.key!=MyHue.Username" style="text-align: right">Delete this Key</div>
+          <div ng-show="Value.key===MyHue.Username" style="text-align: right">(Currently Active Key)</div>
+        </div>
       </div>
       <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
     </div><!-- /inlay content -->
@@ -189,9 +184,30 @@
     <div><br><br></div>
   </div><!-- /overlay -->
 
+  <div id='navcontainer' class='timebasedgradient'>
+    <div id='navbutton' class='glyphicon glyphicon-menu-hamburger'></div>
+    <nav id='navdrawer'>
+      <h4>Settings</h4>
+      <ul>
+        <div class='list-group'>
+          <li class='list-group-item' ng-click='SetMenuItem("Schedules")'>Schedules</li>
+          <li class='list-group-item' ng-click='SetMenuItem("Scenes")'>Scenes</li>
+          <li class='list-group-item' ng-click='SetMenuItem("Sensors")'>Sensors</li>
+          <li class='list-group-item' ng-click='SetMenuItem("Rules")'>Rules</li>
+        </div>
+        <div class='list-group'>
+          <li class='list-group-item' ng-click='SetMenuItem("Bridge")'>Bridge</li>
+        </div>
+        <div class='list-group'>
+          <li class='list-group-item' onclick='delete localStorage.MyHueBridgeIP;window.location.reload(true);'>Refreshed Reload</li>
+        </div>
+      </ul>
+    </nav>
+  </div><!-- /navcontainer -->
+
 </div><!-- /MenuCtrl -->
 
-  <div class='status'>
+  <div class='status timebasedgradient'>
     <h4>hue Web Interface</h4>
     <!-- Single button -->
     <div id='HueStatusbar'>
@@ -200,7 +216,7 @@
       <div>{{Status}}</div>
     </div>
   </div><!-- /status -->
-  
+
 </body>
   
 </html>
