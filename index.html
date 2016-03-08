@@ -105,11 +105,13 @@
       </div><!-- /container -->
       
       <div class='content'>
-        <div ng-show='MenuItem === "Group"' >
+        <div ng-show='(MenuItem === "Group") && (Index>0)' >
           <div ng-repeat="Light in MyHue.Lights">
-          <input type="checkbox" ng-checked='MyHue.Groups[Index].lights.indexOf(MyHue.LightGetId($index+1))!==-1' ng-click="SetGroupLight($index+1)">
-            {{Light.name}}{{$index+1}}
-          </input>
+          <div ng-click="GroupToggleLight($index+1)">
+            <span ng-show='GroupHasLight($index+1)'>(+)</span>
+            <span ng-show='!GroupHasLight($index+1)'>(-)</span>
+            {{Light.name}}
+          </div>
           </div>
         </div>
       </div>
@@ -128,6 +130,7 @@
         </div>
       </div>
       <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
+      <div><br><br></div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
@@ -197,16 +200,6 @@
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Connecting' ng-show='Status == "!Connected"'> <!-- == "!" vs !== "" TESTCODE. -->
-    <div class='inlay content timebasedgradient'>
-      <h3>Stand by while connecting...</h3>
-      <div></div>
-      <h4>{{Status}}</h4>
-      <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
-      <div><br><br></div>
-    </div><!-- /inlay content -->
-  </div><!-- /overlay -->
-
   <div id='navcontainer' class='timebasedgradient'>
     <span id='navbutton' class='glyphicon glyphicon-menu-hamburger'></span>
     <nav id='navdrawer'>
@@ -225,6 +218,16 @@
         </div>
     </nav>
   </div><!-- /navcontainer -->
+
+  <div class='overlay fading' id='Connecting' ng-show='Status == "!Connected"'> <!-- == "!" vs !== "" TESTCODE. -->
+    <div class='inlay content timebasedgradient'>
+      <h3>Stand by while connecting...</h3>
+      <div></div>
+      <h4>{{Status}}</h4>
+      <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
+      <div><br><br></div>
+    </div><!-- /inlay content -->
+  </div><!-- /overlay -->
 
 </div><!-- /MenuCtrl -->
 

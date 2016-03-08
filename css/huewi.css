@@ -18,39 +18,13 @@ html, body {
 .fading.ng-hide {
   opacity: 0;
 }
-nav {
-  display: inline;
-}
-#navcontainer {
-  position: fixed;
-  left: -1px;
-  top: -1px;
-  max-width: 70%;
-  background: rgba(200, 200, 200, 0.35);
-  color: rgba(250, 240, 230, 1);
-  border-style: solid;
-  border-width: 1px;
-  border-color: rgba(250, 240, 230, 0.50);
-  border-bottom-right-radius: 5px;
-  padding: 5px;
-}
-#navdrawer {
-  padding-left: 20px;
-  padding-bottom: 8px;
-  display: none;
-}
-#navbutton
-{
-  float: right;
-  padding: 5px;
-}
 h3 {
   text-align: center;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 h4 {
   text-align: center;
-  margin-bottom: 6px;
+  margin-bottom: 0px;
 }
 @media screen and (orientation:landscape) {
   .container {
@@ -90,14 +64,14 @@ h4 {
 .inlay {
   background: rgba(200, 200, 200, 0.60);
   border-radius: 5px;
-  padding: 25px;
-  margin-top: 16px;
-  margin-left: 16px;
-  margin-right: 16px;
-  margin-bottom: 16px;
+  padding: 24px;
+  margin-top: 24px;
+  margin-left: 24px;
+  margin-right: 24px;
+  margin-bottom: 24px;
 }
 .content {
-  padding-bottom: 16px;
+  padding-bottom: 0px;
 }
 input[type="text"] {
     text-align: center;
@@ -123,11 +97,11 @@ input[type="range"] {
 }
 button, .btn, .btn-sm {
   background: rgba(250, 240, 230, 0.15);
-  margin-top: 4px;
-  margin-bottom: 4px;
 }
 .preset {
   width: 32.5%;
+  margin-top: 0px;
+  margin-bottom: 4px;
 }
 canvas {
   padding-left: 0px;
@@ -144,6 +118,32 @@ canvas {
 }
 .right {
   float: right;
+}
+nav {
+  display: inline;
+}
+#navcontainer {
+  position: fixed;
+  left: -1px;
+  top: -1px;
+  max-width: 70%;
+  background: rgba(200, 200, 200, 0.35);
+  color: rgba(250, 240, 230, 1);
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(250, 240, 230, 0.50);
+  border-bottom-right-radius: 5px;
+  padding: 5px;
+}
+#navbutton
+{
+  float: right;
+  padding: 5px;
+}
+#navdrawer {
+  padding-left: 16px;
+  padding-bottom: 0px;
+  display: none;
 }
 .status {
   position: fixed;
