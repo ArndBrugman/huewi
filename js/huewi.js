@@ -34,7 +34,6 @@ function StateToHTMLColor(State, Model)
 
 angular.module('huewi').factory('hueConnector', function ($rootScope) {
   var MyHue = new huepi();
-  // No Longer possible to create custom values -> MyHue.Username = '085efe879ee3ed83c04efc28a0da03d3';
   var HeartbeatInterval;
   var Status = '';
   
@@ -182,7 +181,7 @@ angular.module('huewi').controller('MenuController', function($rootScope, $scope
   document.addEventListener('backbutton', function(event) { // Cordova/PhoneGap only.
     if (angular.element("#Menu").scope().MenuItem !== '') {
       angular.element("#Menu").scope().MenuItem = '';
-      angular.element("#Menu").scope().$broadcast('MenuUpdate', '', 27);
+      angular.element("#Menu").scope().SetMenuItem('', 27);
       event.preventDefault();
     }
   });
@@ -350,15 +349,38 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
   var ctImage = new Image();
   ctImage.src = 'img/ct.png';
   $scope.Index = 0;
-  $scope._Name = '';
+  $scope._Name = 'Light/Group';
   $scope.OrgName = $scope._Name;
   
   $rootScope.$on('huewiUpdate', function(event, data) {
     if ($scope.Item === 'Group') {
-      console.log('tick', $scope.Index);
+      //console.log('GROUP tick', $scope.Index);
     }
-    $scope.$apply();
   });
+
+  $scope.GroupHasLight = function(LightNr) {
+    if ($scope.Item === 'Group') {
+      if (LightNr === -1)
+      console.log($scope.Index, LightNr, hueConnector.MyHue().LightGetId(LightNr), 
+        huepi.HelperToStringArray(hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights));
+      if (hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights.indexOf( hueConnector.MyHue().LightGetId(LightNr).toString() )>=0)
+        return true;
+    }
+    return false;
+  }
+  
+  $scope.GroupToggleLight = function(LightNr) {
+    if ($scope.Item === 'Group') {
+      //console.log(hueConnector.MyHue().LightGetId(LightNr).toString(), hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights);
+      hueConnector.MyHue().LightAlertSelect(LightNr);
+      if ($scope.GroupHasLight(LightNr))
+        hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights.splice(
+          hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights.indexOf(hueConnector.MyHue().LightGetId(LightNr).toString()),1);
+      else hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights.push(hueConnector.MyHue().LightGetId(LightNr).toString());
+      //console.log(hueConnector.MyHue().LightGetId(LightNr).toString(), hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights);
+      hueConnector.MyHue().GroupSetLights($scope.Index, hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights);
+    }
+  }
 
   hueImage.onload = function() {
     $scope.Redraw();
@@ -379,11 +401,11 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
     var ctContext = ctCanvas.getContext('2d');
     // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
     if ($(window).width() > $(window).height()) {
-      hueCanvas.width = 0.35 * $(window).width();
+      hueCanvas.width = 0.38 * $(window).width();
       if (hueCanvas.width > 0.75 * $(window).height())
         hueCanvas.width = 0.75 * $(window).height();
     } else {
-      hueCanvas.width = 0.55 * $(window).width();
+      hueCanvas.width = 0.57 * $(window).width();
       if (hueCanvas.width > 0.95 * $(window).height())
         hueCanvas.width = 0.95 * $(window).height
     }
@@ -431,19 +453,16 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
     } else {
       $scope.Item = NewItem;
       $scope.Index = NewIndex;
-      // AlertSelect -> Flash Once.
-      if ($scope.Item === 'Group')
-        hueConnector.MyHue().GroupAlertSelect($scope.Index);
-      if ($scope.Item === 'Light')
-        hueConnector.MyHue().LightAlertSelect($scope.Index);
 
       if ($scope.Item === 'Group') {
+        hueConnector.MyHue().GroupAlertSelect($scope.Index);
         if ($scope.Index === 0)
           $scope.OrgName = $scope._Name = 'All Available Lights';
         else if ($scope.Index <= hueConnector.MyHue().GroupIds.length)
           $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].name;
         //else $scope.OrgName = $scope._Name = "Group" + $scope.Index;
       } else if ($scope.Item === 'Light') {
+        hueConnector.MyHue().LightAlertSelect($scope.Index);
         if ($scope.Index <= hueConnector.MyHue().LightIds.length)
           $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[hueConnector.MyHue().LightGetId($scope.Index)].name;
         //else $scope.OrgName = $scope._Name = "Light " + $scope.Index;
@@ -512,10 +531,6 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
       hueConnector.MyHue().LightSetColortemperature($scope.Index, 2500);
       hueConnector.MyHue().LightSetBrightness($scope.Index, 125);
     }
-  }
-  
-  $scope.SetGroupLight = function(LightNr) {
-
   }
 
 });
