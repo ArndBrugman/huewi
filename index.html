@@ -185,7 +185,7 @@
       <br>
       <div>Bridge IP: {{MyHue.BridgeIP}}</div><div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
       <div>Bridge Name: {{MyHue.BridgeName}}</div>
-      <div> {{Status}}</div>
+      <div>Status: {{Status}}</div>
       <div class='list-group'>
         <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist | orderObjectBy : 'last use date' : true">
           {{Value.key}} : {{Value.name}}<br>
@@ -221,9 +221,9 @@
 
   <div class='overlay fading' id='Connecting' ng-show='Status == "!Connected"'> <!-- == "!" vs !== "" TESTCODE. -->
     <div class='inlay content timebasedgradient'>
-      <h3>Stand by while connecting...</h3>
+      <h3>Searching for Bridge and connecting</h3>
       <div></div>
-      <h4>{{Status}}</h4>
+      <h4>Status: {{Status}}</h4>
       <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
       <div><br><br></div>
     </div><!-- /inlay content -->
@@ -237,7 +237,7 @@
     <div id='HueStatusbar'>
       <div>Bridge IP: {{MyHue.BridgeIP}}</div>
       <div>Bridge Name: {{MyHue.BridgeName}}</div>
-      <div>{{Status}}</div>
+      <div>Status: {{Status}}</div>
     </div>
   </div><!-- /status -->
 
