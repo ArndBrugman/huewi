@@ -34,7 +34,7 @@
   <!--script src='js/cordova.js' type='text/javascript' onload="javascript:window.isCordovaApp = true;"></script-->
 </head>
 
-<body id='HueStatus' ng-controller='HueStatusController as HueStatusCtrl'>
+<body id='HueStatus' ng-controller='HueController as HueCtrl'>
 
 <div id='Menu' ng-controller='MenuController as MenuCtrl'>
 
@@ -63,23 +63,23 @@
           <canvas id='ctCanvas'>It seems your device doesn't support the required HTML5 Canvas</canvas>
           <div>
             <div ng-show='MenuItem === "Group"' >
-              <input type='range' min='0' max='255' style='display:inline-block; width:79%' ng-model='MyHue.Groups[MyHue.GroupGetId(Index)].action.bri' ng-change='SetBrightness(Index)' ng-mousedown='SetActive(Index)' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+              <input type='range' min='0' max='255' style='display:inline-block; width:79%' ng-model='MyHue.Groups[MenuIndex].action.bri' ng-change='SetGroupBrightness(MenuIndex)' ng-mousedown='SetActive(MenuIndex)' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
               <div style='display:inline-block; width:19%' class='right'>
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(Index);" ng-class="{ hidden: !((MyHue.Groups[MyHue.GroupGetId(Index)].action.on) || (Index == 0)) }">
-                  <span class="glyphicon glyphicon-off" style="color:{{Group.HTMLColor}}" aria-hidden="true"></span>
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(MenuIndex);" ng-class="{ hidden: !((MyHue.Groups[MenuIndex].action.on) || (MenuIndex == 0)) }">
+                  <span class="glyphicon glyphicon-off" style="color:{{MyHue.Groups[MenuIndex].HTMLColor}}" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(Index);" ng-class="{ hidden:MyHue.Groups[MyHue.GroupGetId(Index)].action.on }">
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(MenuIndex);" ng-class="{ hidden:MyHue.Groups[MenuIndex].action.on }">
                   <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
                 </button>
               </div>
             </div>
             <div ng-show='MenuItem === "Light"' >
-              <input type='range' min='0' max='255' style='display:inline-block; width:79% ' ng-model='MyHue.Lights[MyHue.LightGetId(Index)].state.bri' ng-change='SetBrightness(Index)' ng-mousedown='SetActive(Index)' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
-              <div style='display:inline-block; width:19%' class='right' ng-class="{ hidden:!MyHue.Lights[MyHue.LightGetId(Index)].state.reachable }">
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff(Index);" ng-class="{ hidden:!MyHue.Lights[MyHue.LightGetId(Index)].state.on }">
-                  <span class="glyphicon glyphicon-off" style="color:{{Light.HTMLColor}}" aria-hidden="true"></span>
+              <input type='range' min='0' max='255' style='display:inline-block; width:79% ' ng-model='MyHue.Lights[MenuIndex].state.bri' ng-change='SetLightBrightness(MenuIndex)' ng-mousedown='SetActive(MenuIndex)' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+              <div style='display:inline-block; width:19%' class='right' ng-class="{ hidden:!MyHue.Lights[MenuIndex].state.reachable }">
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff(MenuIndex);" ng-class="{ hidden:!MyHue.Lights[MenuIndex].state.on }">
+                  <span class="glyphicon glyphicon-off" style="color:{{MyHue.Lights[MenuIndex].HTMLColor}}" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOn(Index);" ng-class="{ hidden:MyHue.Lights[MyHue.LightGetId(Index)].state.on }">
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOn(MenuIndex);" ng-class="{ hidden:MyHue.Lights[MenuIndex].state.on }">
                   <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
                 </button>
               </div>
@@ -104,11 +104,11 @@
       </div><!-- /container -->
       
       <div class='content'>
-        <div ng-show='(MenuItem === "Group") && (Index>0)' >
+        <div ng-show='(MenuItem === "Group") && (MenuIndex!=="0")' >
           <span class='light' ng-repeat="Light in MyHue.Lights">
-            <span ng-click="GroupToggleLight($index+1)">
-              <span ng-show='GroupHasLight($index+1)' class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
-              <span ng-show='!GroupHasLight($index+1)' class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+            <span ng-click="GroupToggleLight(Light.id)">
+              <span ng-show='GroupHasLight(Light.id)' class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+              <span ng-show='!GroupHasLight(Light.id)' class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
               {{Light.name}}
             </span>
           </span>
@@ -189,7 +189,7 @@
       <br>
       <div>Bridge IP: {{MyHue.BridgeIP}}</div>
       <div>Bridge Name: {{MyHue.BridgeName}}</div>
-      <div>Status: {{Status}}</div>
+      <div>Status: {{Status()}}</div>
       <div class='list-group'>
         <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist | orderObjectBy : 'last use date' : true">
           {{Value.key}} : {{Value.name}}<br>
@@ -223,12 +223,11 @@
     </nav>
   </div><!-- /navcontainer -->
 
-  <div class='overlay fading' id='Connecting' ng-show='Status == "!Connected"'> <!-- == "!" vs !== "" TESTCODE. -->
+  <div class='overlay fading' id='Connecting' ng-show='Status() == "!Connected"'> <!-- == "!" vs !== "" TESTCODE. -->
     <div class='inlay content timebasedgradient'>
       <h3>Searching for Bridge and connecting</h3>
       <div></div>
-      <h4>Status: {{Status}}</h4>
-      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
+      <h4>Status: {{Status()}}</h4>
       <div><br><br></div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
@@ -241,7 +240,7 @@
     <div id='HueStatusbar'>
       <div>Bridge IP: {{MyHue.BridgeIP}}</div>
       <div>Bridge Name: {{MyHue.BridgeName}}</div>
-      <div>Status: {{Status}}</div>
+      <div>Status: {{Status()}}</div>
     </div>
   </div><!-- /status -->
 
