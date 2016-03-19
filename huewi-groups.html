@@ -1,6 +1,6 @@
 <h3>Groups</h3>
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="Group in MyHue.Groups | orderBy:'type'"> <!-- | filter : {type: 'LightGroup'} | orderBy : 'name'"-->
+  <div class="list-group-item" ng-repeat="Group in MyHue.Groups | orderObjectBy:'type'"> <!-- | filter : {type: 'LightGroup'} | orderBy : 'name'"-->
     <!-- LightGroup Room -->
     <div style='display:inline-block; width:29%' ng-click="SetMenuItem('Group', Group.id)">
     	{{Group.name}}

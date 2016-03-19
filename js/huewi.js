@@ -5,13 +5,13 @@ var app = angular.module('huewi', ['ngAnimate']);
 (function () {
 
 
-angular.module('huewi').factory('hueConnector', function ($rootScope) {
+angular.module(app.name).factory('hueConnector', function ($rootScope) {
   var MyHue = new huepi();
   var HeartbeatInterval;
   var Status = '';
   // Demo Data while loading.
-  MyHue.Groups = [{'name': 'All available lights', type: "LightGroup", HTMLColor: "#ffcc88", id:'0'}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
-  MyHue.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
+  MyHue.Groups = [{name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88', id:'0'}, {name: 'Group1'}, {name: 'Group2'}, {name: 'Group3'}];
+  MyHue.Lights = [{name: 'Light1'}, {name: 'Light2'}, {name: 'Light3'}];
 
   if (window.isCordovaApp) {
     document.addEventListener("deviceready", onStartup, false);
@@ -39,7 +39,7 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
       return Result.length == 1 ? "0" + Result : Result;
     }
 
-    if (State && State.colormode) { // Group 0 (All available lights) doesn't have properties
+    if (State && State.colormode) { // Group 0 (All available lights) doesn't have all properties
       Model = Model || "LCT001";
       var RGB;
       var xy;
@@ -63,52 +63,67 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
   function ConnectToHueBridge() {
     if (!localStorage.MyHueBridgeIP) { // No Cached BridgeIP?
       Status = 'Trying to Discover Bridge via Portal';
-      MyHue.PortalDiscoverLocalBridges().then(function BridgesDiscovered() {
+      $rootScope.$apply();
+      MyHue.PortalDiscoverLocalBridges().then(function NewBridgesDiscovered() {
         Status = 'Bridge Discovered, Getting Config';
-        MyHue.BridgeGetConfig().then(function BridgeConfigReceived() {
+        $rootScope.$apply();
+        MyHue.BridgeGetConfig().then(function NewBridgeConfigReceived() {
           Status = 'Bridge Config Received, Getting Data';
+          $rootScope.$apply();
 //MyHue.BridgeIP = "127.0.0.1:8000"; // Test On SteveyO/Hue-Emulator  TESTCODE.
-          MyHue.BridgeGetData().then(function BridgeDataReceived() {
+          MyHue.BridgeGetData().then(function NewBridgeDataReceived() {
             localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
-            NewBridgeDataReceived();
+            BridgeDataReceived();
             Status = 'Connected';
+            $rootScope.$apply();
 //MyHue.BridgeDeleteUser(MyHue.Username); // Force buttonpress on next Startup TESTCODE.
           }, function UnableToRetreiveBridgeData() {
             Status = 'Please press connect button on the hue Bridge';
-            MyHue.BridgeCreateUser('huewi').then(function BridegeUserCreated() {
+            $rootScope.$apply();
+            MyHue.BridgeCreateUser(app.name).then(function NewBridegeUserCreated() {
               localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
               Status = 'Connected';
+              $rootScope.$apply();
             }, function UnableToCreateUseronBridge() {
               Status = 'Please press connect button on the hue Bridge';
+              $rootScope.$apply();
             });  
           });
         }, function UnableToRetreiveBridgeConfiguration() {
           Status = 'Unable to Retreive Bridge Configuration';
+          $rootScope.$apply();
         });
       }, function UnableToDiscoverLocalBridgesViaPortal() {
         Status = 'Unable to find Local Bridge via Portal';
+        $rootScope.$apply();
       });
     } else {
       MyHue.PortalDiscoverLocalBridges(); // Parallel search for LocalBridges
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
       Status = 'Using Cached Bridge IP, Getting Config';
+      $rootScope.$apply();
       MyHue.BridgeGetConfig().then(function CachedBridgeConfigReceived() {
         Status = 'Bridge Config Received, Getting Data';
+        $rootScope.$apply();
         MyHue.BridgeGetData().then(function CachedBridgeDataReceived() {
-          NewBridgeDataReceived();
+          BridgeDataReceived();
           Status = 'Connected';
+          $rootScope.$apply();
         }, function UnableToRetreiveCachedBridgeData() {
           delete localStorage.MyHueBridgeIP;
           Status = 'Unable to Retreive Cached Bridge Data';
+          $rootScope.$apply();
         });
       }, function UnableToRetreiveCachedBridgeConfig() {
         delete localStorage.MyHueBridgeIP;
         Status = 'Unable to Retreive Cached Bridge Configuration';
+        $rootScope.$apply();
       });
     }
   }
 
-  function NewBridgeDataReceived() {
+  function BridgeDataReceived() {
+    MyHue.Groups['0'] = {name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88', id: '0'};
     for (var Key in MyHue.Groups) {
       MyHue.Groups[Key].id = Key;
       MyHue.Groups[Key].HTMLColor = StateToHTMLColor(MyHue.Groups[Key].action);
@@ -117,7 +132,6 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
       MyHue.Lights[Key].id = Key;
       MyHue.Lights[Key].HTMLColor = StateToHTMLColor(MyHue.Lights[Key].state);
     }
-    MyHue.Groups['0'] = {name: 'All available lights', type: "LightGroup", HTMLColor: "#ffcc88", id: '0'};
   }
 
   $rootScope.$watch(function() {
@@ -132,7 +146,7 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
   
   function StatusHeartbeat() {
     MyHue.BridgeGetData().then(function UpdateUI() {
-      NewBridgeDataReceived();
+      BridgeDataReceived();
       $rootScope.$apply();
     }, function BridgeGetDataFailed() {
       Status = 'Disconnected';
@@ -161,7 +175,31 @@ return {
 (function () {
 
   
-angular.module('huewi').controller('HueController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).filter('orderObjectBy', function() {
+  return function(items, field, reverse) {
+    var filtered = [];
+    for (var key in items) {
+      var item = items[key];
+      item['key'] = key;
+      filtered.push(item);
+    };
+    filtered.sort(function (a, b) {
+      return (a[field] > b[field] ? 1 : -1);
+    });
+    if(reverse) filtered.reverse();
+    return filtered;
+  };
+});
+
+
+})();
+
+
+
+(function () {
+
+
+angular.module(app.name).controller('HueController', function($rootScope, $scope, hueConnector) {
   $scope.MyHue = hueConnector.MyHue(); // For conveinient usage of MyHue in HTML within this controllers $scope
   window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
   $scope.UpdateScheduled = false;
@@ -202,7 +240,7 @@ angular.module('huewi').controller('HueController', function($rootScope, $scope,
 (function () {
 
 
-angular.module('huewi').controller('MenuController', function($rootScope, $scope) {
+angular.module(app.name).controller('MenuController', function($rootScope, $scope) {
   $scope.MenuItem = 'Connecting';
   $scope.MenuIndex = ' ';
   
@@ -242,7 +280,7 @@ angular.module('huewi').controller('MenuController', function($rootScope, $scope
 (function () {
 
   
-angular.module('huewi').controller('TabController', function($scope) {
+angular.module(app.name).controller('TabController', function($scope) {
   $scope.Tab = 1;
 
   $scope.TabIsSet = function(CheckTab) {
@@ -264,15 +302,14 @@ angular.module('huewi').controller('TabController', function($scope) {
 (function () {
 
   
-angular.module('huewi').directive("huewiGroups", function() {
+angular.module(app.name).directive("huewiGroups", function() {
   return {
     restrict: 'E',
     templateUrl: "huewi-groups.html"
   };
 });
 
-angular.module('huewi').controller('GroupsController', function($rootScope, $scope, hueConnector) {
-
+angular.module(app.name).controller('GroupsController', function($rootScope, $scope, hueConnector) {
 });
 
 
@@ -283,15 +320,14 @@ angular.module('huewi').controller('GroupsController', function($rootScope, $sco
 (function () {
 
   
-angular.module('huewi').directive("huewiLights", function() {
+angular.module(app.name).directive("huewiLights", function() {
   return {
     restrict: 'E',
     templateUrl: "huewi-lights.html"
   };
 });
 
-angular.module('huewi').controller('LightsController', function($rootScope, $scope, hueConnector) {
-
+angular.module(app.name).controller('LightsController', function($rootScope, $scope, hueConnector) {
 });
 
 
@@ -302,7 +338,7 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
 (function () {
 
   
-angular.module('huewi').controller('GroupAndLightController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('GroupAndLightController', function($rootScope, $scope, hueConnector) {
   $scope.Item = '';
   $scope.Index = '';
   var hueImage = new Image();
@@ -466,7 +502,7 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
 (function () {
 
   
-angular.module('huewi').controller('SchedulesController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('SchedulesController', function($rootScope, $scope, hueConnector) {
 });
 
 
@@ -477,7 +513,7 @@ angular.module('huewi').controller('SchedulesController', function($rootScope, $
 (function () {
 
   
-angular.module('huewi').controller('ScenesController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('ScenesController', function($rootScope, $scope, hueConnector) {
 });
 
 
@@ -488,7 +524,7 @@ angular.module('huewi').controller('ScenesController', function($rootScope, $sco
 (function () {
 
   
-angular.module('huewi').controller('SensorsController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('SensorsController', function($rootScope, $scope, hueConnector) {
 });
 
 
@@ -499,7 +535,7 @@ angular.module('huewi').controller('SensorsController', function($rootScope, $sc
 (function () {
 
   
-angular.module('huewi').controller('RulesController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('RulesController', function($rootScope, $scope, hueConnector) {
 });
 
 
@@ -510,24 +546,7 @@ angular.module('huewi').controller('RulesController', function($rootScope, $scop
 (function () {
 
 
-angular.module('huewi').filter('orderObjectBy', function() {
-  return function(items, field, reverse) {
-    var filtered = [];
-    for (var key in items) {
-      var item = items[key];
-      item['key'] = key;
-      filtered.push(item);
-    };
-    filtered.sort(function (a, b) {
-      return (a[field] > b[field] ? 1 : -1);
-    });
-    if(reverse) filtered.reverse();
-    return filtered;
-  };
-});
-
-
-angular.module('huewi').controller('BridgeController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('BridgeController', function($rootScope, $scope, hueConnector) {
 });
 
 
