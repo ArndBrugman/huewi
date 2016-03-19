@@ -123,11 +123,10 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
   $rootScope.$watch(function() {
     return Status;
     }, function WatchStatus(NewStatus, OldStatus) {
-      //console.log("Status:", NewStatus);
       setTimeout(function() { $rootScope.$apply(); }, 1);
       if (NewStatus!=='Connected')
         $('#HueStatusbar').show(350);
-      else setTimeout(function() { $('#HueStatusbar').slideUp(750) }, 250);
+      else setTimeout(function() { $('#HueStatusbar').slideUp(750) }, 1);
     }
   );
   
@@ -304,6 +303,8 @@ angular.module('huewi').controller('LightsController', function($rootScope, $sco
 
   
 angular.module('huewi').controller('GroupAndLightController', function($rootScope, $scope, hueConnector) {
+  $scope.Item = '';
+  $scope.Index = '';
   var hueImage = new Image();
   hueImage.src = 'img/hue.png';
   var ctImage = new Image();
@@ -395,7 +396,7 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
 
   $scope.GroupHasLight = function(LightId) {
     if ($scope.Item === 'Group') {
-      if ($scope.Index === 0) return false;
+      if ($scope.Index === '0') return false;
       if (hueConnector.MyHue().Groups[$scope.Index].lights.indexOf(LightId)>=0)
         return true;
     }
@@ -466,7 +467,6 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
 
   
 angular.module('huewi').controller('SchedulesController', function($rootScope, $scope, hueConnector) {
-
 });
 
 
@@ -478,7 +478,6 @@ angular.module('huewi').controller('SchedulesController', function($rootScope, $
 
   
 angular.module('huewi').controller('ScenesController', function($rootScope, $scope, hueConnector) {
-
 });
 
 
@@ -490,7 +489,6 @@ angular.module('huewi').controller('ScenesController', function($rootScope, $sco
 
   
 angular.module('huewi').controller('SensorsController', function($rootScope, $scope, hueConnector) {
-
 });
 
 
@@ -502,7 +500,6 @@ angular.module('huewi').controller('SensorsController', function($rootScope, $sc
 
   
 angular.module('huewi').controller('RulesController', function($rootScope, $scope, hueConnector) {
-
 });
 
 
@@ -531,7 +528,6 @@ angular.module('huewi').filter('orderObjectBy', function() {
 
 
 angular.module('huewi').controller('BridgeController', function($rootScope, $scope, hueConnector) {
-
 });
 
 
