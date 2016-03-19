@@ -1,6 +1,7 @@
 html, body {
   width: 100%;
   height: 100%;
+  background: rgba(0, 0, 0, 1);
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -27,7 +28,7 @@ h4 {
   margin-bottom: 0px;
 }
 @media screen and (orientation:landscape) {
-  .light {
+  .grouplight {
     display: inline-block;
     width: 24.5%;
   }
@@ -37,14 +38,14 @@ h4 {
     height: 100%;
   }
   .onportrait {
-    display:none;
+    display: none;
   }
   .onlandscape {
-    display:all;
+    display: all;
   }
 }
 @media screen and (orientation:portrait) {
-  .light {
+  .grouplight {
     display: inline-block;
     width: 49.5%;
   }
@@ -54,10 +55,10 @@ h4 {
     height: auto;
   }
   .onportrait {
-    display:all;
+    display: all;
   }
   .onlandscape {
-    display:none;
+    display: none;
   }
 }
 .overlay {
@@ -82,11 +83,11 @@ h4 {
   padding-bottom: 0px;
 }
 input[type="text"] {
-    text-align: center;
-    background: rgba(250, 240, 230, 0.05);
-    border-style: none;
-    width: 100%;
-    border-radius: 5px;
+  text-align: center;
+  background: rgba(250, 240, 230, 0.05);
+  border-style: none;
+  width: 100%;
+  border-radius: 5px;
 }
 input[type="range"] {
   margin-top: 8px;

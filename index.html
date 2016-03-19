@@ -103,7 +103,7 @@
       
       <div class='content'>
         <div ng-show='(MenuItem === "Group") && (MenuIndex!=="0")' >
-          <span class='light' ng-repeat="Light in MyHue.Lights">
+          <span class='grouplight' ng-repeat="Light in MyHue.Lights">
             <span ng-click="GroupToggleLight(Light.id)">
               <span ng-show='GroupHasLight(Light.id)' class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
               <span ng-show='!GroupHasLight(Light.id)' class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
