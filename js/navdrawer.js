@@ -11,17 +11,22 @@
     return false;
   }
 
-$(document).ready(function(){
-  $('#navbutton').click(function() {
-    return toggleNavdrawer();
+  $(document).ready(function(){
+    $('#navbutton').click(function() {
+      return toggleNavdrawer();
+    });
+    $('#navcontainer').click(function (event) {
+      if (event.target.nodeName === 'A' || event.target.nodeName === 'LI') {
+        return closeNavdrawer();
+      }
+      return false;
+    });
+    document.body.addEventListener('click', closeNavdrawer);
+    document.body.addEventListener('keyup', function(event) {
+      if (event.keyCode === 27) {
+        closeNavdrawer();
+      }
+    });
   });
-  $('#navcontainer').click(function (event) {
-    if (event.target.nodeName === 'A' || event.target.nodeName === 'LI') {
-      return closeNavdrawer();
-    }
-    return false;
-  });
-  document.body.addEventListener('click', closeNavdrawer);
-});
 
 })();
