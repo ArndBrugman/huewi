@@ -8,8 +8,11 @@ var app = angular.module('huewi', ['ngAnimate']);
 angular.module('huewi').factory('hueConnector', function ($rootScope) {
   var MyHue = new huepi();
   var HeartbeatInterval;
-  var Status = ' ';
-  
+  var Status = '';
+  // Demo Data while loading.
+  MyHue.Groups = [{'name': 'All available lights', type: "LightGroup", HTMLColor: "#ffcc88", id:'0'}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
+  MyHue.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
+
   if (window.isCordovaApp) {
     document.addEventListener("deviceready", onStartup, false);
     document.addEventListener("pause", onPause, false);
@@ -30,6 +33,32 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
     clearInterval(HeartbeatInterval);
   }
 
+  function StateToHTMLColor(State, Model) {
+    function ToHexString(In) {
+      var Result = Math.floor(In).toString(16);
+      return Result.length == 1 ? "0" + Result : Result;
+    }
+
+    if (State && State.colormode) { // Group 0 (All available lights) doesn't have properties
+      Model = Model || "LCT001";
+      var RGB;
+      var xy;
+
+      if (State.colormode === 'hs') {
+        RGB = huepi.HelperHueAngSatBritoRGB(State.hue * 360 / 65535, State.sat / 255, State.bri / 255);
+        xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
+        RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, State.bri / 255, Model);
+      } else if (State.colormode === 'xy') {
+        RGB = huepi.HelperXYtoRGBforModel(State.xy[0], State.xy[1], State.bri / 255, Model);
+      } else if (State.colormode === 'ct') {
+        RGB = huepi.HelperColortemperaturetoRGB(Math.round(1000000 / State.ct));
+        xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
+        RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, State.bri / 255, Model);
+      }
+      return "#" + ToHexString(RGB.Red * 255) + ToHexString(RGB.Green * 255) + ToHexString(RGB.Blue * 255);
+    } else return "#ffcc88"; 
+  }
+
 //delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges TESTCODE.
   function ConnectToHueBridge() {
     if (!localStorage.MyHueBridgeIP) { // No Cached BridgeIP?
@@ -41,6 +70,7 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
 //MyHue.BridgeIP = "127.0.0.1:8000"; // Test On SteveyO/Hue-Emulator  TESTCODE.
           MyHue.BridgeGetData().then(function BridgeDataReceived() {
             localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
+            NewBridgeDataReceived();
             Status = 'Connected';
 //MyHue.BridgeDeleteUser(MyHue.Username); // Force buttonpress on next Startup TESTCODE.
           }, function UnableToRetreiveBridgeData() {
@@ -65,6 +95,7 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
       MyHue.BridgeGetConfig().then(function CachedBridgeConfigReceived() {
         Status = 'Bridge Config Received, Getting Data';
         MyHue.BridgeGetData().then(function CachedBridgeDataReceived() {
+          NewBridgeDataReceived();
           Status = 'Connected';
         }, function UnableToRetreiveCachedBridgeData() {
           delete localStorage.MyHueBridgeIP;
@@ -77,20 +108,33 @@ angular.module('huewi').factory('hueConnector', function ($rootScope) {
     }
   }
 
+  function NewBridgeDataReceived() {
+    for (var Key in MyHue.Groups) {
+      MyHue.Groups[Key].id = Key;
+      MyHue.Groups[Key].HTMLColor = StateToHTMLColor(MyHue.Groups[Key].action);
+    }
+    for (var Key in MyHue.Lights) {
+      MyHue.Lights[Key].id = Key;
+      MyHue.Lights[Key].HTMLColor = StateToHTMLColor(MyHue.Lights[Key].state);
+    }
+    MyHue.Groups['0'] = {name: 'All available lights', type: "LightGroup", HTMLColor: "#ffcc88", id: '0'};
+  }
+
   $rootScope.$watch(function() {
     return Status;
     }, function WatchStatus(NewStatus, OldStatus) {
-      setTimeout(function() { $rootScope.$emit('huewiUpdate') }, 1); // huewiUpdate as Status Update
-      console.log("Status:", NewStatus);
+      //console.log("Status:", NewStatus);
+      setTimeout(function() { $rootScope.$apply(); }, 1);
       if (NewStatus!=='Connected')
         $('#HueStatusbar').show(350);
       else setTimeout(function() { $('#HueStatusbar').slideUp(750) }, 250);
     }
   );
-
+  
   function StatusHeartbeat() {
     MyHue.BridgeGetData().then(function UpdateUI() {
-      $rootScope.$emit('huewiUpdate'); // huewiUpdate with new data from Bridge.
+      NewBridgeDataReceived();
+      $rootScope.$apply();
     }, function BridgeGetDataFailed() {
       Status = 'Disconnected';
       setTimeout(function() {
@@ -106,31 +150,6 @@ return {
     },
     Status: function() {
       return Status;
-    },
-    StateToHTMLColor: function (State, Model) {
-      function ToHexString(In) {
-        var Result = Math.floor(In).toString(16);
-        return Result.length == 1 ? "0" + Result : Result;
-      }
-
-      if (State && State.colormode) { // Group 0 (All available lights) doesn't have properties
-        Model = Model || "LCT001";
-        var RGB;
-        var xy;
-
-        if (State.colormode === 'hs') {
-          RGB = huepi.HelperHueAngSatBritoRGB(State.hue * 360 / 65535, State.sat / 255, State.bri / 255);
-          xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
-          RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, State.bri / 255, Model);
-        } else if (State.colormode === 'xy') {
-          RGB = huepi.HelperXYtoRGBforModel(State.xy[0], State.xy[1], State.bri / 255, Model);
-        } else if (State.colormode === 'ct') {
-          RGB = huepi.HelperColortemperaturetoRGB(Math.round(1000000 / State.ct));
-          xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
-          RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, State.bri / 255, Model);
-        }
-        return "#" + ToHexString(RGB.Red * 255) + ToHexString(RGB.Green * 255) + ToHexString(RGB.Blue * 255);
-      } else return "#ffcc88"; 
     }    
   };
 });
@@ -143,13 +162,36 @@ return {
 (function () {
 
   
-angular.module('huewi').controller('HueStatusController', function($rootScope, $scope, hueConnector) {
+angular.module('huewi').controller('HueController', function($rootScope, $scope, hueConnector) {
   $scope.MyHue = hueConnector.MyHue(); // For conveinient usage of MyHue in HTML within this controllers $scope
-window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
-  $rootScope.$on('huewiUpdate', function(event, data) {
-    $scope.Status = hueConnector.Status();
-    $scope.$apply();
-  });
+  window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
+  $scope.UpdateScheduled = false;
+
+  $scope.Status = function() {
+    return hueConnector.Status();
+  }
+
+  $scope.SetGroupBrightness = function(GroupId) {
+    if ($scope.UpdateScheduled === false)
+    { 
+      $scope.UpdateScheduled = true;
+      setTimeout(function(){
+        hueConnector.MyHue().GroupSetBrightness(GroupId, hueConnector.MyHue().Groups[GroupId].action.bri);
+        $scope.UpdateScheduled = false;
+      }, 200);
+    }
+  };
+
+  $scope.SetLightBrightness = function(LightId) {
+    if ($scope.UpdateScheduled === false)
+    { 
+      $scope.UpdateScheduled = true;
+      setTimeout(function(){
+        hueConnector.MyHue().LightSetBrightness(LightId , hueConnector.MyHue().Lights[LightId].state.bri);
+        $scope.UpdateScheduled = false;
+      }, 200);
+    }
+  };
 
 });
 
@@ -163,9 +205,11 @@ window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
 
 angular.module('huewi').controller('MenuController', function($rootScope, $scope) {
   $scope.MenuItem = 'Connecting';
+  $scope.MenuIndex = ' ';
   
   $scope.SetMenuItem = function(NewItem, NewIndex) {
     $scope.MenuItem = NewItem;
+    $scope.MenuIndex = NewIndex;
     if ($scope.MenuItem === '') // No Overlay selected
       $('body').css('overflow', 'initial'); // Enable scrolling of the <Body>
     else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
@@ -229,44 +273,6 @@ angular.module('huewi').directive("huewiGroups", function() {
 });
 
 angular.module('huewi').controller('GroupsController', function($rootScope, $scope, hueConnector) {
-  $scope.Groups = [{'name': 'All available lights', type: "LightGroup", HTMLColor: "#ffcc88"}, {'name': 'Group1'}, {'name': 'Group2'}, {'name': 'Group3'}];
-  $scope.Active = -1;
-  $scope.Cache = [];
-  $scope.UpdateScheduled = false;
-  
-  $rootScope.$on('huewiUpdate', function(event, data) {
-    if (hueConnector.MyHue().GroupIds.length >0) {
-      if ($scope.Active >= 0) // Cache Active
-        $scope.Cache = $scope.Groups[$scope.Active];
-      $scope.Groups = [];
-      $scope.Groups[0] = {'name': 'All available lights', type: "LightGroup", HTMLColor: "#ffcc88"};
-      var GroupNr = 1;
-      for (var Key in hueConnector.MyHue().Groups) {
-        if (GroupNr !== $scope.Active)
-          $scope.Groups[GroupNr] = hueConnector.MyHue().Groups[Key];
-        else
-          $scope.Groups[GroupNr] = $scope.Cache; // Use Cached Active
-        $scope.Groups[GroupNr].HTMLColor = hueConnector.StateToHTMLColor($scope.Groups[GroupNr].action);
-        GroupNr ++;
-      }
-      $scope.$apply();
-    }
-  });
-
-  $scope.SetActive = function(GroupNr) {
-    $scope.Active = GroupNr;
-  };
-
-  $scope.SetBrightness = function(GroupNr) {
-    if ($scope.UpdateScheduled === false)
-    { 
-      $scope.UpdateScheduled = true;
-      setTimeout(function(){
-        hueConnector.MyHue().GroupSetBrightness(GroupNr, $scope.Groups[GroupNr].action.bri);
-        $scope.UpdateScheduled = false;
-      }, 200);
-    }
-  };
 
 });
 
@@ -286,43 +292,6 @@ angular.module('huewi').directive("huewiLights", function() {
 });
 
 angular.module('huewi').controller('LightsController', function($rootScope, $scope, hueConnector) {
-  $scope.Lights = [{'name': 'Light1'}, {'name': 'Light2'}, {'name': 'Light3'}];
-  $scope.Active = -1;
-  $scope.Cache = [];
-  $scope.UpdateScheduled = false;
-
-  $rootScope.$on('huewiUpdate', function(event, data) {
-    if (hueConnector.MyHue().LightIds.length >0) {
-      if ($scope.Active >= 0) // Cache Active
-        $scope.Cache = $scope.Lights[$scope.Active];
-      $scope.Lights = [];
-      var LightNr = 0;
-      for (var Key in hueConnector.MyHue().Lights) {
-        if (LightNr !== $scope.Active)
-          $scope.Lights[LightNr] = hueConnector.MyHue().Lights[Key];
-        else
-          $scope.Lights[LightNr] = $scope.Cache; // Use Cached Active
-        $scope.Lights[LightNr].HTMLColor = hueConnector.StateToHTMLColor($scope.Lights[LightNr].state);
-        LightNr ++;
-      }      
-      $scope.$apply();
-    }
-  });
-
-  $scope.SetActive = function(LightNr) {
-    $scope.Active = LightNr;
-  };
-
-  $scope.SetBrightness = function(LightNr) {
-    if ($scope.UpdateScheduled === false)
-    { 
-      $scope.UpdateScheduled = true;
-      setTimeout(function(){
-        hueConnector.MyHue().LightSetBrightness(LightNr + 1, $scope.Lights[LightNr].state.bri);
-        $scope.UpdateScheduled = false;
-      }, 200);
-    }
-  };
 
 });
 
@@ -339,15 +308,8 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
   hueImage.src = 'img/hue.png';
   var ctImage = new Image();
   ctImage.src = 'img/ct.png';
-  $scope.Index = 0;
   $scope._Name = 'Light/Group';
   $scope.OrgName = $scope._Name;
-  
-  $rootScope.$on('huewiUpdate', function(event, data) {
-    if ($scope.Item === 'Group') {
-      //console.log('GROUP tick', $scope.Index);
-    }
-  });
 
   $scope.$on('MenuUpdate', function(event, NewItem, NewIndex) {
     if (NewItem === '') { // Key is Hit.
@@ -355,23 +317,16 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
         if ($scope.Name() != $scope.OrgName)
           $scope.Name($scope.OrgName);
       }
-      $scope.Item = NewItem;
     } else {
       $scope.Item = NewItem;
       $scope.Index = NewIndex;
 
       if ($scope.Item === 'Group') {
         hueConnector.MyHue().GroupAlertSelect($scope.Index);
-        if ($scope.Index === 0)
-          $scope.OrgName = $scope._Name = 'All Available Lights';
-        else if ($scope.Index <= hueConnector.MyHue().GroupIds.length)
-          $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].name;
-        //else $scope.OrgName = $scope._Name = "Group" + $scope.Index;
+        $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[$scope.Index].name;
       } else if ($scope.Item === 'Light') {
-        hueConnector.MyHue().LightAlertSelect($scope.Index);
-        if ($scope.Index <= hueConnector.MyHue().LightIds.length)
-          $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[hueConnector.MyHue().LightGetId($scope.Index)].name;
-        //else $scope.OrgName = $scope._Name = "Light " + $scope.Index;
+        hueConnector.MyHue().LightAlertSelect($scope.Index);       
+        $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[hueConnector.MyHue().LightGetId($scope.Index)].name;
       }
     }
   });
@@ -438,25 +393,23 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
     }
   });
 
-  $scope.GroupHasLight = function(LightNr) {
+  $scope.GroupHasLight = function(LightId) {
     if ($scope.Item === 'Group') {
       if ($scope.Index === 0) return false;
-      if (hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights.indexOf( hueConnector.MyHue().LightGetId(LightNr).toString() )>=0)
+      if (hueConnector.MyHue().Groups[$scope.Index].lights.indexOf(LightId)>=0)
         return true;
     }
     return false;
   }
   
-  $scope.GroupToggleLight = function(LightNr) {
+  $scope.GroupToggleLight = function(LightId) {
     if ($scope.Item === 'Group') {
-      //console.log(hueConnector.MyHue().LightGetId(LightNr).toString(), hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights);
-      hueConnector.MyHue().LightAlertSelect(LightNr);
-      if ($scope.GroupHasLight(LightNr))
-        hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights.splice(
-          hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights.indexOf(hueConnector.MyHue().LightGetId(LightNr).toString()),1);
-      else hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights.push(hueConnector.MyHue().LightGetId(LightNr).toString());
-      //console.log(hueConnector.MyHue().LightGetId(LightNr).toString(), hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights);
-      hueConnector.MyHue().GroupSetLights($scope.Index, hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights);
+      hueConnector.MyHue().LightAlertSelect(LightId);
+      if ($scope.GroupHasLight(LightId))
+        hueConnector.MyHue().Groups[$scope.Index].lights.splice(
+          hueConnector.MyHue().Groups[$scope.Index].lights.indexOf(LightId),1);
+      else hueConnector.MyHue().Groups[$scope.Index].lights.push(LightId);
+      hueConnector.MyHue().GroupSetLights($scope.Index, hueConnector.MyHue().Groups[$scope.Index].lights);
     }
   }
 
@@ -513,9 +466,7 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
 
   
 angular.module('huewi').controller('SchedulesController', function($rootScope, $scope, hueConnector) {
-  $rootScope.$on('huewiUpdate', function(event, data) {
-    $scope.$apply();
-  });
+
 });
 
 
@@ -527,9 +478,7 @@ angular.module('huewi').controller('SchedulesController', function($rootScope, $
 
   
 angular.module('huewi').controller('ScenesController', function($rootScope, $scope, hueConnector) {
-  $rootScope.$on('huewiUpdate', function(event, data) {
-    $scope.$apply();
-  });
+
 });
 
 
@@ -541,9 +490,7 @@ angular.module('huewi').controller('ScenesController', function($rootScope, $sco
 
   
 angular.module('huewi').controller('SensorsController', function($rootScope, $scope, hueConnector) {
-  $rootScope.$on('huewiUpdate', function(event, data) {
-    $scope.$apply();
-  });
+
 });
 
 
@@ -555,9 +502,7 @@ angular.module('huewi').controller('SensorsController', function($rootScope, $sc
 
   
 angular.module('huewi').controller('RulesController', function($rootScope, $scope, hueConnector) {
-  $rootScope.$on('huewiUpdate', function(event, data) {
-    $scope.$apply();
-  });
+
 });
 
 
@@ -586,9 +531,7 @@ angular.module('huewi').filter('orderObjectBy', function() {
 
 
 angular.module('huewi').controller('BridgeController', function($rootScope, $scope, hueConnector) {
-  $rootScope.$on('huewiUpdate', function(event, data) {
-    $scope.$apply();
-  });  
+
 });
 
 
