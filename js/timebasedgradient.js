@@ -55,6 +55,15 @@ function TimeBasedGradientUpdate() {
   ];
 
   var index = new Date().getHours();
+  //night = 3
+  //morning = 5
+  //day = 14
+  //evening = 22
+  if (index <  7) index =  3;
+  else if (index <  9) index =  5;
+  else if (index < 18) index = 14;
+  else if (index < 23) index = 22;
+  else index = 3;
   var timebasedgradient = timebasedgradients[index%24];
 
   $(".timebasedgradient").css("background-image", timebasedgradient);

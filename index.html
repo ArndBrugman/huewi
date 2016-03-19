@@ -55,16 +55,15 @@
 
   <div class='overlay fading' id='GroupAndLight' ng-controller='GroupAndLightController as GroupCtrl' ng-show='MenuItem === "Group" || MenuItem === "Light"'>
     <div class='inlay content timebasedgradient'>
-      <h3>
-        <input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }">
-      </h3>
+      <h3><input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }"></h3>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
       
       <div class='container' id='ColorTemp'>
         <div class='content'>
           <canvas id='ctCanvas'>It seems your device doesn't support the required HTML5 Canvas</canvas>
           <div>
             <div ng-show='MenuItem === "Group"' >
-              <input type='range' min='0' max='255' style='display:inline-block; width:80%' ng-model='MyHue.Groups[MyHue.GroupGetId(Index)].action.bri' ng-change='SetBrightness(Index)' ng-mousedown='SetActive(Index)' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+              <input type='range' min='0' max='255' style='display:inline-block; width:79%' ng-model='MyHue.Groups[MyHue.GroupGetId(Index)].action.bri' ng-change='SetBrightness(Index)' ng-mousedown='SetActive(Index)' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
               <div style='display:inline-block; width:19%' class='right'>
                 <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(Index);" ng-class="{ hidden: !((MyHue.Groups[MyHue.GroupGetId(Index)].action.on) || (Index == 0)) }">
                   <span class="glyphicon glyphicon-off" style="color:{{Group.HTMLColor}}" aria-hidden="true"></span>
@@ -75,7 +74,7 @@
               </div>
             </div>
             <div ng-show='MenuItem === "Light"' >
-              <input type='range' min='0' max='255' style='display:inline-block; width:80% ' ng-model='MyHue.Lights[MyHue.LightGetId(Index)].state.bri' ng-change='SetBrightness(Index)' ng-mousedown='SetActive(Index)' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+              <input type='range' min='0' max='255' style='display:inline-block; width:79% ' ng-model='MyHue.Lights[MyHue.LightGetId(Index)].state.bri' ng-change='SetBrightness(Index)' ng-mousedown='SetActive(Index)' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
               <div style='display:inline-block; width:19%' class='right' ng-class="{ hidden:!MyHue.Lights[MyHue.LightGetId(Index)].state.reachable }">
                 <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff(Index);" ng-class="{ hidden:!MyHue.Lights[MyHue.LightGetId(Index)].state.on }">
                   <span class="glyphicon glyphicon-off" style="color:{{Light.HTMLColor}}" aria-hidden="true"></span>
@@ -106,17 +105,17 @@
       
       <div class='content'>
         <div ng-show='(MenuItem === "Group") && (Index>0)' >
-          <div ng-repeat="Light in MyHue.Lights">
-          <div ng-click="GroupToggleLight($index+1)">
-            <span ng-show='GroupHasLight($index+1)'>(+)</span>
-            <span ng-show='!GroupHasLight($index+1)'>(-)</span>
-            {{Light.name}}
-          </div>
-          </div>
+          <span class='light' ng-repeat="Light in MyHue.Lights">
+            <span ng-click="GroupToggleLight($index+1)">
+              <span ng-show='GroupHasLight($index+1)' class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+              <span ng-show='!GroupHasLight($index+1)' class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+              {{Light.name}}
+            </span>
+          </span>
         </div>
       </div>
 
-      <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
       <div><br><br></div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
@@ -124,12 +123,13 @@
   <div class='overlay fading' id='Schedules' ng-controller='SchedulesController as SchedulesCtrl' ng-show='MenuItem === "Schedules"'>
     <div class='inlay content timebasedgradient'>
       <h3>Schedules</h3>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
       <div class='list-group'>
         <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Schedules">
             {{Key}} - {{Value.name}}
         </div>
       </div>
-      <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
       <div><br><br></div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
@@ -137,12 +137,13 @@
   <div class='overlay fading' id='Scenes' ng-controller='ScenesController as ScenesCtrl' ng-show='MenuItem === "Scenes"'>
     <div class='inlay content timebasedgradient'>
       <h3>Scenes</h3>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
       <div class='list-group'>
         <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Scenes">
             {{Key}} - {{Value.name}}
         </div>
       </div>
-      <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
       <div><br><br></div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
@@ -150,12 +151,13 @@
   <div class='overlay fading' id='Sensors' ng-controller='SensorsController as SensorsCtrl' ng-show='MenuItem === "Sensors"'>
     <div class='inlay content timebasedgradient'>
       <h3>Sensors</h3>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
       <div class='list-group'>
         <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Sensors">
             {{Key}} - {{Value.name}}
         </div>
       </div>
-      <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
       <div><br><br></div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
@@ -163,12 +165,13 @@
   <div class='overlay fading' id='Rules' ng-controller='RulesController as RulesCtrl' ng-show='MenuItem === "Rules"'>
     <div class='inlay content timebasedgradient'>
       <h3>Rules</h3>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
       <div class='list-group'>
         <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Rules">
             {{Key}} - {{Value.name}}
         </div>
       </div>
-      <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
       <div><br><br></div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
@@ -176,6 +179,7 @@
   <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='MenuItem === "Bridge"'>
     <div class='inlay content timebasedgradient'>
       <h3>Bridge</h3>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
       <strong>Local Brides</strong>
       <div class='list-group'>
         <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges">
@@ -183,7 +187,7 @@
         </div>
       </div>
       <br>
-      <div>Bridge IP: {{MyHue.BridgeIP}}</div><div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
+      <div>Bridge IP: {{MyHue.BridgeIP}}</div>
       <div>Bridge Name: {{MyHue.BridgeName}}</div>
       <div>Status: {{Status}}</div>
       <div class='list-group'>
@@ -195,7 +199,7 @@
           <div ng-show="Value.key===MyHue.Username" style="text-align: right">(Current Key)</div>
         </div>
       </div>
-      <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
       <div><br><br></div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
@@ -203,7 +207,7 @@
   <div id='navcontainer' class='timebasedgradient'>
     <span id='navbutton' class='glyphicon glyphicon-menu-hamburger'></span>
     <nav id='navdrawer'>
-      <h4>Settings</h4>
+      <h4>Settings</h4><br>
         <div class='list-group'>
           <li class='list-group-item' ng-click='SetMenuItem("Schedules")'>Schedules</li>
           <li class='list-group-item' ng-click='SetMenuItem("Scenes")'>Scenes</li>
@@ -224,7 +228,7 @@
       <h3>Searching for Bridge and connecting</h3>
       <div></div>
       <h4>Status: {{Status}}</h4>
-      <div ng-click="SetMenuItem('')" style="text-align: right"><br>Close</div>
+      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
       <div><br><br></div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->

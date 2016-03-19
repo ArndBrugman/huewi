@@ -113,7 +113,7 @@ return {
         return Result.length == 1 ? "0" + Result : Result;
       }
 
-      if (State) { // Group 0 (All available lights) doesn't have properties
+      if (State && State.colormode) { // Group 0 (All available lights) doesn't have properties
         Model = Model || "LCT001";
         var RGB;
         var xy;
@@ -161,7 +161,7 @@ window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
 (function () {
 
 
-angular.module('huewi').controller('MenuController', function($rootScope, $scope, hueConnector) {
+angular.module('huewi').controller('MenuController', function($rootScope, $scope) {
   $scope.MenuItem = 'Connecting';
   
   $scope.SetMenuItem = function(NewItem, NewIndex) {
@@ -355,6 +355,7 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
         if ($scope.Name() != $scope.OrgName)
           $scope.Name($scope.OrgName);
       }
+      $scope.Item = NewItem;
     } else {
       $scope.Item = NewItem;
       $scope.Index = NewIndex;
@@ -439,9 +440,7 @@ angular.module('huewi').controller('GroupAndLightController', function($rootScop
 
   $scope.GroupHasLight = function(LightNr) {
     if ($scope.Item === 'Group') {
-      if (LightNr === -1)
-      console.log($scope.Index, LightNr, hueConnector.MyHue().LightGetId(LightNr), 
-        huepi.HelperToStringArray(hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights));
+      if ($scope.Index === 0) return false;
       if (hueConnector.MyHue().Groups[hueConnector.MyHue().GroupGetId($scope.Index)].lights.indexOf( hueConnector.MyHue().LightGetId(LightNr).toString() )>=0)
         return true;
     }
