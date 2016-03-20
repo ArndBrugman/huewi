@@ -12,7 +12,7 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
   // Demo Data while loading.
   MyHue.Groups = [{name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88', id:'0'}, {name: 'Group1'}, {name: 'Group2'}, {name: 'Group3'}];
   MyHue.Lights = [{name: 'Light1'}, {name: 'Light2'}, {name: 'Light3'}];
-
+  
   if (window.isCordovaApp) {
     document.addEventListener("deviceready", onStartup, false);
     document.addEventListener("pause", onPause, false);
@@ -26,7 +26,6 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
   function onResume() {
     TimeBasedGradientUpdate();
     ConnectToHueBridge();
-    HeartbeatInterval = setInterval(StatusHeartbeat, 2500);
   }
 
   function onPause() {
@@ -59,66 +58,65 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
     } else return "#ffcc88"; 
   }
 
-//delete localStorage.MyHueBridgeIP; // Force PortalDiscoverLocalBridges TESTCODE.
+  function ReConnectHueBridge() { // IP is stored in MyHue.
+    Status = 'Getting Config';
+    $rootScope.$apply();
+    MyHue.BridgeGetConfig().then(function() {
+    Status = 'Bridge Config Received, Getting Data';
+    $rootScope.$apply();
+    MyHue.BridgeGetData().then(function() {
+      localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
+      BridgeDataReceived();
+      Status = 'Connected';
+      $rootScope.$apply();
+      HeartbeatInterval = setInterval(StatusHeartbeat, 2500);
+    }, function() {
+      Status = 'Please press connect button on the hue Bridge';
+      $rootScope.$apply();
+      MyHue.BridgeCreateUser(app.name).then(function() {
+        localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
+        Status = 'Connected';
+        $rootScope.$apply();
+        HeartbeatInterval = setInterval(StatusHeartbeat, 2500);
+      }, function() {
+        Status = 'Please press connect button on the hue Bridge';
+        $rootScope.$apply();
+      });  
+    });
+  }, function() {
+    Status = 'Unable to Retreive Bridge Configuration';
+    delete localStorage.MyHueBridgeIP; // un-Cache BridgeIP
+    $rootScope.$apply();
+  });
+  }
+
   function ConnectToHueBridge() {
-    if (!localStorage.MyHueBridgeIP) { // No Cached BridgeIP?
+    if (localStorage.MyHueBridgeIP) { // Cached BridgeIP?
+      MyHue.BridgeIP = localStorage.MyHueBridgeIP;
+      ReConnectHueBridge();
+      MyHue.PortalDiscoverLocalBridges(); // in Parallel retrieve LocalBridges
+     } else {
       Status = 'Trying to Discover Bridge via Portal';
       $rootScope.$apply();
-      MyHue.PortalDiscoverLocalBridges().then(function NewBridgesDiscovered() {
+      MyHue.PortalDiscoverLocalBridges().then(function() {
         Status = 'Bridge Discovered, Getting Config';
         $rootScope.$apply();
-        MyHue.BridgeGetConfig().then(function NewBridgeConfigReceived() {
-          Status = 'Bridge Config Received, Getting Data';
+        ReConnectHueBridge();
+      }, function() {
+        Status = 'Trying to Discover Bridge on Network';
+        $rootScope.$apply();
+          MyHue.NetworkDiscoverLocalBridges().then(function() {
+          Status = 'Bridge Discovered, Getting Config';
           $rootScope.$apply();
-//MyHue.BridgeIP = "127.0.0.1:8000"; // Test On SteveyO/Hue-Emulator  TESTCODE.
-          MyHue.BridgeGetData().then(function NewBridgeDataReceived() {
-            localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
-            BridgeDataReceived();
-            Status = 'Connected';
-            $rootScope.$apply();
-//MyHue.BridgeDeleteUser(MyHue.Username); // Force buttonpress on next Startup TESTCODE.
-          }, function UnableToRetreiveBridgeData() {
-            Status = 'Please press connect button on the hue Bridge';
-            $rootScope.$apply();
-            MyHue.BridgeCreateUser(app.name).then(function NewBridegeUserCreated() {
-              localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
-              Status = 'Connected';
-              $rootScope.$apply();
-            }, function UnableToCreateUseronBridge() {
-              Status = 'Please press connect button on the hue Bridge';
-              $rootScope.$apply();
-            });  
-          });
-        }, function UnableToRetreiveBridgeConfiguration() {
-          Status = 'Unable to Retreive Bridge Configuration';
+          ReConnectHueBridge();
+        }, function() {
+          Status = 'Unable to find Local Bridge on Network';
+          $rootScope.$apply();
+        }).progress(function update(Percentage){
+          Status = 'Searching Local Network for Bridge '+ Percentage +'% done';
           $rootScope.$apply();
         });
-      }, function UnableToDiscoverLocalBridgesViaPortal() {
-        Status = 'Unable to find Local Bridge via Portal';
-        $rootScope.$apply();
-      });
-    } else {
-      MyHue.PortalDiscoverLocalBridges(); // Parallel search for LocalBridges
-      MyHue.BridgeIP = localStorage.MyHueBridgeIP;
-      Status = 'Using Cached Bridge IP, Getting Config';
-      $rootScope.$apply();
-      MyHue.BridgeGetConfig().then(function CachedBridgeConfigReceived() {
-        Status = 'Bridge Config Received, Getting Data';
-        $rootScope.$apply();
-        MyHue.BridgeGetData().then(function CachedBridgeDataReceived() {
-          BridgeDataReceived();
-          Status = 'Connected';
-          $rootScope.$apply();
-        }, function UnableToRetreiveCachedBridgeData() {
-          delete localStorage.MyHueBridgeIP;
-          Status = 'Unable to Retreive Cached Bridge Data';
-          $rootScope.$apply();
-        });
-      }, function UnableToRetreiveCachedBridgeConfig() {
-        delete localStorage.MyHueBridgeIP;
-        Status = 'Unable to Retreive Cached Bridge Configuration';
-        $rootScope.$apply();
-      });
+      });      
     }
   }
 
@@ -152,7 +150,7 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
       Status = 'Disconnected';
       setTimeout(function() {
         onPause();
-        onResume();
+        onResume(); 
       }, 1);
     });
   }
