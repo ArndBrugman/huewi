@@ -5,8 +5,55 @@ var app = angular.module('huewi', ['ngAnimate']);
 (function () {
 
 
+angular.module(app.name).filter('orderObjectBy', function() {
+  return function(items, field, reverse) {
+    var filtered = [];
+    for (var key in items) {
+      var item = items[key];
+      item['id'] = key;
+      filtered.push(item);
+    };
+    filtered.sort(function (a, b) {
+      return (a[field] > b[field] ? 1 : -1);
+    });
+    if(reverse) filtered.reverse();
+    return filtered;
+  };
+});
+
+
+})();
+
+
+
+(function () {
+
+
+angular.module(app.name).controller('TabController', function($scope) {
+  $scope.Tab = 1;
+
+  $scope.TabIsSet = function(CheckTab) {
+    return $scope.Tab === CheckTab;
+  };
+  $scope.SetTab = function(SetTab) {
+    $scope.Tab = SetTab;
+  };
+  $scope.GetTab = function() {
+    return $scope.Tab;
+  };
+});
+
+
+})();
+
+
+
+(function () {
+
+
 angular.module(app.name).factory('hueConnector', function ($rootScope) {
   var MyHue = new huepi();
+  //var MyHue = new huepi("localhost:8000"); // Emulator
   var HeartbeatInterval;
   var Status = '';
   // Demo Data while loading.
@@ -26,6 +73,8 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
   function onResume() {
     TimeBasedGradientUpdate();
     ConnectToHueBridge();
+    //if (Status !== "Connected")
+      //setTimeout(function() { onResume() }, 2500);
   }
 
   function onPause() {
@@ -58,70 +107,78 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
     } else return "#ffcc88"; 
   }
 
-  function ReConnectHueBridge() { // IP is stored in MyHue.
+  function ReConnectHueBridge() { // IP is stored in MyHue.BridgeIP
     Status = 'Getting Config';
-    $rootScope.$apply();
+    setTimeout(function() { $rootScope.$apply(); }, 1);
     MyHue.BridgeGetConfig().then(function() {
-    Status = 'Bridge Config Received, Getting Data';
-    $rootScope.$apply();
-    MyHue.BridgeGetData().then(function() {
-      localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
-      BridgeDataReceived();
-      Status = 'Connected';
-      $rootScope.$apply();
-      HeartbeatInterval = setInterval(StatusHeartbeat, 2500);
-    }, function() {
-      Status = 'Please press connect button on the hue Bridge';
-      $rootScope.$apply();
-      MyHue.BridgeCreateUser(app.name).then(function() {
+      Status = 'Bridge Config Received, Getting Data';
+      setTimeout(function() { $rootScope.$apply(); }, 1);
+      MyHue.BridgeGetData().then(function() {
         localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
+        BridgeDataReceived();
         Status = 'Connected';
-        $rootScope.$apply();
+        setTimeout(function() { $rootScope.$apply(); }, 1);
         HeartbeatInterval = setInterval(StatusHeartbeat, 2500);
       }, function() {
         Status = 'Please press connect button on the hue Bridge';
-        $rootScope.$apply();
-      });  
+        setTimeout(function() { $rootScope.$apply(); }, 1);
+        MyHue.BridgeCreateUser(app.name).then(function() {
+          localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
+          Status = 'Connected';
+          setTimeout(function() { $rootScope.$apply(); }, 1);
+          HeartbeatInterval = setInterval(StatusHeartbeat, 2500);
+        }, function() {
+          Status = 'Please press connect button on the hue Bridge';
+          setTimeout(function() { $rootScope.$apply(); }, 1);
+        });
+      });
+    }, function() {
+      Status = 'Unable to Retreive Bridge Configuration';
+      delete localStorage.MyHueBridgeIP; // un-Cache BridgeIP
+      setTimeout(function() { $rootScope.$apply(); }, 1);
     });
-  }, function() {
-    Status = 'Unable to Retreive Bridge Configuration';
-    delete localStorage.MyHueBridgeIP; // un-Cache BridgeIP
-    $rootScope.$apply();
-  });
   }
 
   function ConnectToHueBridge() {
-    if (localStorage.MyHueBridgeIP) { // Cached BridgeIP?
+    clearInterval(HeartbeatInterval);
+    if (MyHue.BridgeIP !== "") { // Preset/Previous BridgeIP
+      ReConnectHueBridge();
+    } else if (localStorage.MyHueBridgeIP) { // Cached BridgeIP
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
       ReConnectHueBridge();
-      MyHue.PortalDiscoverLocalBridges(); // in Parallel retrieve LocalBridges
-     } else {
+    } else {
       Status = 'Trying to Discover Bridge via Portal';
-      $rootScope.$apply();
+      setTimeout(function() { $rootScope.$apply(); }, 1);
       MyHue.PortalDiscoverLocalBridges().then(function() {
         Status = 'Bridge Discovered, Getting Config';
-        $rootScope.$apply();
+        setTimeout(function() { $rootScope.$apply(); }, 1);
         ReConnectHueBridge();
-      }, function() {
-        Status = 'Trying to Discover Bridge on Network';
-        $rootScope.$apply();
-          MyHue.NetworkDiscoverLocalBridges().then(function() {
-          Status = 'Bridge Discovered, Getting Config';
-          $rootScope.$apply();
-          ReConnectHueBridge();
-        }, function() {
-          Status = 'Unable to find Local Bridge on Network';
-          $rootScope.$apply();
-        }).progress(function update(Percentage){
-          Status = 'Searching Local Network for Bridge '+ Percentage +'% done';
-          $rootScope.$apply();
-        });
-      });      
+      }, function() { // else
+        Status = 'Unable to find Local Bridge via Portal';
+        setTimeout(function() { $rootScope.$apply(); }, 1);
+      } );
     }
   }
 
+  function ScanForHueBridges() {
+    clearInterval(HeartbeatInterval);
+    Status = 'Trying to Discover Bridge on Network';
+    setTimeout(function() { $rootScope.$apply(); }, 1);
+    MyHue.NetworkDiscoverLocalBridges().then(function() {
+      Status = 'Bridge Discovered, Getting Config';
+      setTimeout(function() { $rootScope.$apply(); }, 1);
+      ReConnectHueBridge();
+    }, function() { // else
+      Status = 'Unable to find Local Bridge on Network';
+      setTimeout(function() { $rootScope.$apply(); }, 1);
+    }).progress(function update(Percentage){
+      Status = 'Searching Local Network for Bridge '+ Percentage +'% done';
+      setTimeout(function() { $rootScope.$apply(); }, 1);
+    });
+  }
+
   function BridgeDataReceived() {
-    MyHue.Groups['0'] = {name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88', id: '0'};
+    MyHue.Groups['0'] = {name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88'};
     for (var Key in MyHue.Groups) {
       MyHue.Groups[Key].id = Key;
       MyHue.Groups[Key].HTMLColor = StateToHTMLColor(MyHue.Groups[Key].action);
@@ -145,23 +202,29 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
   function StatusHeartbeat() {
     MyHue.BridgeGetData().then(function UpdateUI() {
       BridgeDataReceived();
-      $rootScope.$apply();
+      setTimeout(function() { $rootScope.$apply(); }, 1);
     }, function BridgeGetDataFailed() {
       Status = 'Disconnected';
       setTimeout(function() {
         onPause();
-        onResume(); 
+        onResume();
       }, 1);
     });
   }
 
 return {
-    MyHue: function () {
+    MyHue : function () {
       return MyHue;
     },
-    Status: function() {
+    Status : function() {
       return Status;
-    }    
+    },
+    ConnectToHueBridge : function() {
+      return ConnectToHueBridge();
+    },
+    ScanForHueBridges : function() {
+      return ScanForHueBridges();
+    }
   };
 });
 
@@ -172,21 +235,29 @@ return {
 
 (function () {
 
+
+angular.module(app.name).factory('Menu', function($rootScope) {
+  var Item = 'Connecting';
+  var Index = ' ';
   
-angular.module(app.name).filter('orderObjectBy', function() {
-  return function(items, field, reverse) {
-    var filtered = [];
-    for (var key in items) {
-      var item = items[key];
-      item['key'] = key;
-      filtered.push(item);
-    };
-    filtered.sort(function (a, b) {
-      return (a[field] > b[field] ? 1 : -1);
-    });
-    if(reverse) filtered.reverse();
-    return filtered;
+  return {
+    SetItem : function(NewItem, NewIndex) {
+      Item = NewItem;
+      Index = NewIndex;
+      if (Item === '') // No Overlay selected
+        $('body').css('overflow', 'initial'); // Enable scrolling of the <Body>
+      else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
+      $rootScope.$broadcast('MenuUpdate', NewItem, NewIndex);
+      setTimeout(function() { $rootScope.$apply() }, 1);
+    },
+    GetItem : function() {
+      return Item;
+    },
+    GetIndex : function() {
+      return Index;
+    }
   };
+
 });
 
 
@@ -197,7 +268,7 @@ angular.module(app.name).filter('orderObjectBy', function() {
 (function () {
 
 
-angular.module(app.name).controller('HueController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('HueController', function($rootScope, $scope, hueConnector, Menu) {
   $scope.MyHue = hueConnector.MyHue(); // For conveinient usage of MyHue in HTML within this controllers $scope
   window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
   $scope.UpdateScheduled = false;
@@ -206,12 +277,20 @@ angular.module(app.name).controller('HueController', function($rootScope, $scope
     return hueConnector.Status();
   }
 
+  $scope.Connect = function() {
+    return hueConnector.ConnectToHueBridge();
+  }
+
+  $scope.Scan = function() {
+    return hueConnector.ScanForHueBridges();
+  }
+
   $scope.SetGroupBrightness = function(GroupId) {
     if ($scope.UpdateScheduled === false)
     { 
       $scope.UpdateScheduled = true;
       setTimeout(function(){
-        hueConnector.MyHue().GroupSetBrightness(GroupId, hueConnector.MyHue().Groups[GroupId].action.bri);
+        hueConnector.MyHue().GroupSetBrightness(GroupId, hueConnector.MyHue().Groups[GroupId].action.bri, 2);
         $scope.UpdateScheduled = false;
       }, 200);
     }
@@ -222,74 +301,39 @@ angular.module(app.name).controller('HueController', function($rootScope, $scope
     { 
       $scope.UpdateScheduled = true;
       setTimeout(function(){
-        hueConnector.MyHue().LightSetBrightness(LightId , hueConnector.MyHue().Lights[LightId].state.bri);
+        hueConnector.MyHue().LightSetBrightness(LightId , hueConnector.MyHue().Lights[LightId].state.bri, 2);
         $scope.UpdateScheduled = false;
       }, 200);
     }
   };
 
-});
-
-
-})();
-
-
-
-(function () {
-
-
-angular.module(app.name).controller('MenuController', function($rootScope, $scope) {
-  $scope.MenuItem = 'Connecting';
-  $scope.MenuIndex = ' ';
-  
   $scope.SetMenuItem = function(NewItem, NewIndex) {
-    $scope.MenuItem = NewItem;
-    $scope.MenuIndex = NewIndex;
-    if ($scope.MenuItem === '') // No Overlay selected
-      $('body').css('overflow', 'initial'); // Enable scrolling of the <Body>
-    else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
-    $scope.$broadcast('MenuUpdate', NewItem, NewIndex);
-    setTimeout(function() { $scope.$apply() }, 1);
-  };
+    return Menu.SetItem(NewItem, NewIndex);
+  }
+
+  $scope.MenuItem = function() {
+    return Menu.GetItem();
+  }
+
+  $scope.MenuIndex = function() {
+    return Menu.GetIndex();
+  }
 
   document.addEventListener('backbutton', function(event) { // Cordova/PhoneGap only.
-    if (angular.element("#Menu").scope().MenuItem !== '') {
-      angular.element("#Menu").scope().MenuItem = '';
-      angular.element("#Menu").scope().SetMenuItem('', 27);
+    if (angular.element("#HueStatus").scope().MenuItem() !== '') {
+      angular.element("#HueStatus").scope().MenuItem() = '';
+      angular.element("#HueStatus").scope().SetMenuItem('', 27);
     }
   });
 
   document.onkeyup = function(event) {
-    if (angular.element("#Menu").scope().MenuItem !== '') {
+    if (angular.element("#HueStatus").scope().MenuItem() !== '') {
       // Escape & Enter will close open Overlays.
       if ((event.keyCode === 27) || (event.keyCode === 13)) {
-        angular.element("#Menu").scope().SetMenuItem('', event.keyCode);
+        angular.element("#HueStatus").scope().SetMenuItem('', event.keyCode);
       }
     }
   }
-
-});
-
-
-})();
-
-
-
-(function () {
-
-  
-angular.module(app.name).controller('TabController', function($scope) {
-  $scope.Tab = 1;
-
-  $scope.TabIsSet = function(CheckTab) {
-    return $scope.Tab === CheckTab;
-  };
-  $scope.SetTab = function(SetTab) {
-    $scope.Tab = SetTab;
-  };
-  $scope.GetTab = function() {
-    return $scope.Tab;
-  };
 });
 
 
@@ -317,7 +361,7 @@ angular.module(app.name).controller('GroupsController', function($rootScope, $sc
 
 (function () {
 
-  
+
 angular.module(app.name).directive("huewiLights", function() {
   return {
     restrict: 'E',
@@ -335,7 +379,7 @@ angular.module(app.name).controller('LightsController', function($rootScope, $sc
 
 (function () {
 
-  
+
 angular.module(app.name).controller('GroupAndLightController', function($rootScope, $scope, hueConnector) {
   $scope.Item = '';
   $scope.Index = '';
@@ -499,7 +543,7 @@ angular.module(app.name).controller('GroupAndLightController', function($rootSco
 
 (function () {
 
-  
+
 angular.module(app.name).controller('SchedulesController', function($rootScope, $scope, hueConnector) {
 });
 
@@ -510,7 +554,7 @@ angular.module(app.name).controller('SchedulesController', function($rootScope, 
 
 (function () {
 
-  
+
 angular.module(app.name).controller('ScenesController', function($rootScope, $scope, hueConnector) {
 });
 
@@ -521,7 +565,7 @@ angular.module(app.name).controller('ScenesController', function($rootScope, $sc
 
 (function () {
 
-  
+
 angular.module(app.name).controller('SensorsController', function($rootScope, $scope, hueConnector) {
 });
 
@@ -532,7 +576,7 @@ angular.module(app.name).controller('SensorsController', function($rootScope, $s
 
 (function () {
 
-  
+
 angular.module(app.name).controller('RulesController', function($rootScope, $scope, hueConnector) {
 });
 
