@@ -172,21 +172,37 @@
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='MenuItem() === "Bridge"'>
+  <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='Status() !== "Connected" || MenuItem() === "Bridge"'> <!-- == "!" vs !== "" TESTCODE. -->
     <div class='inlay content timebasedgradient'>
       <h3>Bridge</h3>
       <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
-      <div>Bridge IP: {{MyHue.BridgeIP}}</div>
-      <div>Bridge Name: {{MyHue.BridgeName}}</div>
-      <div>Bridge ID: {{MyHue.BridgeID}}</div>
+      <div class='list-group'>
+        <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges" ng-click="MyHue.ScanningNetwork = false; MyHue.BridgeIP = Value.internalipaddress; Connect();">
+          <div style="display:inline-block; width:69%">
+            {{Value.internalipaddress}} : {{Value.id}}
+          </div>
+          <div ng-show="Value.internalipaddress===MyHue.BridgeIP" style="display:inline-block; width:29%; text-align: right">Active Bridge</div>
+        </div>
+      </div>
+      <button type="button" class="btn" ng-click="MyHue.PortalDiscoverLocalBridges();" ng-show="!MyHue.ScanningNetwork">Reload Bridges</button>
+      <button type="button" class="btn" ng-click="Scan();" ng-show="!MyHue.ScanningNetwork">Scan for Bridges</button>
+      <button type="button" class="btn" ng-click="MyHue.ScanningNetwork = false;" ng-show="MyHue.ScanningNetwork">Cancel Bridge Scanning</button>
+      <button type="button" class="btn" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true);" ng-show="!MyHue.ScanningNetwork">Refreshed Reload</button>
+      <div></div>
+      <h4>Status: {{Status()}}</h4>
+      <h4>Bridge IP: {{MyHue.BridgeIP}}</h4>
+      <h4>Bridge Name: {{MyHue.BridgeName}}</h4>
       <br>
       <div class='list-group'>
         <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist | orderObjectBy : 'last use date' : true">
-          {{Value.key}} : {{Value.name}}<br>
-          Created: {{Value['create date']}}, 
-          LastUsed: {{Value['last use date']}}
-          <div ng-show="Value.id===MyHue.Username" style="text-align: right">(Current Key)</div>
-          <div ng-click="MyHue.BridgeDeleteUser(Value.key)" ng-show="Value.key!=MyHue.Username" style="text-align: right">Delete Key</div>
+          <div style="display:inline-block; width:69%">
+            {{Value.id}} : {{Value.name}}<br>
+            Created: {{Value['create date']}}, 
+            LastUsed: {{Value['last use date']}}
+          </div>
+          <div ng-show="Value.id===MyHue.Username" style="display:inline-block; width:29%; text-align: right">Active Key</div>
+          <div style="display:inline-block; width:69%"></div>
+          <div ng-click="MyHue.BridgeDeleteUser(Value.id)" style="display:inline-block; width:29%; text-align: right">Delete Key</div>
         </div>
       </div>
       <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
@@ -194,6 +210,7 @@
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
+  
   <div id='navcontainer' class='timebasedgradient'>
     <span id='navbutton' class='glyphicon glyphicon-menu-hamburger'></span>
     <nav id='navdrawer'>
@@ -205,32 +222,10 @@
           <li class='list-group-item' ng-click='SetMenuItem("Rules")'>Rules</li>
         </div>
         <div class='list-group'>
-          <li class='list-group-item' ng-click='SetMenuItem("SelectBridge")'>Find Bridge(s)</li>
-          <li class='list-group-item' ng-click='SetMenuItem("Bridge")' ng-show='Status() === "Connected"'>Bridge</li>
-          <li class='list-group-item' onclick='delete localStorage.MyHueBridgeIP;window.location.reload(true);'>Refreshed Reload</li>
+          <li class='list-group-item' ng-click='SetMenuItem("Bridge")'>Bridge</li>
         </div>
     </nav>
   </div><!-- /navcontainer -->
-
-  <div class='overlay fading' id='Connecting' ng-show='Status() !== "Connected" || MenuItem() === "SelectBridge"'> <!-- == "!" vs !== "" TESTCODE. -->
-    <div class='inlay content timebasedgradient'>
-      <h3>Connect</h3>
-      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
-      <strong>Local Bridges</strong>
-      <div class='list-group'>
-        <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges" ng-click="MyHue.BridgeIP = Value.internalipaddress; Connect();">
-          {{Value.internalipaddress}} : {{Value.id}}
-        </div>
-      </div>
-      <button type="button" class="btn" ng-click="Scan()" ng-show="!MyHue.BridgeScan">Scan</button>
-      <button type="button" class="btn" ng-click="MyHue.BridgeScan = false" ng-show="MyHue.BridgeScan">Cancel</button>
-      <button type="button" class="btn" onclick="delete localStorage.MyHueBridgeIP;window.location.reload(true);">Refreshed Reload</button>
-      <div></div>
-      <h4>Status: {{Status()}}</h4>
-      <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
-      <div><br><br></div>
-    </div><!-- /inlay content -->
-  </div><!-- /overlay -->
 
 
   <div class='status timebasedgradient'>
