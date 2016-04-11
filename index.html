@@ -179,19 +179,18 @@
       <div class='list-group'>
         <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges" ng-click="MyHue.ScanningNetwork = false; MyHue.BridgeIP = Value.internalipaddress; Connect();">
           <div style="display:inline-block; width:69%">
-            {{Value.internalipaddress}} : {{Value.id}}
+            {{Value.internalipaddress}}
+            <span ng-show="Value.internalipaddress===MyHue.BridgeIP">, '{{MyHue.BridgeName}}'</span>
+            , {{Value.id}}
           </div>
           <div ng-show="Value.internalipaddress===MyHue.BridgeIP" style="display:inline-block; width:29%; text-align: right">Active Bridge</div>
         </div>
       </div>
-      <button type="button" class="btn" ng-click="MyHue.PortalDiscoverLocalBridges();" ng-show="!MyHue.ScanningNetwork">Reload Bridges</button>
-      <button type="button" class="btn" ng-click="Scan();" ng-show="!MyHue.ScanningNetwork">Scan for Bridges</button>
-      <button type="button" class="btn" ng-click="MyHue.ScanningNetwork = false;" ng-show="MyHue.ScanningNetwork">Cancel Bridge Scanning</button>
-      <button type="button" class="btn" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true);" ng-show="!MyHue.ScanningNetwork">Refreshed Reload</button>
+      <button type="button" class="btn btn-sm preset" ng-click="MyHue.PortalDiscoverLocalBridges();" ng-show="!MyHue.ScanningNetwork">Reload Bridges</button>
+      <button type="button" class="btn btn-sm preset" ng-click="Scan();" ng-show="!MyHue.ScanningNetwork">Scan Network</button>
+      <button type="button" class="btn btn-sm preset" ng-click="MyHue.ScanningNetwork = false;" ng-show="MyHue.ScanningNetwork">Cancel Scan</button>
+      <button type="button" class="btn btn-sm preset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true);" ng-show="!MyHue.ScanningNetwork">Refreshed Reload</button>
       <div></div>
-      <h4>Status: {{Status()}}</h4>
-      <h4>Bridge IP: {{MyHue.BridgeIP}}</h4>
-      <h4>Bridge Name: {{MyHue.BridgeName}}</h4>
       <br>
       <div class='list-group'>
         <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist | orderObjectBy : 'last use date' : true">
