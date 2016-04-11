@@ -51,6 +51,34 @@ angular.module(app.name).controller('TabController', function($scope) {
 (function () {
 
 
+angular.module(app.name).factory('Menu', function() {
+  var Item = 'Connecting';
+  var Id = '';
+  
+  return {
+    SetItem : function(NewItem, NewId) {
+      Item = NewItem;
+      if (NewId)
+        Id = NewId;
+    },
+    GetItem : function() {
+      return Item;
+    },
+    GetId : function() {
+      return Id;
+    }
+  };
+
+});
+
+
+})();
+
+
+
+(function () {
+
+
 angular.module(app.name).factory('hueConnector', function ($rootScope) {
   var MyHue = new huepi();
   //var MyHue = new huepi("localhost:8000"); // Emulator
@@ -60,7 +88,7 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
   MyHue.Groups = [{name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88', id:'0'}, {name: 'Group1'}, {name: 'Group2'}, {name: 'Group3'}];
   MyHue.Lights = [{name: 'Light1'}, {name: 'Light2'}, {name: 'Light3'}];
   
-  if (window.isCordovaApp) {
+  if (window.cordova) {
     document.addEventListener("deviceready", onStartup, false);
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
@@ -80,37 +108,35 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
     clearInterval(HeartbeatInterval);
   }
 
+  function SetStatus(NewStatus) {
+    Status = NewStatus;
+    setTimeout(function() { $rootScope.$apply(); }, 1); // Make Sure UI is updated :)
+  }
+
   function ReConnect() { // IP is stored in MyHue.BridgeIP
     clearInterval(HeartbeatInterval);
     MyHue.Username = '';
-    Status = 'Getting Config';
-    setTimeout(function() { $rootScope.$apply(); }, 1);
+    SetStatus('Getting Config');
     MyHue.BridgeGetConfig().then(function() {
-      Status = 'Bridge Config Received, Getting Data';
-      setTimeout(function() { $rootScope.$apply(); }, 1);
+      SetStatus('Bridge Config Received, Getting Data');
       MyHue.BridgeGetData().then(function() {
         localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
         DataReceived();
-        Status = 'Connected';
-        setTimeout(function() { $rootScope.$apply(); }, 1);
+        SetStatus('Connected');
         HeartbeatInterval = setInterval(onHeartbeat, 2500);
       }, function() {
-        Status = 'Please press connect button on the hue Bridge';
-        setTimeout(function() { $rootScope.$apply(); }, 1);
+        SetStatus('Please press connect button on the hue Bridge');
         MyHue.BridgeCreateUser(app.name).then(function() {
           localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
-          Status = 'Connected';
-          setTimeout(function() { $rootScope.$apply(); }, 1);
+          SetStatus('Connected');
           HeartbeatInterval = setInterval(onHeartbeat, 2500);
         }, function() {
-          Status = 'Please press connect button on the hue Bridge';
-          setTimeout(function() { $rootScope.$apply(); }, 1);
+          SetStatus('Please press connect button on the hue Bridge');
         });
       });
     }, function() {
-      Status = 'Unable to Retreive Bridge Configuration';
+      SetStatus('Unable to Retreive Bridge Configuration');
       delete localStorage.MyHueBridgeIP; // un-Cache BridgeIP
-      setTimeout(function() { $rootScope.$apply(); }, 1);
     });
   }
 
@@ -123,33 +149,26 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
       ReConnect();
     } else {
-      Status = 'Trying to Discover Bridge via Portal';
-      setTimeout(function() { $rootScope.$apply(); }, 1);
+      SetStatus('Trying to Discover Bridge via Portal');
       MyHue.PortalDiscoverLocalBridges().then(function() {
-        Status = 'Bridge Discovered, Getting Config';
-        setTimeout(function() { $rootScope.$apply(); }, 1);
+        SetStatus('Bridge Discovered, Getting Config');
         ReConnect();
       }, function() { // else
-        Status = 'Unable to find Local Bridge via Portal';
-        setTimeout(function() { $rootScope.$apply(); }, 1);
+        SetStatus('Unable to find Local Bridge via Portal');
       } );
     }
   }
 
   function Scan() {
     clearInterval(HeartbeatInterval);
-    Status = 'Trying to Discover Bridge on Network';
-    setTimeout(function() { $rootScope.$apply(); }, 1);
+    SetStatus('Trying to Discover Bridge on Network');
     MyHue.NetworkDiscoverLocalBridges().then(function() {
-      Status = 'Bridge Discovered, Getting Config';
-      setTimeout(function() { $rootScope.$apply(); }, 1);
+      SetStatus('Bridge Discovered, Getting Config');
       ReConnect();
     }, function() { // else
-      Status = 'Unable to find Local Bridge on Network';
-      setTimeout(function() { $rootScope.$apply(); }, 1);
+      SetStatus('Unable to find Local Bridge on Network');
     }).progress(function update(Percentage){
-      Status = 'Searching Local Network for Bridge '+ Percentage +'% done';
-      setTimeout(function() { $rootScope.$apply(); }, 1);
+      SetStatus('Searching Local Network for Bridge '+ Percentage +'% done');
     });
   }
 
@@ -158,7 +177,7 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
       DataReceived();
       setTimeout(function() { $rootScope.$apply(); }, 1);
     }, function BridgeGetDataFailed() {
-      Status = 'Disconnected';
+      SetStatus('Disconnected');
       setTimeout(function() {
         onPause();
         onResume();
@@ -166,16 +185,6 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
     });
   }
 
-  $rootScope.$watch(function() {
-    return Status;
-    }, function WatchStatus(NewStatus, OldStatus) {
-      setTimeout(function() { $rootScope.$apply(); }, 1);
-      if (NewStatus!=='Connected')
-        $('#HueStatusbar').show(350);
-      else setTimeout(function() { $('#HueStatusbar').slideUp(750); }, 1);
-    }
-  );
-  
   function DataReceived() {
     MyHue.Groups['0'] = {name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88'};
 
@@ -240,42 +249,28 @@ return {
 (function () {
 
 
-angular.module(app.name).factory('Menu', function($rootScope) {
-  var Item = 'Connecting';
-  var Index = ' ';
-  
-  return {
-    SetItem : function(NewItem, NewIndex) {
-      Item = NewItem;
-      Index = NewIndex;
-      if (Item === '') // No Overlay selected
-        $('body').css('overflow', 'initial'); // Enable scrolling of the <Body>
-      else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
-      $rootScope.$broadcast('MenuUpdate', NewItem, NewIndex);
-      setTimeout(function() { $rootScope.$apply(); }, 1);
-    },
-    GetItem : function() {
-      return Item;
-    },
-    GetIndex : function() {
-      return Index;
-    }
-  };
-
-});
-
-
-})();
-
-
-
-(function () {
-
-
-angular.module(app.name).controller('HueController', function($rootScope, $scope, hueConnector, Menu) {
+angular.module(app.name).controller('HueController', function($scope, hueConnector, Menu) {
   $scope.MyHue = hueConnector.MyHue(); // For conveinient usage of MyHue in HTML within this controllers $scope
   window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
   $scope.UpdateScheduled = false;
+
+  $scope.$watch(function() {
+    return hueConnector.Status();
+    }, function WatchStatus(NewStatus, OldStatus) {
+      if (NewStatus!=='Connected')
+        $('#HueStatusbar').show(350);
+      else setTimeout(function() { $('#HueStatusbar').slideUp(750); }, 1);
+    }
+  );
+
+  $scope.$watch(function() {
+    return Menu.GetItem();
+    }, function WatchStatus(NewItem, OldItem) {
+      if (NewItem === '') // No Overlay selected
+        $('body').css('overflow', 'initial'); // Enable scrolling of the <Body>
+      else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
+    }
+  );
 
   $scope.Status = function() {
     return hueConnector.Status();
@@ -311,29 +306,32 @@ angular.module(app.name).controller('HueController', function($rootScope, $scope
     }
   };
 
-  $scope.SetMenuItem = function(NewItem, NewIndex) {
-    return Menu.SetItem(NewItem, NewIndex);
+  $scope.SetMenuItem = function(NewItem, NewId) {
+    return Menu.SetItem(NewItem, NewId);
   };
 
   $scope.MenuItem = function() {
     return Menu.GetItem();
   };
 
-  $scope.MenuIndex = function() {
-    return Menu.GetIndex();
+  $scope.MenuId = function() {
+    return Menu.GetId();
   };
 
   document.addEventListener('backbutton', function(event) { // Cordova/PhoneGap only.
     if (angular.element("#HueStatus").scope().MenuItem() !== '') {
-      angular.element("#HueStatus").scope().SetMenuItem('', 27);
+      angular.element("#HueStatus").scope().SetMenuItem('Escape');
     }
   });
 
   document.onkeyup = function(event) {
     if (angular.element("#HueStatus").scope().MenuItem() !== '') {
       // Escape & Enter will close open Overlays.
-      if ((event.keyCode === 27) || (event.keyCode === 13)) {
-        angular.element("#HueStatus").scope().SetMenuItem('', event.keyCode);
+      if ((event.keyCode === 27)) { // Escape or Backspace
+        angular.element("#HueStatus").scope().SetMenuItem('Escape');
+      }
+      if ((event.keyCode === 13)) { // Enter
+        angular.element("#HueStatus").scope().SetMenuItem('');
       }
     }
   };
@@ -355,7 +353,7 @@ angular.module(app.name).directive("huewiGroups", function() {
   };
 });
 
-angular.module(app.name).controller('GroupsController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('GroupsController', function($scope, hueConnector) {
 });
 
 
@@ -373,7 +371,7 @@ angular.module(app.name).directive("huewiLights", function() {
   };
 });
 
-angular.module(app.name).controller('LightsController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('LightsController', function($scope, hueConnector) {
 });
 
 
@@ -384,9 +382,7 @@ angular.module(app.name).controller('LightsController', function($rootScope, $sc
 (function () {
 
 
-angular.module(app.name).controller('GroupAndLightController', function($rootScope, $scope, hueConnector) {
-  $scope.Item = '';
-  $scope.Index = '';
+angular.module(app.name).controller('GroupAndLightController', function($scope, hueConnector, Menu) {
   var hueImage = new Image();
   hueImage.src = 'img/hue.png';
   var ctImage = new Image();
@@ -394,25 +390,28 @@ angular.module(app.name).controller('GroupAndLightController', function($rootSco
   $scope._Name = 'Light/Group';
   $scope.OrgName = $scope._Name;
 
-  $scope.$on('MenuUpdate', function(event, NewItem, NewIndex) {
-    if (NewItem === '') { // Key is Hit.
-      if (NewIndex === 27) { // Is Ecape Hit? Reset Name to OrgName
-        if ($scope.Name() != $scope.OrgName)
-          $scope.Name($scope.OrgName);
-      }
-    } else {
-      $scope.Item = NewItem;
-      $scope.Index = NewIndex;
-
-      if ($scope.Item === 'Group') {
-        hueConnector.MyHue().GroupAlertSelect($scope.Index);
-        $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[$scope.Index].name;
-      } else if ($scope.Item === 'Light') {
-        hueConnector.MyHue().LightAlertSelect($scope.Index);       
-        $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[hueConnector.MyHue().LightGetId($scope.Index)].name;
+  $scope.$watch(function() {
+    return Menu.GetItem();
+    }, function WatchStatus(NewItem, OldItem) {
+    if (Menu.GetItem() === 'Escape') { // a Escape-key is Hit
+        if (OldItem === 'Group') {
+          if (hueConnector.MyHue().Groups[Menu.GetId()].name != $scope.OrgName)
+            hueConnector.MyHue().GroupSetName(Menu.GetId(), $scope.OrgName);
+        } else if (OldItem=== 'Light') {
+          if (hueConnector.MyHue().Lights[Menu.GetId()].name != $scope.OrgName)
+          hueConnector.MyHue().LightSetName(Menu.GetId(), $scope.OrgName);
+        }
+    } else { // NewItem Selected
+        if (Menu.GetItem() === 'Group') {
+          hueConnector.MyHue().GroupAlertSelect(Menu.GetId());
+          $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[Menu.GetId()].name;
+        } else if (Menu.GetItem() === 'Light') {
+          hueConnector.MyHue().LightAlertSelect(Menu.GetId());       
+          $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[Menu.GetId()].name;
+        }
       }
     }
-  });
+  );
 
   hueImage.onload = function() {
     $scope.Redraw();
@@ -454,10 +453,10 @@ angular.module(app.name).controller('GroupAndLightController', function($rootSco
     var HueContext = document.getElementById('hueCanvas').getContext('2d');
     var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
-    if ($scope.Item === 'Group') {
-      hueConnector.MyHue().GroupSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
-    } else if ($scope.Item === 'Light') {
-      hueConnector.MyHue().LightSetRGB($scope.Index, HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    if (Menu.GetItem() === 'Group') {
+      hueConnector.MyHue().GroupSetRGB(Menu.GetId(), HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+    } else if (Menu.GetItem() === 'Light') {
+      hueConnector.MyHue().LightSetRGB(Menu.GetId(), HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
     }
   });
 
@@ -467,55 +466,55 @@ angular.module(app.name).controller('GroupAndLightController', function($rootSco
     var y = event.offsetY;
     var ColorTemperature = 2000 + (6500-2000)*(x/ctGroupCanvas.width);
     var Brightness = 255 - 255*(y/ctGroupCanvas.height);
-    if ($scope.Item === 'Group') {
-      hueConnector.MyHue().GroupSetColortemperature($scope.Index, ColorTemperature);
-      hueConnector.MyHue().GroupSetBrightness($scope.Index, Brightness);
-    } else if ($scope.Item === 'Light') {
-      hueConnector.MyHue().LightSetColortemperature($scope.Index, ColorTemperature);
-      hueConnector.MyHue().LightSetBrightness($scope.Index, Brightness);
+    if (Menu.GetItem() === 'Group') {
+      hueConnector.MyHue().GroupSetColortemperature(Menu.GetId(), ColorTemperature);
+      hueConnector.MyHue().GroupSetBrightness(Menu.GetId(), Brightness);
+    } else if (Menu.GetItem() === 'Light') {
+      hueConnector.MyHue().LightSetColortemperature(Menu.GetId(), ColorTemperature);
+      hueConnector.MyHue().LightSetBrightness(Menu.GetId(), Brightness);
     }
   });
 
   $scope.GroupHasLight = function(LightId) {
-    if ($scope.Item === 'Group') {
-      if ($scope.Index === '0') return false;
-      if (hueConnector.MyHue().Groups[$scope.Index].lights.indexOf(LightId)>=0)
+    if (Menu.GetItem() === 'Group') {
+      if (Menu.GetId() === '0') return false;
+      if (hueConnector.MyHue().Groups[Menu.GetId()].lights.indexOf(LightId)>=0)
         return true;
     }
     return false;
   };
   
   $scope.GroupToggleLight = function(LightId) {
-    if ($scope.Item === 'Group') {
+    if (Menu.GetItem() === 'Group') {
       hueConnector.MyHue().LightAlertSelect(LightId);
       if ($scope.GroupHasLight(LightId))
-        hueConnector.MyHue().Groups[$scope.Index].lights.splice(
-          hueConnector.MyHue().Groups[$scope.Index].lights.indexOf(LightId),1);
-      else hueConnector.MyHue().Groups[$scope.Index].lights.push(LightId);
-      hueConnector.MyHue().GroupSetLights($scope.Index, hueConnector.MyHue().Groups[$scope.Index].lights);
+        hueConnector.MyHue().Groups[Menu.GetId()].lights.splice(
+          hueConnector.MyHue().Groups[Menu.GetId()].lights.indexOf(LightId),1);
+      else hueConnector.MyHue().Groups[Menu.GetId()].lights.push(LightId);
+      hueConnector.MyHue().GroupSetLights(Menu.GetId(), hueConnector.MyHue().Groups[Menu.GetId()].lights);
     }
   };
 
   $scope.Name = function(NewName) { // Getter/Setter function
     if (angular.isDefined(NewName))
     { // Set
-      if ($scope.Item === 'Group') {
-        hueConnector.MyHue().GroupSetName($scope.Index, NewName);
-      } else if ($scope.Item === 'Light') {
-        hueConnector.MyHue().LightSetName($scope.Index, NewName);
-      }
       $scope._Name = NewName;
+      if (Menu.GetItem() === 'Group') {
+        hueConnector.MyHue().GroupSetName(Menu.GetId(), NewName);
+      } else if (Menu.GetItem() === 'Light') {
+        hueConnector.MyHue().LightSetName(Menu.GetId(), NewName);
+      }
     }
-    return $scope._Name;
+    return $scope._Name; // Get
   };
 
   $scope.SetCTBrightness = function(CT, Brightness) {
-    if ($scope.Item === 'Group') {
-      hueConnector.MyHue().GroupSetCT($scope.Index, CT);
-      hueConnector.MyHue().GroupSetBrightness($scope.Index, Brightness);
-    } else if ($scope.Item === 'Light') {
-      hueConnector.MyHue().LightSetCT($scope.Index, CT);
-      hueConnector.MyHue().LightSetBrightness($scope.Index, Brightness);
+    if (Menu.GetItem() === 'Group') {
+      hueConnector.MyHue().GroupSetCT(Menu.GetId(), CT);
+      hueConnector.MyHue().GroupSetBrightness(Menu.GetId(), Brightness);
+    } else if (Menu.GetItem() === 'Light') {
+      hueConnector.MyHue().LightSetCT(Menu.GetId(), CT);
+      hueConnector.MyHue().LightSetBrightness(Menu.GetId(), Brightness);
     }    
   };
 
@@ -549,7 +548,7 @@ angular.module(app.name).controller('GroupAndLightController', function($rootSco
 (function () {
 
 
-angular.module(app.name).controller('SchedulesController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('SchedulesController', function($scope, hueConnector) {
 });
 
 
@@ -560,7 +559,7 @@ angular.module(app.name).controller('SchedulesController', function($rootScope, 
 (function () {
 
 
-angular.module(app.name).controller('ScenesController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('ScenesController', function($scope, hueConnector) {
 });
 
 
@@ -571,7 +570,7 @@ angular.module(app.name).controller('ScenesController', function($rootScope, $sc
 (function () {
 
 
-angular.module(app.name).controller('SensorsController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('SensorsController', function($scope, hueConnector) {
 });
 
 
@@ -582,7 +581,7 @@ angular.module(app.name).controller('SensorsController', function($rootScope, $s
 (function () {
 
 
-angular.module(app.name).controller('RulesController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('RulesController', function($scope, hueConnector) {
 });
 
 
@@ -593,7 +592,7 @@ angular.module(app.name).controller('RulesController', function($rootScope, $sco
 (function () {
 
 
-angular.module(app.name).controller('BridgeController', function($rootScope, $scope, hueConnector) {
+angular.module(app.name).controller('BridgeController', function($scope, hueConnector) {
 });
 
 
