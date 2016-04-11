@@ -59,23 +59,23 @@
           <canvas id='ctCanvas'>It seems your device doesn't support the required HTML5 Canvas</canvas>
           <div>
             <div ng-show='MenuItem() === "Group"' >
-              <input type='range' min='0' max='255' style='display:inline-block; width:79%' ng-model='MyHue.Groups[MenuIndex()].action.bri' ng-change='SetGroupBrightness(MenuIndex())' ng-mousedown='SetActive(MenuIndex())' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+              <input type='range' min='0' max='255' style='display:inline-block; width:79%' ng-model='MyHue.Groups[MenuId()].action.bri' ng-change='SetGroupBrightness(MenuId())' ng-mousedown='SetActive(MenuId())' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
               <div style='display:inline-block; width:19%' class='right'>
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(MenuIndex());" ng-class="{ hidden: !((MyHue.Groups[MenuIndex()].action.on) || (MenuIndex() == 0)) }">
-                  <span class="glyphicon glyphicon-off" style="color:{{MyHue.Groups[MenuIndex()].HTMLColor}}" aria-hidden="true"></span>
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(MenuId());" ng-class="{ hidden: !((MyHue.Groups[MenuId()].action.on) || (MenuId() == 0)) }">
+                  <span class="glyphicon glyphicon-off" style="color:{{MyHue.Groups[MenuId()].HTMLColor}}" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(MenuIndex());" ng-class="{ hidden:MyHue.Groups[MenuIndex()].action.on }">
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(MenuId());" ng-class="{ hidden:MyHue.Groups[MenuId()].action.on }">
                   <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
                 </button>
               </div>
             </div>
             <div ng-show='MenuItem() === "Light"' >
-              <input type='range' min='0' max='255' style='display:inline-block; width:79% ' ng-model='MyHue.Lights[MenuIndex()].state.bri' ng-change='SetLightBrightness(MenuIndex())' ng-mousedown='SetActive(MenuIndex())' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
-              <div style='display:inline-block; width:19%' class='right' ng-class="{ hidden:!MyHue.Lights[MenuIndex()].state.reachable }">
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff(MenuIndex());" ng-class="{ hidden:!MyHue.Lights[MenuIndex()].state.on }">
-                  <span class="glyphicon glyphicon-off" style="color:{{MyHue.Lights[MenuIndex()].HTMLColor}}" aria-hidden="true"></span>
+              <input type='range' min='0' max='255' style='display:inline-block; width:79% ' ng-model='MyHue.Lights[MenuId()].state.bri' ng-change='SetLightBrightness(MenuId())' ng-mousedown='SetActive(MenuId())' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+              <div style='display:inline-block; width:19%' class='right' ng-class="{ hidden:!MyHue.Lights[MenuId()].state.reachable }">
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff(MenuId());" ng-class="{ hidden:!MyHue.Lights[MenuId()].state.on }">
+                  <span class="glyphicon glyphicon-off" style="color:{{MyHue.Lights[MenuId()].HTMLColor}}" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOn(MenuIndex());" ng-class="{ hidden:MyHue.Lights[MenuIndex()].state.on }">
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOn(MenuId());" ng-class="{ hidden:MyHue.Lights[MenuId()].state.on }">
                   <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
                 </button>
               </div>
@@ -100,7 +100,7 @@
       </div><!-- /container -->
       
       <div class='content'>
-        <div ng-show='(MenuItem() === "Group") && (MenuIndex()!=="0")' >
+        <div ng-show='(MenuItem() === "Group") && (MenuId()!=="0")' >
           <span class='grouplight' ng-repeat="Light in MyHue.Lights">
             <span ng-click="GroupToggleLight(Light.id)">
               <span ng-show='GroupHasLight(Light.id)' class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
