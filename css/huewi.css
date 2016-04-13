@@ -112,6 +112,11 @@ button, .btn, .btn-sm {
   margin-top: 4px;
   margin-bottom: 4px;
 }
+.bridgeset {
+  width: 49%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
 canvas {
   padding-left: 0px;
   padding-right: 0px;

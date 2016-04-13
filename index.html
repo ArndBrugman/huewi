@@ -59,7 +59,10 @@
           <canvas id='ctCanvas'>It seems your device doesn't support the required HTML5 Canvas</canvas>
           <div>
             <div ng-show='MenuItem() === "Group"' >
-              <input type='range' min='0' max='255' style='display:inline-block; width:79%' ng-model='MyHue.Groups[MenuId()].action.bri' ng-change='SetGroupBrightness(MenuId())' ng-mousedown='SetActive(MenuId())' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+              <div style='display:inline-block; width:79%' >
+                <input type='range' min='0' max='255' ng-show="MyHue.Groups[MenuId()].action.on" ng-model='MyHue.Groups[MenuId()].action.bri' 
+                ng-change='SetGroupBrightness(MenuId())' ng-mousedown='SetActive(MenuId())' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+              </div>
               <div style='display:inline-block; width:19%' class='right'>
                 <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(MenuId());" ng-class="{ hidden: !((MyHue.Groups[MenuId()].action.on) || (MenuId() == 0)) }">
                   <span class="glyphicon glyphicon-off" style="color:{{MyHue.Groups[MenuId()].HTMLColor}}" aria-hidden="true"></span>
@@ -70,7 +73,10 @@
               </div>
             </div>
             <div ng-show='MenuItem() === "Light"' >
-              <input type='range' min='0' max='255' style='display:inline-block; width:79% ' ng-model='MyHue.Lights[MenuId()].state.bri' ng-change='SetLightBrightness(MenuId())' ng-mousedown='SetActive(MenuId())' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+              <div style='display:inline-block; width:79%' >
+                <input type='range' min='0' max='255' ng-show="MyHue.Lights[MenuId()].action.on" ng-model='MyHue.Lights[MenuId()].state.bri' 
+                ng-change='SetLightBrightness(MenuId())' ng-mousedown='SetActive(MenuId())' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+              </div>
               <div style='display:inline-block; width:19%' class='right' ng-class="{ hidden:!MyHue.Lights[MenuId()].state.reachable }">
                 <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff(MenuId());" ng-class="{ hidden:!MyHue.Lights[MenuId()].state.on }">
                   <span class="glyphicon glyphicon-off" style="color:{{MyHue.Lights[MenuId()].HTMLColor}}" aria-hidden="true"></span>
@@ -186,10 +192,10 @@
           <div ng-show="Value.internalipaddress===MyHue.BridgeIP" style="display:inline-block; width:29%; text-align: right">Active Bridge</div>
         </div>
       </div>
-      <button type="button" class="btn btn-sm preset" ng-click="MyHue.PortalDiscoverLocalBridges();" ng-show="!MyHue.ScanningNetwork">Reload Bridges</button>
-      <button type="button" class="btn btn-sm preset" ng-click="Scan();" ng-show="!MyHue.ScanningNetwork">Scan Network</button>
-      <button type="button" class="btn btn-sm preset" ng-click="MyHue.ScanningNetwork = false;" ng-show="MyHue.ScanningNetwork">Cancel Scan</button>
-      <button type="button" class="btn btn-sm preset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true);" ng-show="!MyHue.ScanningNetwork">Refreshed Reload</button>
+      <button type="button" class="btn bridgeset" ng-click="MyHue.PortalDiscoverLocalBridges();" ng-show="!MyHue.ScanningNetwork">Reload Bridges</button>
+      <button type="button" class="btn bridgeset" ng-click="Scan();" ng-show="!MyHue.ScanningNetwork">Scan Network</button>
+      <button type="button" class="btn bridgeset" ng-click="MyHue.ScanningNetwork = false;" ng-show="MyHue.ScanningNetwork">Cancel Scan</button>
+      <button type="button" class="btn bridgeset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true);" ng-show="!MyHue.ScanningNetwork">Refreshed Reload</button>
       <div></div>
       <br>
       <div class='list-group'>
