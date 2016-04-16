@@ -1,0 +1,70 @@
+<h3><input type="text" id="GroupLightName" ng-model="Name" ng-model-options="{ getterSetter: true }"></h3>
+<button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
+
+<div class="container" id="ColorTemp">
+  <div class="content">
+    <div>
+      <div ng-show="GetMenuItem() === 'Group'" >
+        <div style="display:inline-block; width:79%" >
+          <input type="range" min="0" max="255" ng-show="((MyHue.Groups[GetMenuId()].action.on) || (GetMenuId() == 0))" ng-model="MyHue.Groups[GetMenuId()].action.bri" 
+          ng-change="SetGroupBrightness(GetMenuId())" ng-mousedown="SetActive(GetMenuId())" ng-mouseup="SetActive(-1)" ng-mouseleave="SetActive(-1)"/>
+        </div>
+        <div style="display:inline-block; width:19%" class="right">
+          <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(GetMenuId())" ng-show="((MyHue.Groups[GetMenuId()].action.on) || (GetMenuId() == 0))">
+            <span class="glyphicon glyphicon-off" style="color:{{MyHue.Groups[GetMenuId()].HTMLColor}}" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(GetMenuId())" ng-hide="MyHue.Groups[GetMenuId()].action.on">
+            <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+      <div ng-show="GetMenuItem() === 'Light'" >
+        <div style="display:inline-block; width:79%" >
+          <input type="range" min="0" max="255" ng-show="MyHue.Lights[GetMenuId()].state.on" ng-model="MyHue.Lights[GetMenuId()].state.bri" 
+          ng-change="SetLightBrightness(GetMenuId())" ng-mousedown="SetActive(GetMenuId())" ng-mouseup="SetActive(-1)" ng-mouseleave="SetActive(-1)"/>
+        </div>
+        <div style="display:inline-block; width:19%" class="right" ng-show="MyHue.Lights[GetMenuId()].state.reachable">
+          <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff(GetMenuId())" ng-show="MyHue.Lights[GetMenuId()].state.on">
+            <span class="glyphicon glyphicon-off" style="color:{{MyHue.Lights[GetMenuId()].HTMLColor}}" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOn(GetMenuId())" ng-hide="MyHue.Lights[GetMenuId()].state.on">
+            <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <canvas id="ctCanvas">It seems your device doesn"t support the required HTML5 Canvas</canvas>
+    <div>
+      <button type="button" class="btn btn-sm preset" ng-click="Relax()">Relax</button>
+      <button type="button" class="btn btn-sm preset" ng-click="Reading()">Reading</button>
+      <button type="button" class="btn btn-sm preset" ng-click="Concentrate()">Concentrate</button>
+      <button type="button" class="btn btn-sm preset" ng-click="Energize()">Energize</button>
+      <button type="button" class="btn btn-sm preset" ng-click="GoldenHour()">Gold</button>
+    </div>          
+    <div class="onportait"><br></div><!-- Spacing on Portait after ColorTemp -->
+  </div><!-- /content -->
+</div><!-- /container -->
+
+<div class="container" id="hueColor">
+  <div class="content">
+    <div>
+      <canvas id="hueCanvas">It seems your device doesn"t support the required HTML5 Canvas</canvas>
+    </div>
+  </div><!-- /content -->
+</div><!-- /container -->
+
+<div><br><br></div>
+<div class="content">
+  <div ng-show="(GetMenuItem() === 'Group') && (GetMenuId()!=='0')" >
+    <span class="grouplight" ng-repeat="Light in MyHue.Lights">
+      <span ng-click="GroupToggleLight(Light.id)">
+        <span ng-show="GroupHasLight(Light.id)" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
+        <span ng-hide="GroupHasLight(Light.id)" class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+        {{Light.name}}
+      </span>
+    </span>
+  </div>
+</div>
+
+<button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
+<div><br><br></div>

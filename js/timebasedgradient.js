@@ -1,4 +1,5 @@
 function TimeBasedGradientUpdate() {
+  "use strict";
 
   var timebasedgradients = [ // from http://codepen.io/zessx/pen/rDEAl
     "linear-gradient(to bottom, rgba(0, 0, 12, 0.80) 0%, rgba(0, 0, 12, 0.80) 0%)",
