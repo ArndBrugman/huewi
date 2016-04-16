@@ -1,7 +1,6 @@
-<h3>Groups</h3>
+<h3 ng-click="ChangeType()">{{GroupType}}s</h3>
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="Group in MyHue.Groups | orderObjectBy:'type' | filter:'Group' | filter:'!huelabs' "> <!-- | filter : {type: 'LightGroup'} | orderBy : 'name'"-->
-    <!-- LightGroup Room -->
+  <div class="list-group-item" ng-repeat="Group in MyHue.Groups | orderObjectBy:'type' | filter:{type:GroupType} | filter:'!huelabs' ">
     <div style="display:inline-block; width:29%" ng-click="SetMenuItem('Group', Group.id)">
     	{{Group.name}}
     </div>

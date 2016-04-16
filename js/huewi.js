@@ -26,28 +26,6 @@ angular.module(app.name).filter("orderObjectBy", function() {
 
 
 
-/** unused (function () {
-
-
-angular.module(app.name).controller("TabController", function($scope) {
-  $scope.Tab = 1;
-
-  $scope.TabIsSet = function(CheckTab) {
-    return $scope.Tab === CheckTab;
-  };
-  $scope.SetTab = function(SetTab) {
-    $scope.Tab = SetTab;
-  };
-  $scope.GetTab = function() {
-    return $scope.Tab;
-  };
-});
-
-
-})();
-**/
-
-
 (function () {
 
 
@@ -81,7 +59,6 @@ angular.module(app.name).factory("Menu", function() {
 
 angular.module(app.name).factory("hueConnector", function ($rootScope) {
   var MyHue = new huepi();
-  //var MyHue = new huepi("localhost:8000"); // Emulator
   var HeartbeatInterval;
   var Status = "";
   // Show this Demo Data while Connecting...
@@ -102,10 +79,6 @@ angular.module(app.name).factory("hueConnector", function ($rootScope) {
     TimeBasedGradientUpdate();
     MyHue.PortalDiscoverLocalBridges(); // Parallel
     Connect();
-    setTimeout(function() {
-      if ((Status != "Connected") && !MyHue.ScanningNetwork)
-      onResume();
-    }, 5000);
   }
 
   function onPause() {
@@ -162,7 +135,11 @@ angular.module(app.name).factory("hueConnector", function ($rootScope) {
         SetStatus("Unable to find Local Bridge via Portal");
       } );
     }
-  }
+    setTimeout(function() {
+      if ((Status != "Connected") && !MyHue.ScanningNetwork)
+        Connect();
+    }, 5000);
+}
 
   function Scan() {
     clearInterval(HeartbeatInterval);
@@ -315,24 +292,24 @@ angular.module(app.name).controller("HueController", function($scope, hueConnect
     return Menu.SetItem(NewItem, NewId);
   };
 
-  $scope.MenuItem = function() {
+  $scope.GetMenuItem = function() {
     return Menu.GetItem();
   };
 
-  $scope.MenuId = function() {
+  $scope.GetMenuId = function() {
     return Menu.GetId();
   };
 
   document.addEventListener("backbutton", function(event) { // Cordova/PhoneGap only.
-    if (angular.element("#HueStatus").scope().MenuItem() !== "") {
+    if (angular.element("#HueStatus").scope().GetMenuItem() !== "") {
       angular.element("#HueStatus").scope().SetMenuItem("Escape");
     }
   });
 
   document.onkeyup = function(event) {
-    if (angular.element("#HueStatus").scope().MenuItem() !== "") {
+    if (angular.element("#HueStatus").scope().GetMenuItem() !== "") {
       // Escape & Enter will close open Overlays.
-      if ((event.keyCode === 27)) { // Escape or Backspace
+      if ((event.keyCode === 27)) { // Escape
         angular.element("#HueStatus").scope().SetMenuItem("Escape");
       }
       if ((event.keyCode === 13)) { // Enter
@@ -359,6 +336,15 @@ angular.module(app.name).directive("huewiGroups", function() {
 });
 
 angular.module(app.name).controller("GroupsController", function($scope, hueConnector) {
+  $scope.GroupType = "LightGroup"; // LightGroup or Room
+
+  $scope.ChangeType = function()
+  {
+    if ($scope.GroupType === "LightGroup")
+      $scope.GroupType = "Room";
+    else 
+      $scope.GroupType = "LightGroup";
+  }
 });
 
 
@@ -482,9 +468,10 @@ angular.module(app.name).controller("GroupAndLightController", function($scope, 
 
   $scope.GroupHasLight = function(LightId) {
     if (Menu.GetItem() === "Group") {
-      if (Menu.GetId() === "0") return false;
-      if (hueConnector.MyHue().Groups[Menu.GetId()].lights.indexOf(LightId)>=0)
-        return true;
+      if (Menu.GetId() != "0") {
+        if (hueConnector.MyHue().Groups[Menu.GetId()].lights.indexOf(LightId)>=0)
+          return true;
+      }
     }
     return false;
   };
@@ -598,7 +585,7 @@ angular.module(app.name).controller("RulesController", function($scope, hueConne
 
 
 angular.module(app.name).controller("BridgeController", function($scope, hueConnector) {
-  $scope.ManualBridge = hueConnector.MyHue().BridgeIP || "localhost:8000";
+  $scope.ManualBridge = "localhost:8000";
 });
 
 
