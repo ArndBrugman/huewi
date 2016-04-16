@@ -180,7 +180,7 @@
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  <div class="overlay fading" id="Bridge" ng-controller="BridgeController as BridgeCtrl" ng-show="Status() !== 'Connected' || GetMenuItem() === 'Bridge'">
+  <div class="overlay fading" id="Bridge" ng-controller="BridgeController as BridgeCtrl" ng-show="Status() != 'Connected' || GetMenuItem() === 'Bridge'">
     <div class="inlay content timebasedgradient">
       <h3>Bridge {{MyHue.BridgeIP}} {{MyHue.BridgeName}}</h3>
       <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
@@ -239,7 +239,6 @@
 
   <div class="status timebasedgradient">
     <h4>hue Web Interface</h4>
-    <!-- Single button -->
     <div id="HueStatusbar">
       <div>Bridge IP: {{MyHue.BridgeIP}}</div>
       <div>Bridge Name: {{MyHue.BridgeName}}</div>

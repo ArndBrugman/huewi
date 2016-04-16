@@ -340,11 +340,12 @@ angular.module(app.name).controller("GroupsController", function($scope, hueConn
 
   $scope.ChangeType = function()
   {
-    if ($scope.GroupType === "LightGroup")
+    if ($scope.GroupType === "LightGroup") {
       $scope.GroupType = "Room";
-    else 
+    } else {
       $scope.GroupType = "LightGroup";
-  }
+    }
+  };
 });
 
 
