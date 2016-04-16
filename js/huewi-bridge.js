@@ -7,11 +7,11 @@ angular.module(app.name)
   return {
     restrict: "EA",
     templateUrl: "huewi-bridge.html",
-    controller: "BridgeController"
+    controller: "huewiBridgeController"
   };
 })
 
-.controller("BridgeController", function($scope, hueConnector) {
+.controller("huewiBridgeController", function($scope, hueConnector) {
   $scope.ManualBridge = "localhost:8000";
 });
 

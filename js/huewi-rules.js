@@ -7,11 +7,11 @@ angular.module(app.name)
   return {
     restrict: "EA",
     templateUrl: "huewi-rules.html",
-    controller: "RulesController"
+    controller: "huewiRulesController"
   };
 })
 
-.controller("RulesController", function($scope, hueConnector) {
+.controller("huewiRulesController", function($scope, hueConnector) {
 });
 
 

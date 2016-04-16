@@ -7,11 +7,11 @@ angular.module(app.name)
   return {
     restrict: "EA",
     templateUrl: "huewi-groupandlight.html",
-    controller: "GroupAndLightController"
+    controller: "huewiGroupAndLightController"
   };
 })
 
-.controller("GroupAndLightController", function($scope, hueConnector, Menu) {
+.controller("huewiGroupAndLightController", function($scope, hueConnector, Menu) {
   var hueImage = new Image();
   hueImage.src = "img/hue.png";
   var ctImage = new Image();

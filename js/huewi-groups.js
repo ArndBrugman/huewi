@@ -7,11 +7,11 @@ angular.module(app.name)
   return {
     restrict: "EA",
     templateUrl: "huewi-groups.html",
-    controller: "GroupsController"
+    controller: "huewiGroupsController"
   };
 })
 
-.controller("GroupsController", function($scope, hueConnector) {
+.controller("huewiGroupsController", function($scope, hueConnector) {
   $scope.GroupType = "LightGroup"; // LightGroup or Room
 
   $scope.ChangeType = function()

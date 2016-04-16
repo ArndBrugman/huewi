@@ -7,11 +7,11 @@ angular.module(app.name)
   return {
     restrict: "EA",
     templateUrl: "huewi-lights.html",
-    controller: "LightsController"
+    controller: "huewiLightsController"
   };
 })
 
-.controller("LightsController", function($scope, hueConnector) {
+.controller("huewiLightsController", function($scope, hueConnector) {
 });
 
 

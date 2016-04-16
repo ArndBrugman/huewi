@@ -3,7 +3,7 @@
 
 angular.module(app.name)
 
-.controller("HueController", function($scope, hueConnector, Menu) {
+.controller("huewiController", function($scope, hueConnector, Menu) {
   $scope.MyHue = hueConnector.MyHue(); // For conveinient usage of MyHue in HTML within this controllers $scope
   window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
   $scope.UpdateScheduled = false;
