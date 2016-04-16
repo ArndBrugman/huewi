@@ -51,7 +51,7 @@
 
   <div class='overlay fading' id='GroupAndLight' ng-controller='GroupAndLightController as GroupCtrl' ng-show='MenuItem() === "Group" || MenuItem() === "Light"'>
     <div class='inlay content timebasedgradient'>
-      <h3><input type="text" ng-model="Name" ng-model-options="{ getterSetter: true }"></h3>
+      <h3><input type="text" id='GroupLightName' ng-model="Name" ng-model-options="{ getterSetter: true }"></h3>
       <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
       
       <div class='container' id='ColorTemp'>
@@ -60,28 +60,28 @@
           <div>
             <div ng-show='MenuItem() === "Group"' >
               <div style='display:inline-block; width:79%' >
-                <input type='range' min='0' max='255' ng-show="MyHue.Groups[MenuId()].action.on" ng-model='MyHue.Groups[MenuId()].action.bri' 
+                <input type='range' min='0' max='255' ng-show="((MyHue.Groups[MenuId()].action.on) || (MenuId() == 0))" ng-model='MyHue.Groups[MenuId()].action.bri' 
                 ng-change='SetGroupBrightness(MenuId())' ng-mousedown='SetActive(MenuId())' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
               </div>
               <div style='display:inline-block; width:19%' class='right'>
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(MenuId());" ng-class="{ hidden: !((MyHue.Groups[MenuId()].action.on) || (MenuId() == 0)) }">
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(MenuId());" ng-show="((MyHue.Groups[MenuId()].action.on) || (MenuId() == 0))">
                   <span class="glyphicon glyphicon-off" style="color:{{MyHue.Groups[MenuId()].HTMLColor}}" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(MenuId());" ng-class="{ hidden:MyHue.Groups[MenuId()].action.on }">
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(MenuId());" ng-hide="MyHue.Groups[MenuId()].action.on">
                   <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
                 </button>
               </div>
             </div>
             <div ng-show='MenuItem() === "Light"' >
               <div style='display:inline-block; width:79%' >
-                <input type='range' min='0' max='255' ng-show="MyHue.Lights[MenuId()].action.on" ng-model='MyHue.Lights[MenuId()].state.bri' 
+                <input type='range' min='0' max='255' ng-show="MyHue.Lights[MenuId()].state.on" ng-model='MyHue.Lights[MenuId()].state.bri' 
                 ng-change='SetLightBrightness(MenuId())' ng-mousedown='SetActive(MenuId())' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
               </div>
-              <div style='display:inline-block; width:19%' class='right' ng-class="{ hidden:!MyHue.Lights[MenuId()].state.reachable }">
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff(MenuId());" ng-class="{ hidden:!MyHue.Lights[MenuId()].state.on }">
+              <div style='display:inline-block; width:19%' class='right' ng-show="MyHue.Lights[MenuId()].state.reachable">
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff(MenuId());" ng-show="MyHue.Lights[MenuId()].state.on">
                   <span class="glyphicon glyphicon-off" style="color:{{MyHue.Lights[MenuId()].HTMLColor}}" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOn(MenuId());" ng-class="{ hidden:MyHue.Lights[MenuId()].state.on }">
+                <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOn(MenuId());" ng-hide="MyHue.Lights[MenuId()].state.on">
                   <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
                 </button>
               </div>
@@ -97,6 +97,7 @@
           <div class="onportait"><br></div><!-- Spacing on Portait after ColorTemp -->
         </div><!-- /content -->
       </div><!-- /container -->
+
       <div class='container' id='hueColor'>
         <div class='content'>
           <div>
@@ -104,13 +105,14 @@
           </div>
         </div><!-- /content -->
       </div><!-- /container -->
-      
+
+      <div><br><br></div>
       <div class='content'>
         <div ng-show='(MenuItem() === "Group") && (MenuId()!=="0")' >
           <span class='grouplight' ng-repeat="Light in MyHue.Lights">
             <span ng-click="GroupToggleLight(Light.id)">
               <span ng-show='GroupHasLight(Light.id)' class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
-              <span ng-show='!GroupHasLight(Light.id)' class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
+              <span ng-hide='GroupHasLight(Light.id)' class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
               {{Light.name}}
             </span>
           </span>
@@ -178,24 +180,26 @@
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='Status() !== "Connected" || MenuItem() === "Bridge"'> <!-- == "!" vs !== "" TESTCODE. -->
+  <div class='overlay fading' id='Bridge' ng-controller='BridgeController as BridgeCtrl' ng-show='Status() !== "Connected" || MenuItem() === "Bridge"'>
     <div class='inlay content timebasedgradient'>
-      <h3>Bridge</h3>
+      <h3>Bridge {{MyHue.BridgeIP}} {{MyHue.BridgeName}}</h3>
       <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
       <div class='list-group'>
         <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges" ng-click="MyHue.ScanningNetwork = false; MyHue.BridgeIP = Value.internalipaddress; Connect();">
           <div style="display:inline-block; width:69%">
-            {{Value.internalipaddress}}
-            <span ng-show="Value.internalipaddress===MyHue.BridgeIP">, '{{MyHue.BridgeName}}'</span>
-            , {{Value.id}}
+            {{Value.internalipaddress}}<span ng-show="Value.internalipaddress===MyHue.BridgeIP">, '{{MyHue.BridgeName}}'</span>, {{Value.id}}
           </div>
           <div ng-show="Value.internalipaddress===MyHue.BridgeIP" style="display:inline-block; width:29%; text-align: right">Active Bridge</div>
         </div>
       </div>
-      <button type="button" class="btn bridgeset" ng-click="MyHue.PortalDiscoverLocalBridges();" ng-show="!MyHue.ScanningNetwork">Reload Bridges</button>
-      <button type="button" class="btn bridgeset" ng-click="Scan();" ng-show="!MyHue.ScanningNetwork">Scan Network</button>
-      <button type="button" class="btn bridgeset" ng-click="MyHue.ScanningNetwork = false;" ng-show="MyHue.ScanningNetwork">Cancel Scan</button>
-      <button type="button" class="btn bridgeset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true);" ng-show="!MyHue.ScanningNetwork">Refreshed Reload</button>
+      <button type="button" class="btn preset" ng-click="MyHue.PortalDiscoverLocalBridges()" ng-hide="MyHue.ScanningNetwork">Discover</button>
+      <button type="button" class="btn preset" ng-click="Scan();" ng-hide="MyHue.ScanningNetwork">Scan</button>
+      <button type="button" class="btn preset" ng-click="MyHue.ScanningNetwork = false" ng-show="MyHue.ScanningNetwork">Cancel</button>
+      <button type="button" class="btn preset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true)" ng-hide="MyHue.ScanningNetwork">Reload</button>
+      <div></div>
+      <div type="text" class="preset" style="display:inline-block" ng-hide="MyHue.ScanningNetwork">Manual:</div>
+      <input type="text" class="preset" ng-model="ManualBridge" ng-hide="MyHue.ScanningNetwork"></input>
+      <button type="button" class="btn preset" ng-click="Connect(ManualBridge)" ng-hide="MyHue.ScanningNetwork">Connect</button>
       <div></div>
       <br>
       <div class='list-group'>
@@ -215,7 +219,7 @@
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  
+
   <div id='navcontainer' class='timebasedgradient'>
     <span id='navbutton' class='glyphicon glyphicon-menu-hamburger'></span>
     <nav id='navdrawer'>

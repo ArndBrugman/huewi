@@ -102,6 +102,10 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
     TimeBasedGradientUpdate();
     MyHue.PortalDiscoverLocalBridges(); // Parallel
     Connect();
+    setTimeout(function() {
+      if ((Status != 'Connected') && !MyHue.ScanningNetwork)
+      onResume();
+    }, 5000);
   }
 
   function onPause() {
@@ -140,9 +144,10 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
     });
   }
 
-  function Connect() {
+  function Connect(NewBridgeAddress) {
     clearInterval(HeartbeatInterval);
     MyHue.Username = '';
+    MyHue.BridgeIP = NewBridgeAddress || MyHue.BridgeIP;
     if (MyHue.BridgeIP !== "") { // Preset/Previous BridgeIP
       ReConnect();
     } else if (localStorage.MyHueBridgeIP) { // Cached BridgeIP
@@ -231,8 +236,8 @@ return {
     Status : function() {
       return Status;
     },
-    Connect : function() {
-      return Connect();
+    Connect : function(NewBridgeAddress) {
+      return Connect(NewBridgeAddress);
     },
     Scan : function() {
       return Scan();
@@ -258,7 +263,7 @@ angular.module(app.name).controller('HueController', function($scope, hueConnect
     return hueConnector.Status();
     }, function WatchStatus(NewStatus, OldStatus) {
       if (NewStatus!=='Connected')
-        $('#HueStatusbar').show(350);
+        $('#HueStatusbar').slideDown(350);
       else setTimeout(function() { $('#HueStatusbar').slideUp(750); }, 1);
     }
   );
@@ -276,8 +281,8 @@ angular.module(app.name).controller('HueController', function($scope, hueConnect
     return hueConnector.Status();
   };
 
-  $scope.Connect = function() {
-    return hueConnector.Connect();
+  $scope.Connect = function(NewBridgeAddress) {
+    return hueConnector.Connect(NewBridgeAddress);
   };
 
   $scope.Scan = function() {
@@ -593,6 +598,7 @@ angular.module(app.name).controller('RulesController', function($scope, hueConne
 
 
 angular.module(app.name).controller('BridgeController', function($scope, hueConnector) {
+  $scope.ManualBridge = hueConnector.MyHue().BridgeIP || 'localhost:8000';
 });
 
 
