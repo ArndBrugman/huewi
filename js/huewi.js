@@ -1,11 +1,11 @@
-var app = angular.module('huewi', ['ngAnimate']);
+var app = angular.module("huewi", ["ngAnimate"]);
 
 
 
 (function () {
 
 
-angular.module(app.name).filter('orderObjectBy', function() {
+angular.module(app.name).filter("orderObjectBy", function() {
   return function(items, field, reverse) {
     var filtered = [];
     for (var key in items) {
@@ -29,7 +29,7 @@ angular.module(app.name).filter('orderObjectBy', function() {
 /** unused (function () {
 
 
-angular.module(app.name).controller('TabController', function($scope) {
+angular.module(app.name).controller("TabController", function($scope) {
   $scope.Tab = 1;
 
   $scope.TabIsSet = function(CheckTab) {
@@ -51,9 +51,9 @@ angular.module(app.name).controller('TabController', function($scope) {
 (function () {
 
 
-angular.module(app.name).factory('Menu', function() {
-  var Item = 'Connecting';
-  var Id = '';
+angular.module(app.name).factory("Menu", function() {
+  var Item = "Connecting";
+  var Id = "";
   
   return {
     SetItem : function(NewItem, NewId) {
@@ -79,14 +79,14 @@ angular.module(app.name).factory('Menu', function() {
 (function () {
 
 
-angular.module(app.name).factory('hueConnector', function ($rootScope) {
+angular.module(app.name).factory("hueConnector", function ($rootScope) {
   var MyHue = new huepi();
   //var MyHue = new huepi("localhost:8000"); // Emulator
   var HeartbeatInterval;
-  var Status = '';
+  var Status = "";
   // Show this Demo Data while Connecting...
-  MyHue.Groups = [{name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88', id:'0'}, {name: 'Group1'}, {name: 'Group2'}, {name: 'Group3'}];
-  MyHue.Lights = [{name: 'Light1'}, {name: 'Light2'}, {name: 'Light3'}];
+  MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"}, {name: "Group1"}, {name: "Group2"}, {name: "Group3"}];
+  MyHue.Lights = [{name: "Light1"}, {name: "Light2"}, {name: "Light3"}];
   
   if (window.cordova) {
     document.addEventListener("deviceready", onStartup, false);
@@ -103,7 +103,7 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
     MyHue.PortalDiscoverLocalBridges(); // Parallel
     Connect();
     setTimeout(function() {
-      if ((Status != 'Connected') && !MyHue.ScanningNetwork)
+      if ((Status != "Connected") && !MyHue.ScanningNetwork)
       onResume();
     }, 5000);
   }
@@ -119,34 +119,34 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
 
   function ReConnect() { // IP is stored in MyHue.BridgeIP
     clearInterval(HeartbeatInterval);
-    MyHue.Username = '';
-    SetStatus('Getting Config');
+    MyHue.Username = "";
+    SetStatus("Getting Config");
     MyHue.BridgeGetConfig().then(function() {
-      SetStatus('Bridge Config Received, Getting Data');
+      SetStatus("Bridge Config Received, Getting Data");
       MyHue.BridgeGetData().then(function() {
         localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
         DataReceived();
-        SetStatus('Connected');
+        SetStatus("Connected");
         HeartbeatInterval = setInterval(onHeartbeat, 2500);
       }, function() {
-        SetStatus('Please press connect button on the hue Bridge');
+        SetStatus("Please press connect button on the hue Bridge");
         MyHue.BridgeCreateUser(app.name).then(function() {
           localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
-          SetStatus('Connected');
+          SetStatus("Connected");
           HeartbeatInterval = setInterval(onHeartbeat, 2500);
         }, function() {
-          SetStatus('Please press connect button on the hue Bridge');
+          SetStatus("Please press connect button on the hue Bridge");
         });
       });
     }, function() {
-      SetStatus('Unable to Retreive Bridge Configuration');
+      SetStatus("Unable to Retreive Bridge Configuration");
       delete localStorage.MyHueBridgeIP; // un-Cache BridgeIP
     });
   }
 
   function Connect(NewBridgeAddress) {
     clearInterval(HeartbeatInterval);
-    MyHue.Username = '';
+    MyHue.Username = "";
     MyHue.BridgeIP = NewBridgeAddress || MyHue.BridgeIP;
     if (MyHue.BridgeIP !== "") { // Preset/Previous BridgeIP
       ReConnect();
@@ -154,26 +154,26 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
       ReConnect();
     } else {
-      SetStatus('Trying to Discover Bridge via Portal');
+      SetStatus("Trying to Discover Bridge via Portal");
       MyHue.PortalDiscoverLocalBridges().then(function() {
-        SetStatus('Bridge Discovered, Getting Config');
+        SetStatus("Bridge Discovered, Getting Config");
         ReConnect();
       }, function() { // else
-        SetStatus('Unable to find Local Bridge via Portal');
+        SetStatus("Unable to find Local Bridge via Portal");
       } );
     }
   }
 
   function Scan() {
     clearInterval(HeartbeatInterval);
-    SetStatus('Trying to Discover Bridge on Network');
+    SetStatus("Trying to Discover Bridge on Network");
     MyHue.NetworkDiscoverLocalBridges().then(function() {
-      SetStatus('Bridge Discovered, Getting Config');
+      SetStatus("Bridge Discovered, Getting Config");
       ReConnect();
     }, function() { // else
-      SetStatus('Unable to find Local Bridge on Network');
+      SetStatus("Unable to find Local Bridge on Network");
     }).progress(function update(Percentage){
-      SetStatus('Searching Local Network for Bridge '+ Percentage +'% done');
+      SetStatus("Searching Local Network for Bridge "+ Percentage +"% done");
     });
   }
 
@@ -182,7 +182,7 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
       DataReceived();
       setTimeout(function() { $rootScope.$apply(); }, 1);
     }, function BridgeGetDataFailed() {
-      SetStatus('Disconnected');
+      SetStatus("Disconnected");
       setTimeout(function() {
         onPause();
         onResume();
@@ -191,7 +191,7 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
   }
 
   function DataReceived() {
-    MyHue.Groups['0'] = {name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88'};
+    MyHue.Groups["0"] = {name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88"};
 
     function StateToHTMLColor(State, Model) {
       function ToHexString(In) {
@@ -199,18 +199,18 @@ angular.module(app.name).factory('hueConnector', function ($rootScope) {
         return Result.length == 1 ? "0" + Result : Result;
       }
 
-      if (State && State.colormode) { // Group 0 (All available lights) doesn't have all properties
+      if (State && State.colormode) { // Group 0 (All available lights) doesn"t have all properties
         Model = Model || "LCT001";
         var RGB;
         var xy;
 
-        if (State.colormode === 'hs') {
+        if (State.colormode === "hs") {
           RGB = huepi.HelperHueAngSatBritoRGB(State.hue * 360 / 65535, State.sat / 255, State.bri / 255);
           xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
           RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, State.bri / 255, Model);
-        } else if (State.colormode === 'xy') {
+        } else if (State.colormode === "xy") {
           RGB = huepi.HelperXYtoRGBforModel(State.xy[0], State.xy[1], State.bri / 255, Model);
-        } else if (State.colormode === 'ct') {
+        } else if (State.colormode === "ct") {
           RGB = huepi.HelperColortemperaturetoRGB(Math.round(1000000 / State.ct));
           xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
           RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, State.bri / 255, Model);
@@ -254,7 +254,7 @@ return {
 (function () {
 
 
-angular.module(app.name).controller('HueController', function($scope, hueConnector, Menu) {
+angular.module(app.name).controller("HueController", function($scope, hueConnector, Menu) {
   $scope.MyHue = hueConnector.MyHue(); // For conveinient usage of MyHue in HTML within this controllers $scope
   window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
   $scope.UpdateScheduled = false;
@@ -262,18 +262,18 @@ angular.module(app.name).controller('HueController', function($scope, hueConnect
   $scope.$watch(function() {
     return hueConnector.Status();
     }, function WatchStatus(NewStatus, OldStatus) {
-      if (NewStatus!=='Connected')
-        $('#HueStatusbar').slideDown(350);
-      else setTimeout(function() { $('#HueStatusbar').slideUp(750); }, 1);
+      if (NewStatus!=="Connected")
+        $("#HueStatusbar").slideDown(350);
+      else setTimeout(function() { $("#HueStatusbar").slideUp(750); }, 1);
     }
   );
 
   $scope.$watch(function() {
     return Menu.GetItem();
     }, function WatchStatus(NewItem, OldItem) {
-      if (NewItem === '') // No Overlay selected
-        $('body').css('overflow', 'initial'); // Enable scrolling of the <Body>
-      else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
+      if (NewItem === "") // No Overlay selected
+        $("body").css("overflow", "initial"); // Enable scrolling of the <Body>
+      else $("body").css("overflow", "hidden"); // Disable scrolling of the <Body>
     }
   );
 
@@ -323,20 +323,20 @@ angular.module(app.name).controller('HueController', function($scope, hueConnect
     return Menu.GetId();
   };
 
-  document.addEventListener('backbutton', function(event) { // Cordova/PhoneGap only.
-    if (angular.element("#HueStatus").scope().MenuItem() !== '') {
-      angular.element("#HueStatus").scope().SetMenuItem('Escape');
+  document.addEventListener("backbutton", function(event) { // Cordova/PhoneGap only.
+    if (angular.element("#HueStatus").scope().MenuItem() !== "") {
+      angular.element("#HueStatus").scope().SetMenuItem("Escape");
     }
   });
 
   document.onkeyup = function(event) {
-    if (angular.element("#HueStatus").scope().MenuItem() !== '') {
+    if (angular.element("#HueStatus").scope().MenuItem() !== "") {
       // Escape & Enter will close open Overlays.
       if ((event.keyCode === 27)) { // Escape or Backspace
-        angular.element("#HueStatus").scope().SetMenuItem('Escape');
+        angular.element("#HueStatus").scope().SetMenuItem("Escape");
       }
       if ((event.keyCode === 13)) { // Enter
-        angular.element("#HueStatus").scope().SetMenuItem('');
+        angular.element("#HueStatus").scope().SetMenuItem("");
       }
     }
   };
@@ -353,12 +353,12 @@ angular.module(app.name).controller('HueController', function($scope, hueConnect
   
 angular.module(app.name).directive("huewiGroups", function() {
   return {
-    restrict: 'E',
+    restrict: "E",
     templateUrl: "huewi-groups.html"
   };
 });
 
-angular.module(app.name).controller('GroupsController', function($scope, hueConnector) {
+angular.module(app.name).controller("GroupsController", function($scope, hueConnector) {
 });
 
 
@@ -371,12 +371,12 @@ angular.module(app.name).controller('GroupsController', function($scope, hueConn
 
 angular.module(app.name).directive("huewiLights", function() {
   return {
-    restrict: 'E',
+    restrict: "E",
     templateUrl: "huewi-lights.html"
   };
 });
 
-angular.module(app.name).controller('LightsController', function($scope, hueConnector) {
+angular.module(app.name).controller("LightsController", function($scope, hueConnector) {
 });
 
 
@@ -387,30 +387,30 @@ angular.module(app.name).controller('LightsController', function($scope, hueConn
 (function () {
 
 
-angular.module(app.name).controller('GroupAndLightController', function($scope, hueConnector, Menu) {
+angular.module(app.name).controller("GroupAndLightController", function($scope, hueConnector, Menu) {
   var hueImage = new Image();
-  hueImage.src = 'img/hue.png';
+  hueImage.src = "img/hue.png";
   var ctImage = new Image();
-  ctImage.src = 'img/ct.png';
-  $scope._Name = 'Light/Group';
+  ctImage.src = "img/ct.png";
+  $scope._Name = "Light/Group";
   $scope.OrgName = $scope._Name;
 
   $scope.$watch(function() {
     return Menu.GetItem();
     }, function WatchStatus(NewItem, OldItem) {
-    if (Menu.GetItem() === 'Escape') { // a Escape-key is Hit
-        if (OldItem === 'Group') {
+    if (Menu.GetItem() === "Escape") { // a Escape-key is Hit
+        if (OldItem === "Group") {
           if (hueConnector.MyHue().Groups[Menu.GetId()].name != $scope.OrgName)
             hueConnector.MyHue().GroupSetName(Menu.GetId(), $scope.OrgName);
-        } else if (OldItem=== 'Light') {
+        } else if (OldItem=== "Light") {
           if (hueConnector.MyHue().Lights[Menu.GetId()].name != $scope.OrgName)
           hueConnector.MyHue().LightSetName(Menu.GetId(), $scope.OrgName);
         }
     } else { // NewItem Selected
-        if (Menu.GetItem() === 'Group') {
+        if (Menu.GetItem() === "Group") {
           hueConnector.MyHue().GroupAlertSelect(Menu.GetId());
           $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[Menu.GetId()].name;
-        } else if (Menu.GetItem() === 'Light') {
+        } else if (Menu.GetItem() === "Light") {
           hueConnector.MyHue().LightAlertSelect(Menu.GetId());       
           $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[Menu.GetId()].name;
         }
@@ -431,11 +431,11 @@ angular.module(app.name).controller('GroupAndLightController', function($scope, 
   });
 
   $scope.Redraw = function() {
-    var hueCanvas = document.getElementById('hueCanvas');
-    var hueContext = hueCanvas.getContext('2d');
-    var ctCanvas = document.getElementById('ctCanvas');
-    var ctContext = ctCanvas.getContext('2d');
-    // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
+    var hueCanvas = document.getElementById("hueCanvas");
+    var hueContext = hueCanvas.getContext("2d");
+    var ctCanvas = document.getElementById("ctCanvas");
+    var ctContext = ctCanvas.getContext("2d");
+    // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn"t match canvas sizes
     if ($(window).width() > $(window).height()) {
       hueCanvas.width = 0.38 * $(window).width();
       if (hueCanvas.width > 0.75 * $(window).height())
@@ -452,37 +452,37 @@ angular.module(app.name).controller('GroupAndLightController', function($scope, 
     ctContext.drawImage(ctImage, 0, 0, ctCanvas.width, ctCanvas.height); // ReDraw
   };
 
-  $('#hueCanvas').on('click', function(event) {
+  $("#hueCanvas").on("click", function(event) {
     var x = event.offsetX;
     var y = event.offsetY;
-    var HueContext = document.getElementById('hueCanvas').getContext('2d');
+    var HueContext = document.getElementById("hueCanvas").getContext("2d");
     var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
-    if (Menu.GetItem() === 'Group') {
+    if (Menu.GetItem() === "Group") {
       hueConnector.MyHue().GroupSetRGB(Menu.GetId(), HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
-    } else if (Menu.GetItem() === 'Light') {
+    } else if (Menu.GetItem() === "Light") {
       hueConnector.MyHue().LightSetRGB(Menu.GetId(), HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
     }
   });
 
-  $('#ctCanvas').on('click', function(event) { // 2000..6500
-    var ctGroupCanvas = document.getElementById('ctCanvas');
+  $("#ctCanvas").on("click", function(event) { // 2000..6500
+    var ctGroupCanvas = document.getElementById("ctCanvas");
     var x = event.offsetX;
     var y = event.offsetY;
     var ColorTemperature = 2000 + (6500-2000)*(x/ctGroupCanvas.width);
     var Brightness = 255 - 255*(y/ctGroupCanvas.height);
-    if (Menu.GetItem() === 'Group') {
+    if (Menu.GetItem() === "Group") {
       hueConnector.MyHue().GroupSetColortemperature(Menu.GetId(), ColorTemperature);
       hueConnector.MyHue().GroupSetBrightness(Menu.GetId(), Brightness);
-    } else if (Menu.GetItem() === 'Light') {
+    } else if (Menu.GetItem() === "Light") {
       hueConnector.MyHue().LightSetColortemperature(Menu.GetId(), ColorTemperature);
       hueConnector.MyHue().LightSetBrightness(Menu.GetId(), Brightness);
     }
   });
 
   $scope.GroupHasLight = function(LightId) {
-    if (Menu.GetItem() === 'Group') {
-      if (Menu.GetId() === '0') return false;
+    if (Menu.GetItem() === "Group") {
+      if (Menu.GetId() === "0") return false;
       if (hueConnector.MyHue().Groups[Menu.GetId()].lights.indexOf(LightId)>=0)
         return true;
     }
@@ -490,7 +490,7 @@ angular.module(app.name).controller('GroupAndLightController', function($scope, 
   };
   
   $scope.GroupToggleLight = function(LightId) {
-    if (Menu.GetItem() === 'Group') {
+    if (Menu.GetItem() === "Group") {
       hueConnector.MyHue().LightAlertSelect(LightId);
       if ($scope.GroupHasLight(LightId))
         hueConnector.MyHue().Groups[Menu.GetId()].lights.splice(
@@ -504,9 +504,9 @@ angular.module(app.name).controller('GroupAndLightController', function($scope, 
     if (angular.isDefined(NewName))
     { // Set
       $scope._Name = NewName;
-      if (Menu.GetItem() === 'Group') {
+      if (Menu.GetItem() === "Group") {
         hueConnector.MyHue().GroupSetName(Menu.GetId(), NewName);
-      } else if (Menu.GetItem() === 'Light') {
+      } else if (Menu.GetItem() === "Light") {
         hueConnector.MyHue().LightSetName(Menu.GetId(), NewName);
       }
     }
@@ -514,10 +514,10 @@ angular.module(app.name).controller('GroupAndLightController', function($scope, 
   };
 
   $scope.SetCTBrightness = function(CT, Brightness) {
-    if (Menu.GetItem() === 'Group') {
+    if (Menu.GetItem() === "Group") {
       hueConnector.MyHue().GroupSetCT(Menu.GetId(), CT);
       hueConnector.MyHue().GroupSetBrightness(Menu.GetId(), Brightness);
-    } else if (Menu.GetItem() === 'Light') {
+    } else if (Menu.GetItem() === "Light") {
       hueConnector.MyHue().LightSetCT(Menu.GetId(), CT);
       hueConnector.MyHue().LightSetBrightness(Menu.GetId(), Brightness);
     }    
@@ -553,7 +553,7 @@ angular.module(app.name).controller('GroupAndLightController', function($scope, 
 (function () {
 
 
-angular.module(app.name).controller('SchedulesController', function($scope, hueConnector) {
+angular.module(app.name).controller("SchedulesController", function($scope, hueConnector) {
 });
 
 
@@ -564,7 +564,7 @@ angular.module(app.name).controller('SchedulesController', function($scope, hueC
 (function () {
 
 
-angular.module(app.name).controller('ScenesController', function($scope, hueConnector) {
+angular.module(app.name).controller("ScenesController", function($scope, hueConnector) {
 });
 
 
@@ -575,7 +575,7 @@ angular.module(app.name).controller('ScenesController', function($scope, hueConn
 (function () {
 
 
-angular.module(app.name).controller('SensorsController', function($scope, hueConnector) {
+angular.module(app.name).controller("SensorsController", function($scope, hueConnector) {
 });
 
 
@@ -586,7 +586,7 @@ angular.module(app.name).controller('SensorsController', function($scope, hueCon
 (function () {
 
 
-angular.module(app.name).controller('RulesController', function($scope, hueConnector) {
+angular.module(app.name).controller("RulesController", function($scope, hueConnector) {
 });
 
 
@@ -597,8 +597,8 @@ angular.module(app.name).controller('RulesController', function($scope, hueConne
 (function () {
 
 
-angular.module(app.name).controller('BridgeController', function($scope, hueConnector) {
-  $scope.ManualBridge = hueConnector.MyHue().BridgeIP || 'localhost:8000';
+angular.module(app.name).controller("BridgeController", function($scope, hueConnector) {
+  $scope.ManualBridge = hueConnector.MyHue().BridgeIP || "localhost:8000";
 });
 
 
