@@ -1,4 +1,4 @@
-<h3 ng-click="ChangeType()">{{GroupType}}s</h3>
+<h3 ng-click="ChangeType()" ng-show="GroupType==='LightGroup'" >Groups</h3><h3 ng-click="ChangeType()" ng-show="GroupType==='Room'" >Rooms</h3>
 <div class="list-group">
   <div class="list-group-item" ng-repeat="Group in MyHue.Groups | orderObjectBy:'type' | filter:{type:GroupType} | filter:'!huelabs' ">
     <div style="display:inline-block; width:29%" ng-click="SetMenuItem('Group', Group.id)">
@@ -12,9 +12,10 @@
       <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(Group.id)" ng-show="(Group.action.on) || (Group.id === '0')">
         <span class="glyphicon glyphicon-off" style="color:{{Group.HTMLColor}}" aria-hidden="true"></span>
       </button>
-      <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(Group.id)" ng-show="(!Group.action.on) || (Group.id === '0')">
+      <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(Group.id)" ng-hide="(Group.action.on) && (Group.id != '0')">
         <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
       </button>
     </div>
   </div>
 </div>
+<div><br><br></div>
