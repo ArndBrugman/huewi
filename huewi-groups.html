@@ -1,18 +1,18 @@
-<h3>Groups</h3>
+<h3 ng-click="ChangeType()">{{GroupType}}s</h3>
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="Group in MyHue.Groups | orderObjectBy:'type' | filter:'Group' | filter:'!huelabs' "> <!-- | filter : {type: 'LightGroup'} | orderBy : 'name'"-->
-    <!-- LightGroup Room -->
-    <div style='display:inline-block; width:29%' ng-click="SetMenuItem('Group', Group.id)">
+  <div class="list-group-item" ng-repeat="Group in MyHue.Groups | orderObjectBy:'type' | filter:{type:GroupType} | filter:'!huelabs' ">
+    <div style="display:inline-block; width:29%" ng-click="SetMenuItem('Group', Group.id)">
     	{{Group.name}}
     </div>
-    <div style='display:inline-block; width:49%' >
-      <input type='range' min='0' max='255' ng-model='Group.action.bri' ng-change='SetGroupBrightness(Group.id)' ng-mousedown='SetActive(Group.id)' ng-mouseup='SetActive(-1)' ng-mouseleave='SetActive(-1)'/>
+    <div style="display:inline-block; width:49%" >
+      <input type="range" min="0" max="255" ng-show="(Group.action.on) || (Group.id === '0')" ng-model="Group.action.bri"
+      ng-change="SetGroupBrightness(Group.id)" ng-mousedown="SetActive(Group.id)" ng-mouseup="SetActive(-1)" ng-mouseleave="SetActive(-1)"/>
     </div>
-    <div style='display:inline-block; width:19%' class='right'>
-      <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(Group.id);" ng-class="{ hidden: !((Group.action.on) || (Group.id === '0')) }">
+    <div style="display:inline-block; width:19%" class="right">
+      <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(Group.id)" ng-show="(Group.action.on) || (Group.id === '0')">
         <span class="glyphicon glyphicon-off" style="color:{{Group.HTMLColor}}" aria-hidden="true"></span>
       </button>
-      <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(Group.id);" ng-class="{ hidden:Group.action.on }">
+      <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(Group.id)" ng-show="(!Group.action.on) || (Group.id === '0')">
         <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
       </button>
     </div>
