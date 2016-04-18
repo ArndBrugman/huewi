@@ -54,7 +54,6 @@
     <div class="container" id="Groups">
       <div huewi-groups class="content">
       </div><!-- /content -->
-      <div class="onlandscape"><br><br></div><!-- Spacing on Landscape after Groups -->
     </div><!-- /container -->
 
     <div class="container" id="Lights">
@@ -88,7 +87,7 @@
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  <div class="overlay fading" id="Bridge" ng-show="Status() != 'Connected' || GetMenuItem() === 'Bridge'">
+  <div class="overlay fading" id="Bridge" ng-show="Status() === '!Connected' || GetMenuItem() === 'Bridge'">
     <div huewi-bridge class="inlay content timebasedgradient">
     </div><!-- /inlay content -->
   </div><!-- /overlay -->

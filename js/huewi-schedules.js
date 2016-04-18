@@ -1,7 +1,7 @@
 (function () {
 "use strict";
 
-angular.module(app.name)
+app
 
 .directive("huewiSchedules", function() {
   return {

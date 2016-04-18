@@ -1,22 +1,30 @@
 (function () {
 "use strict";
 
-angular.module(app.name)
+app
 
 .factory("hueConnector", function ($rootScope) {
   var MyHue = new huepi();
   var HeartbeatInterval;
   var Status = "";
-  // Show this Demo Data while Connecting...
-  MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"}, {name: "Group1"}, {name: "Group2"}, {name: "Group3"}];
-  MyHue.Lights = [{name: "Light1"}, {name: "Light2"}, {name: "Light3"}];
+  // Demo Data while Connecting...
+  MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"}, 
+   {name: "Living Group", type: "LightGroup", state: {on:"true"}},
+   {name: "Dining Group", type: "LightGroup", state: {on:"false"}},
+   {name: "Bed Group", type: "LightGroup", state: {on:"false"}}, 
+   {name: "Living Room", type: "Room", action: {on:"true"}}, 
+   {name: "Dining Room", type: "Room", action: {on:"false"}}, 
+   {name: "Bed Room", type: "Room", action: {on:"false"}}];
+  MyHue.Lights = [{name: "Light1", state: {on:"true",reachable:"true"}}, 
+   {name: "Light2", state: {on:"false",reachable:"true"}}, 
+   {name: "Light3", state: {on:"false",reachable:"true"}}];
   
   if (window.cordova) {
     document.addEventListener("deviceready", onStartup, false);
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
   } else {
-    setTimeout(function() { $(document).ready(onStartup); }, 1000);
+    $(document).ready(onStartup);
   }
 
   function onStartup() {

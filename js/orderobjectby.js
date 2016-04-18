@@ -1,7 +1,7 @@
 (function () {
 "use strict";
 
-angular.module(app.name)
+app
 
 .filter("orderObjectBy", function() {
   return function(items, field, reverse) {

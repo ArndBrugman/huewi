@@ -1,7 +1,7 @@
 (function () {
 "use strict";
 
-angular.module(app.name)
+app
 
 .controller("huewiController", function($scope, hueConnector, Menu) {
   $scope.MyHue = hueConnector.MyHue(); // For conveinient usage of MyHue in HTML within this controllers $scope

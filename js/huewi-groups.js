@@ -1,7 +1,7 @@
 (function () {
 "use strict";
   
-angular.module(app.name)
+app
 
 .directive("huewiGroups", function() {
   return {
@@ -12,7 +12,7 @@ angular.module(app.name)
 })
 
 .controller("huewiGroupsController", function($scope, hueConnector) {
-  $scope.GroupType = "LightGroup"; // LightGroup or Room
+  $scope.GroupType = "Room"; // LightGroup or Room
 
   $scope.ChangeType = function()
   {
