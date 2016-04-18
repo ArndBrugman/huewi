@@ -49,7 +49,7 @@ app
   function ReConnect() { // IP is stored in MyHue.BridgeIP
     clearInterval(HeartbeatInterval);
     MyHue.Username = "";
-    SetStatus("Getting Config");
+    SetStatus("Getting Bridge Config");
     MyHue.BridgeGetConfig().then(function() {
       SetStatus("Bridge Config Received, Getting Data");
       MyHue.BridgeGetData().then(function() {
@@ -83,12 +83,12 @@ app
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
       ReConnect();
     } else {
-      SetStatus("Trying to Discover Bridge via Portal");
+      SetStatus("Discovering Bridge via Portal");
       MyHue.PortalDiscoverLocalBridges().then(function() {
-        SetStatus("Bridge Discovered, Getting Config");
+        SetStatus("Bridge Discovered");
         ReConnect();
       }, function() { // else
-        SetStatus("Unable to find Local Bridge via Portal");
+        SetStatus("Unable to Discover Local Bridge via Portal, Please Try Scan Network");
       } );
     }
     setTimeout(function() {
@@ -99,12 +99,12 @@ app
 
   function Scan() {
     clearInterval(HeartbeatInterval);
-    SetStatus("Trying to Discover Bridge on Network");
+    SetStatus("Scanning for Bridge on Network");
     MyHue.NetworkDiscoverLocalBridges().then(function() {
-      SetStatus("Bridge Discovered, Getting Config");
+      SetStatus("Bridge Found");
       ReConnect();
     }, function() { // else
-      SetStatus("Unable to find Local Bridge on Network");
+      SetStatus("Unable to find Local Bridge by Scanning Network");
     }).progress(function update(Percentage){
       SetStatus("Searching Local Network for Bridge "+ Percentage +"% done");
     });
