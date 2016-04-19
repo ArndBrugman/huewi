@@ -1,22 +1,30 @@
 (function () {
 "use strict";
 
-angular.module(app.name)
+app
 
-.factory("hueConnector", function ($rootScope) {
+.factory("hueConnector", ["$rootScope", function ($rootScope) {
   var MyHue = new huepi();
   var HeartbeatInterval;
   var Status = "";
-  // Show this Demo Data while Connecting...
-  MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"}, {name: "Group1"}, {name: "Group2"}, {name: "Group3"}];
-  MyHue.Lights = [{name: "Light1"}, {name: "Light2"}, {name: "Light3"}];
+  // Demo Data while Connecting...
+  MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"}, 
+   {name: "Demo Group", type: "LightGroup", state: {on:"true"}},
+   {name: "Living Group", type: "LightGroup", state: {on:"false"}},
+   {name: "Dining Group", type: "LightGroup", state: {on:"false"}}, 
+   {name: "Demo Room", type: "Room", action: {on:"true"}}, 
+   {name: "Living Room", type: "Room", action: {on:"false"}}, 
+   {name: "Dining Room", type: "Room", action: {on:"false"}}];
+  MyHue.Lights = [{name: "Demo Light", state: {on:"true",reachable:"true"}}, 
+   {name: "Living Light", state: {on:"false",reachable:"true"}}, 
+   {name: "Dining Light", state: {on:"false",reachable:"true"}}];
   
   if (window.cordova) {
     document.addEventListener("deviceready", onStartup, false);
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
   } else {
-    setTimeout(function() { $(document).ready(onStartup); }, 1000);
+    $(document).ready(onStartup);
   }
 
   function onStartup() {
@@ -24,9 +32,9 @@ angular.module(app.name)
   }
 
   function onResume() {
-    TimeBasedGradientUpdate();
-    MyHue.PortalDiscoverLocalBridges(); // Parallel
     Connect();
+    TimeBasedGradientUpdate(); // After Connect(); for faster (Re)Connection.
+    MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
   }
 
   function onPause() {
@@ -35,13 +43,13 @@ angular.module(app.name)
 
   function SetStatus(NewStatus) {
     Status = NewStatus;
-    setTimeout(function() { $rootScope.$apply(); }, 1); // Make Sure UI is updated :)
+    setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
   }
 
-  function ReConnect() { // IP is stored in MyHue.BridgeIP
+  function ReConnect() { // IP is known and stored in MyHue.BridgeIP
     clearInterval(HeartbeatInterval);
     MyHue.Username = "";
-    SetStatus("Getting Config");
+    SetStatus("Getting Bridge Config");
     MyHue.BridgeGetConfig().then(function() {
       SetStatus("Bridge Config Received, Getting Data");
       MyHue.BridgeGetData().then(function() {
@@ -65,7 +73,7 @@ angular.module(app.name)
     });
   }
 
-  function Connect(NewBridgeAddress) {
+  function Connect(NewBridgeAddress) { // IP is Unknown, Fetch it and ReConnect on it
     clearInterval(HeartbeatInterval);
     MyHue.Username = "";
     MyHue.BridgeIP = NewBridgeAddress || MyHue.BridgeIP;
@@ -75,30 +83,30 @@ angular.module(app.name)
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
       ReConnect();
     } else {
-      SetStatus("Trying to Discover Bridge via Portal");
+      SetStatus("Discovering Bridge via Portal");
       MyHue.PortalDiscoverLocalBridges().then(function() {
-        SetStatus("Bridge Discovered, Getting Config");
+        SetStatus("Bridge Discovered");
         ReConnect();
       }, function() { // else
-        SetStatus("Unable to find Local Bridge via Portal");
+        SetStatus("Unable to Discover Bridge, Please use Network Scan");
       } );
     }
     setTimeout(function() {
-      if ((Status != "Connected") && !MyHue.ScanningNetwork)
+      if ((Status != "Connected") && (!MyHue.ScanningNetwork))
         Connect();
     }, 5000);
 }
 
   function Scan() {
     clearInterval(HeartbeatInterval);
-    SetStatus("Trying to Discover Bridge on Network");
+    SetStatus("Scanning Network for Bridge");
     MyHue.NetworkDiscoverLocalBridges().then(function() {
-      SetStatus("Bridge Discovered, Getting Config");
+      SetStatus("Bridge Found");
       ReConnect();
     }, function() { // else
-      SetStatus("Unable to find Local Bridge on Network");
+      SetStatus("Unable to locate Bridge with Network Scan");
     }).progress(function update(Percentage){
-      SetStatus("Searching Local Network for Bridge "+ Percentage +"% done");
+      SetStatus("Searching Network for Bridge, "+ Percentage +"% done");
     });
   }
 
@@ -150,7 +158,7 @@ angular.module(app.name)
     }
     for (Key in MyHue.Lights) {
       MyHue.Lights[Key].id = Key;
-      MyHue.Lights[Key].HTMLColor = StateToHTMLColor(MyHue.Lights[Key].state);
+      MyHue.Lights[Key].HTMLColor = StateToHTMLColor(MyHue.Lights[Key].state, MyHue.Lights[Key].modelid);
     }
   }
 
@@ -169,7 +177,7 @@ return {
     }
   };
 
-});
+}]);
 
 
 })();

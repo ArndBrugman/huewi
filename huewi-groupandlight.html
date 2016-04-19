@@ -1,4 +1,5 @@
 <h3><input type="text" id="GroupLightName" ng-model="Name" ng-model-options="{ getterSetter: true }"></h3>
+
 <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
 
 <div class="container" id="ColorTemp">
@@ -6,7 +7,7 @@
     <div>
       <div ng-show="GetMenuItem() === 'Group'" >
         <div style="display:inline-block; width:79%" >
-          <input type="range" min="0" max="255" ng-show="((MyHue.Groups[GetMenuId()].action.on) || (GetMenuId() == 0))" ng-model="MyHue.Groups[GetMenuId()].action.bri" 
+          <input type="range" min="1" max="254" ng-show="((MyHue.Groups[GetMenuId()].action.on) || (GetMenuId() == 0))" ng-model="MyHue.Groups[GetMenuId()].action.bri" 
           ng-change="SetGroupBrightness(GetMenuId())" ng-mousedown="SetActive(GetMenuId())" ng-mouseup="SetActive(-1)" ng-mouseleave="SetActive(-1)"/>
         </div>
         <div style="display:inline-block; width:19%" class="right">
@@ -20,7 +21,7 @@
       </div>
       <div ng-show="GetMenuItem() === 'Light'" >
         <div style="display:inline-block; width:79%" >
-          <input type="range" min="0" max="255" ng-show="MyHue.Lights[GetMenuId()].state.on" ng-model="MyHue.Lights[GetMenuId()].state.bri" 
+          <input type="range" min="1" max="254" ng-show="MyHue.Lights[GetMenuId()].state.on" ng-model="MyHue.Lights[GetMenuId()].state.bri" 
           ng-change="SetLightBrightness(GetMenuId())" ng-mousedown="SetActive(GetMenuId())" ng-mouseup="SetActive(-1)" ng-mouseleave="SetActive(-1)"/>
         </div>
         <div style="display:inline-block; width:19%" class="right" ng-show="MyHue.Lights[GetMenuId()].state.reachable">
@@ -54,6 +55,7 @@
 </div><!-- /container -->
 
 <div><br><br></div>
+
 <div class="content">
   <div ng-show="(GetMenuItem() === 'Group') && (GetMenuId()!=='0')" >
     <span class="grouplight" ng-repeat="Light in MyHue.Lights">
@@ -67,4 +69,3 @@
 </div>
 
 <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
-<div><br><br></div>

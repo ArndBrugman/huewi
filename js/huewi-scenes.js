@@ -1,7 +1,7 @@
 (function () {
 "use strict";
 
-angular.module(app.name)
+app
 
 .directive("huewiScenes", function() {
   return {
@@ -11,8 +11,8 @@ angular.module(app.name)
   };
 })
 
-.controller("huewiScenesController", function($scope, hueConnector) {
-});
+.controller("huewiScenesController", ["$scope", "hueConnector", function($scope, hueConnector) {
+}]);
 
 
 })();

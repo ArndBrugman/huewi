@@ -1,7 +1,7 @@
 (function () {
 "use strict";
 
-angular.module(app.name)
+app
 
 .directive("huewiBridge", function() {
   return {
@@ -11,9 +11,9 @@ angular.module(app.name)
   };
 })
 
-.controller("huewiBridgeController", function($scope, hueConnector) {
+.controller("huewiBridgeController", ["$scope", "hueConnector", function($scope, hueConnector) {
   $scope.ManualBridge = "localhost:8000";
-});
+}]);
 
 
 })();

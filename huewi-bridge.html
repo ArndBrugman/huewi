@@ -1,5 +1,7 @@
 <h3>Bridge {{MyHue.BridgeIP}} {{MyHue.BridgeName}}</h3>
+
 <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
+
 <div class="list-group">
   <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges" ng-click="MyHue.ScanningNetwork = false; MyHue.BridgeIP = Value.internalipaddress; Connect()">
     <div style="display:inline-block; width:69%">
@@ -8,16 +10,17 @@
     <div ng-show="Value.internalipaddress===MyHue.BridgeIP" style="display:inline-block; width:29%; text-align: right">Current</div>
   </div>
 </div>
+
 <button type="button" class="btn preset" ng-click="MyHue.PortalDiscoverLocalBridges()" ng-hide="MyHue.ScanningNetwork">Discover</button>
 <button type="button" class="btn preset" ng-click="Scan()" ng-hide="MyHue.ScanningNetwork">Scan</button>
 <button type="button" class="btn preset" ng-click="MyHue.ScanningNetwork = false" ng-show="MyHue.ScanningNetwork">Cancel</button>
 <button type="button" class="btn preset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true)" ng-hide="MyHue.ScanningNetwork">Reload</button>
-<div></div>
 <div type="text" class="preset" style="display:inline-block" ng-hide="MyHue.ScanningNetwork">Manual:</div>
 <input type="text" class="preset" ng-model="ManualBridge" ng-hide="MyHue.ScanningNetwork"></input>
 <button type="button" class="btn preset" ng-click="Connect(ManualBridge)" ng-hide="MyHue.ScanningNetwork">Connect</button>
-<div></div>
-<br>
+
+<div><br></div>
+
 <div class="list-group">
   <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist | orderObjectBy : 'last use date' : true">
     <div style="display:inline-block; width:69%">
@@ -30,5 +33,5 @@
     <div ng-click="MyHue.BridgeDeleteUser(Value.id)" style="display:inline-block; width:29%; text-align: right">Delete Key</div>
   </div>
 </div>
+
 <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
-<div><br><br></div>

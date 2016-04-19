@@ -1,7 +1,7 @@
 (function () {
 "use strict";
 
-angular.module(app.name)
+app
 
 .directive("huewiGroupandlight", function() {
   return {
@@ -11,7 +11,7 @@ angular.module(app.name)
   };
 })
 
-.controller("huewiGroupAndLightController", function($scope, hueConnector, Menu) {
+.controller("huewiGroupAndLightController", ["$scope", "hueConnector", "Menu", function($scope, hueConnector, Menu) {
   var hueImage = new Image();
   hueImage.src = "img/hue.png";
   var ctImage = new Image();
@@ -59,7 +59,7 @@ angular.module(app.name)
     var hueContext = hueCanvas.getContext("2d");
     var ctCanvas = document.getElementById("ctCanvas");
     var ctContext = ctCanvas.getContext("2d");
-    // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn"t match canvas sizes
+    // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
     if ($(window).width() > $(window).height()) {
       hueCanvas.width = 0.38 * $(window).width();
       if (hueCanvas.width > 0.75 * $(window).height())
@@ -148,27 +148,27 @@ angular.module(app.name)
     }    
   };
 
-  $scope.Relax = function(NewName) {
+  $scope.Relax = function() {
     $scope.SetCTBrightness(467, 144);
   };
   
-  $scope.Reading = function(NewName) {
+  $scope.Reading = function() {
     $scope.SetCTBrightness(343, 240);
   };
   
-  $scope.Concentrate = function(NewName) {
+  $scope.Concentrate = function() {
     $scope.SetCTBrightness(231, 219);
   };
   
-  $scope.Energize = function(NewName) {
+  $scope.Energize = function() {
     $scope.SetCTBrightness(156, 203);
   };
   
-  $scope.GoldenHour = function(NewName) {
+  $scope.GoldenHour = function() {
     $scope.SetCTBrightness(400, 125);
   };
 
-});
+}]);
 
 
 })();
