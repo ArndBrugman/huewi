@@ -9,15 +9,15 @@ app
   var Status = "";
   // Demo Data while Connecting...
   MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"}, 
-   {name: "Living Group", type: "LightGroup", state: {on:"true"}},
-   {name: "Dining Group", type: "LightGroup", state: {on:"false"}},
-   {name: "Bed Group", type: "LightGroup", state: {on:"false"}}, 
-   {name: "Living Room", type: "Room", action: {on:"true"}}, 
-   {name: "Dining Room", type: "Room", action: {on:"false"}}, 
-   {name: "Bed Room", type: "Room", action: {on:"false"}}];
-  MyHue.Lights = [{name: "Light1", state: {on:"true",reachable:"true"}}, 
-   {name: "Light2", state: {on:"false",reachable:"true"}}, 
-   {name: "Light3", state: {on:"false",reachable:"true"}}];
+   {name: "Demo Group", type: "LightGroup", state: {on:"true"}},
+   {name: "Living Group", type: "LightGroup", state: {on:"false"}},
+   {name: "Dining Group", type: "LightGroup", state: {on:"false"}}, 
+   {name: "Demo Room", type: "Room", action: {on:"true"}}, 
+   {name: "Living Room", type: "Room", action: {on:"false"}}, 
+   {name: "Dining Room", type: "Room", action: {on:"false"}}];
+  MyHue.Lights = [{name: "Demo Light", state: {on:"true",reachable:"true"}}, 
+   {name: "Living Light", state: {on:"false",reachable:"true"}}, 
+   {name: "Dining Light", state: {on:"false",reachable:"true"}}];
   
   if (window.cordova) {
     document.addEventListener("deviceready", onStartup, false);
