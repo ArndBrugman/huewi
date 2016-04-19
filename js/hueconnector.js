@@ -88,7 +88,6 @@ app
         SetStatus("Bridge Discovered");
         ReConnect();
       }, function() { // else
-        SetStatus("Unable to Discover Local Bridge via Portal, Please Try Scan Network");
       } );
     }
     setTimeout(function() {
@@ -99,14 +98,12 @@ app
 
   function Scan() {
     clearInterval(HeartbeatInterval);
-    SetStatus("Scanning for Bridge on Network");
+    SetStatus("Scanning Network for Bridge");
     MyHue.NetworkDiscoverLocalBridges().then(function() {
       SetStatus("Bridge Found");
       ReConnect();
     }, function() { // else
-      SetStatus("Unable to find Local Bridge by Scanning Network");
     }).progress(function update(Percentage){
-      SetStatus("Searching Local Network for Bridge "+ Percentage +"% done");
     });
   }
 

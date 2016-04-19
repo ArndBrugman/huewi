@@ -1,11 +1,12 @@
 <h3>Lights</h3>
+
 <div class="list-group">
   <div class="list-group-item" ng-repeat="Light in MyHue.Lights" ng-class="{ grayed:!Light.state.reachable }">
     <div style="display:inline-block; width:29%" ng-click="SetMenuItem('Light', Light.id)">
       {{Light.name}}
     </div>
     <div style="display:inline-block; width:49%" >
-      <input type="range" min="0" max="255" ng-show="Light.state.on" ng-model="Light.state.bri"
+      <input type="range" min="1" max="254" ng-show="Light.state.on" ng-model="Light.state.bri"
       ng-change="SetLightBrightness(Light.id)" ng-mousedown="SetActive(Light.id)" ng-mouseup="SetActive(-1)" ng-mouseleave="SetActive(-1)"/>
     </div>
     <div style="display:inline-block; width:19%" class="right" ng-show="Light.state.reachable">
@@ -18,4 +19,3 @@
     </div>
   </div>
 </div>
-<div><br><br></div>
