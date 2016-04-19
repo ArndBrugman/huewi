@@ -11,7 +11,7 @@ app
   };
 })
 
-.controller("huewiGroupsController", function($scope, hueConnector) {
+.controller("huewiGroupsController", ["$scope", "hueConnector", function($scope, hueConnector) {
   $scope.GroupType = "Room"; // LightGroup or Room
 
   $scope.ChangeType = function()
@@ -22,7 +22,7 @@ app
       $scope.GroupType = "LightGroup";
     }
   };
-});
+}]);
 
 
 })();

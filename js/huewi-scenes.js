@@ -11,8 +11,8 @@ app
   };
 })
 
-.controller("huewiScenesController", function($scope, hueConnector) {
-});
+.controller("huewiScenesController", ["$scope", "hueConnector", function($scope, hueConnector) {
+}]);
 
 
 })();

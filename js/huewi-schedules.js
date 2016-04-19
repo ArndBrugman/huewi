@@ -11,8 +11,8 @@ app
   };
 })
 
-.controller("huewiSchedulesController", function($scope, hueConnector) {
-});
+.controller("huewiSchedulesController", ["$scope", "hueConnector", function($scope, hueConnector) {
+}]);
 
 
 })();

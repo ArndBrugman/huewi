@@ -3,7 +3,7 @@
 
 app
 
-.factory("hueConnector", function ($rootScope) {
+.factory("hueConnector", ["$rootScope", function ($rootScope) {
   var MyHue = new huepi();
   var HeartbeatInterval;
   var Status = "";
@@ -32,9 +32,9 @@ app
   }
 
   function onResume() {
-    TimeBasedGradientUpdate();
-    MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
     Connect();
+    TimeBasedGradientUpdate(); // After Connect(); for faster (Re)Connection.
+    MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
   }
 
   function onPause() {
@@ -92,7 +92,7 @@ app
       } );
     }
     setTimeout(function() {
-      if ((Status != "Connected") && !MyHue.ScanningNetwork)
+      if ((Status != "Connected") && (!MyHue.ScanningNetwork))
         Connect();
     }, 5000);
 }
@@ -177,7 +177,7 @@ return {
     }
   };
 
-});
+}]);
 
 
 })();

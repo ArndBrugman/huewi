@@ -11,9 +11,9 @@ app
   };
 })
 
-.controller("huewiBridgeController", function($scope, hueConnector) {
+.controller("huewiBridgeController", ["$scope", "hueConnector", function($scope, hueConnector) {
   $scope.ManualBridge = "localhost:8000";
-});
+}]);
 
 
 })();

@@ -11,8 +11,8 @@ app
   };
 })
 
-.controller("huewiSensorsController", function($scope, hueConnector) {
-});
+.controller("huewiSensorsController", ["$scope", "hueConnector", function($scope, hueConnector) {
+}]);
 
 
 })();

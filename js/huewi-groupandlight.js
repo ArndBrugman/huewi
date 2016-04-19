@@ -11,7 +11,7 @@ app
   };
 })
 
-.controller("huewiGroupAndLightController", function($scope, hueConnector, Menu) {
+.controller("huewiGroupAndLightController", ["$scope", "hueConnector", "Menu", function($scope, hueConnector, Menu) {
   var hueImage = new Image();
   hueImage.src = "img/hue.png";
   var ctImage = new Image();
@@ -168,7 +168,7 @@ app
     $scope.SetCTBrightness(400, 125);
   };
 
-});
+}]);
 
 
 })();

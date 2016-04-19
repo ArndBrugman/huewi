@@ -3,7 +3,7 @@
 
 app
 
-.controller("huewiController", function($scope, hueConnector, Menu) {
+.controller("huewiController", ["$rootScope", "$scope", "hueConnector", "Menu", function($rootScope, $scope, hueConnector, Menu) {
   $scope.MyHue = hueConnector.MyHue(); // For conveinient usage of MyHue in HTML within this controllers $scope
   window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
   $scope.UpdateScheduled = false;
@@ -83,14 +83,16 @@ app
       // Escape & Enter will close open Overlays.
       if ((event.keyCode === 27)) { // Escape
         angular.element("#HueStatus").scope().SetMenuItem("Escape");
+        setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
       }
       if ((event.keyCode === 13)) { // Enter
         angular.element("#HueStatus").scope().SetMenuItem("");
+        setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
       }
     }
   };
 
-});
+}]);
 
 
 })();
