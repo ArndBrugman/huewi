@@ -33,7 +33,7 @@ app
 
   function onResume() {
     TimeBasedGradientUpdate();
-    MyHue.PortalDiscoverLocalBridges(); // Parallel
+    MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
     Connect();
   }
 
@@ -43,10 +43,10 @@ app
 
   function SetStatus(NewStatus) {
     Status = NewStatus;
-    setTimeout(function() { $rootScope.$apply(); }, 1); // Make Sure UI is updated :)
+    setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
   }
 
-  function ReConnect() { // IP is stored in MyHue.BridgeIP
+  function ReConnect() { // IP is known and stored in MyHue.BridgeIP
     clearInterval(HeartbeatInterval);
     MyHue.Username = "";
     SetStatus("Getting Bridge Config");
@@ -73,7 +73,7 @@ app
     });
   }
 
-  function Connect(NewBridgeAddress) {
+  function Connect(NewBridgeAddress) { // IP is Unknown, Fetch it and ReConnect on it
     clearInterval(HeartbeatInterval);
     MyHue.Username = "";
     MyHue.BridgeIP = NewBridgeAddress || MyHue.BridgeIP;
@@ -88,6 +88,7 @@ app
         SetStatus("Bridge Discovered");
         ReConnect();
       }, function() { // else
+        SetStatus("Unable to Discover Bridge, Please use Network Scan");
       } );
     }
     setTimeout(function() {
@@ -103,7 +104,9 @@ app
       SetStatus("Bridge Found");
       ReConnect();
     }, function() { // else
+      SetStatus("Unable to locate Bridge with Network Scan");
     }).progress(function update(Percentage){
+      SetStatus("Searching Network for Bridge, "+ Percentage +"% done");
     });
   }
 
@@ -155,7 +158,7 @@ app
     }
     for (Key in MyHue.Lights) {
       MyHue.Lights[Key].id = Key;
-      MyHue.Lights[Key].HTMLColor = StateToHTMLColor(MyHue.Lights[Key].state);
+      MyHue.Lights[Key].HTMLColor = StateToHTMLColor(MyHue.Lights[Key].state, MyHue.Lights[Key].modelid);
     }
   }
 
