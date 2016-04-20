@@ -6,7 +6,7 @@
     	{{Group.name}}
     </div>
     <div style="display:inline-block; width:49%" >
-      <input type="range" min="1" max="254" ng-show="(Group.action.on) || (Group.id === '0')" ng-model="Group.action.bri"
+      <input type="range" min="1" max="254" ng-show="(Group.action.on) || (Group.state.any_on) || (Group.id === '0')" ng-model="Group.action.bri"
       ng-change="SetGroupBrightness(Group.id)" ng-mousedown="SetActive(Group.id)" ng-mouseup="SetActive(-1)" ng-mouseleave="SetActive(-1)"/>
     </div>
     <div style="display:inline-block; width:19%" class="right">
