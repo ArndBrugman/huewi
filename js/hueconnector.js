@@ -9,9 +9,9 @@ app
   var Status = "";
   // Demo Data while Connecting...
   MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"}, 
-   {name: "Demo Group", type: "LightGroup", state: {on:"true"}},
-   {name: "Living Group", type: "LightGroup", state: {on:"false"}},
-   {name: "Dining Group", type: "LightGroup", state: {on:"false"}}, 
+   {name: "Demo Group", type: "LightGroup", action: {on:"true"}},
+   {name: "Living Group", type: "LightGroup", action: {on:"false"}},
+   {name: "Dining Group", type: "LightGroup", action: {on:"false"}}, 
    {name: "Demo Room", type: "Room", action: {on:"true"}}, 
    {name: "Living Room", type: "Room", action: {on:"false"}}, 
    {name: "Dining Room", type: "Room", action: {on:"false"}}];
@@ -124,7 +124,7 @@ app
   }
 
   function DataReceived() {
-    MyHue.Groups["0"] = {name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88"};
+    MyHue.Groups["0"] = {name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", action: {bri:155}};
 
     function StateToHTMLColor(State, Model) {
       function ToHexString(In) {
@@ -156,6 +156,7 @@ app
       MyHue.Groups[Key].id = Key;
       MyHue.Groups[Key].HTMLColor = StateToHTMLColor(MyHue.Groups[Key].action);
     }
+
     for (Key in MyHue.Lights) {
       MyHue.Lights[Key].id = Key;
       MyHue.Lights[Key].HTMLColor = StateToHTMLColor(MyHue.Lights[Key].state, MyHue.Lights[Key].modelid);
