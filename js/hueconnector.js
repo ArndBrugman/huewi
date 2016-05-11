@@ -6,7 +6,8 @@ app
 .factory("hueConnector", ["$rootScope", function ($rootScope) {
   var MyHue = new huepi();
   var HeartbeatInterval;
-  var Status = "";
+  var Status = "Disconnected";
+  var ReconnectInterval;
   // Demo Data while Connecting...
   MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"}, 
    {name: "Demo Group", type: "LightGroup", action: {on:"true"}},
@@ -35,14 +36,22 @@ app
     Connect();
     TimeBasedGradientUpdate(); // After Connect(); for faster (Re)Connection.
     MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
+    //
+    ReconnectInterval = setInterval(function() {
+      if ((Status.indexOf("Unable")>-1) && (!MyHue.ScanningNetwork)) {
+        Connect();
+      }
+    }, 1234);
   }
 
   function onPause() {
     clearInterval(HeartbeatInterval);
+    clearInterval(ReconnectInterval);
   }
 
   function SetStatus(NewStatus) {
     Status = NewStatus;
+    console.log(Status);
     setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
   }
 
@@ -64,13 +73,13 @@ app
           SetStatus("Connected");
           HeartbeatInterval = setInterval(onHeartbeat, 2500);
         }, function() {
-          SetStatus("Please press connect button on the hue Bridge");
+          SetStatus("Unable to Whitelist, Please press connect button on the hue Bridge");
         });
       });
     }, function() {
       SetStatus("Unable to Retreive Bridge Configuration");
       delete localStorage.MyHueBridgeIP; // un-Cache BridgeIP
-    });
+    } );
   }
 
   function Connect(NewBridgeAddress) { // IP is Unknown, Fetch it and ReConnect on it
@@ -83,19 +92,20 @@ app
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
       ReConnect();
     } else {
-      SetStatus("Discovering Bridge via Portal");
-      MyHue.PortalDiscoverLocalBridges().then(function() {
-        SetStatus("Bridge Discovered");
-        ReConnect();
-      }, function() { // else
-        SetStatus("Unable to Discover Bridge, Please use Network Scan");
-      } );
+      Discover();
     }
-    setTimeout(function() {
-      if ((Status != "Connected") && (!MyHue.ScanningNetwork))
-        Connect();
-    }, 5000);
 }
+
+  function Discover() {
+    clearInterval(HeartbeatInterval);
+    SetStatus("Discovering Bridge via Portal");
+    MyHue.PortalDiscoverLocalBridges().then(function() {
+      SetStatus("Bridge Discovered");
+      ReConnect();
+    }, function() { // else
+      SetStatus("Unable to locate Bridge with Network Scan");
+    } );
+  }
 
   function Scan() {
     clearInterval(HeartbeatInterval);
@@ -107,7 +117,7 @@ app
       SetStatus("Unable to locate Bridge with Network Scan");
     }).progress(function update(Percentage){
       SetStatus("Searching Network for Bridge, "+ Percentage +"% done");
-    });
+    } );
   }
 
   function onHeartbeat() {
@@ -120,7 +130,7 @@ app
         onPause();
         onResume();
       }, 1);
-    });
+    } );
   }
 
   function DataReceived() {
@@ -172,6 +182,9 @@ return {
     },
     Connect : function(NewBridgeAddress) {
       return Connect(NewBridgeAddress);
+    },
+    Discover : function() {
+      return Discover();
     },
     Scan : function() {
       return Scan();

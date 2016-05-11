@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<button type="button" class="btn preset" ng-click="MyHue.PortalDiscoverLocalBridges()" ng-hide="MyHue.ScanningNetwork">Discover</button>
+<button type="button" class="btn preset" ng-click="Discover()" ng-hide="MyHue.ScanningNetwork">Discover</button>
 <button type="button" class="btn preset" ng-click="Scan()" ng-hide="MyHue.ScanningNetwork">Scan</button>
 <button type="button" class="btn preset" ng-click="MyHue.ScanningNetwork = false" ng-show="MyHue.ScanningNetwork">Cancel</button>
 <button type="button" class="btn preset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true)" ng-hide="MyHue.ScanningNetwork">Reload</button>

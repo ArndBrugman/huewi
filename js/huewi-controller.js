@@ -34,6 +34,10 @@ app
     return hueConnector.Connect(NewBridgeAddress);
   };
 
+  $scope.Discover = function() {
+    return hueConnector.Discover();
+  };
+
   $scope.Scan = function() {
     return hueConnector.Scan();
   };
