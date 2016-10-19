@@ -82,10 +82,11 @@ app
     var HueContext = document.getElementById("hueCanvas").getContext("2d");
     var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
+    var HueAngSatBri = huepi.HelperRGBtoHueAngSatBri(HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
     if (Menu.GetItem() === "Group") {
-      hueConnector.MyHue().GroupSetRGB(Menu.GetId(), HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+      hueConnector.MyHue().GroupSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, hueConnector.MyHue().Groups[Menu.GetId()].action.bri);
     } else if (Menu.GetItem() === "Light") {
-      hueConnector.MyHue().LightSetRGB(Menu.GetId(), HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
+      hueConnector.MyHue().LightSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, hueConnector.MyHue().Lights[Menu.GetId()].state.bri);
     }
   });
 
@@ -94,13 +95,10 @@ app
     var x = event.offsetX;
     var y = event.offsetY;
     var ColorTemperature = 2000 + (6500-2000)*(x/ctGroupCanvas.width);
-    var Brightness = 255 - 255*(y/ctGroupCanvas.height);
     if (Menu.GetItem() === "Group") {
       hueConnector.MyHue().GroupSetColortemperature(Menu.GetId(), ColorTemperature);
-      hueConnector.MyHue().GroupSetBrightness(Menu.GetId(), Brightness);
     } else if (Menu.GetItem() === "Light") {
       hueConnector.MyHue().LightSetColortemperature(Menu.GetId(), ColorTemperature);
-      hueConnector.MyHue().LightSetBrightness(Menu.GetId(), Brightness);
     }
   });
 
