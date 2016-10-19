@@ -36,8 +36,8 @@ app
     Connect();
     TimeBasedGradientUpdate(); // After Connect(); for faster (Re)Connection.
     MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
-    //
-    ReconnectInterval = setInterval(function() {
+
+    ReconnectInterval = setInterval(function() { // Reconnects on Statusses of 'Unable', to retry
       if ((Status.indexOf("Unable")>-1) && (!MyHue.ScanningNetwork)) {
         Connect();
       }
@@ -103,7 +103,7 @@ app
       SetStatus("Bridge Discovered");
       ReConnect();
     }, function() { // else
-      SetStatus("Unable to locate Bridge with Network Scan");
+      SetStatus("Unable to discover Bridge via Portal");
     } );
   }
 
