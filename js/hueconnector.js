@@ -52,17 +52,22 @@ app
   function SetStatus(NewStatus) {
     Status = NewStatus;
     console.log(Status);
-    setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
+    try {
+      $rootScope.$apply(); // Force UI update
+    }
+    catch (error) {}
   }
 
   function ReConnect() { // IP is known and stored in MyHue.BridgeIP
     clearInterval(HeartbeatInterval);
-    MyHue.Username = "";
+    //MyHue.Username = "";
     SetStatus("Getting Bridge Config");
+    //MyHue.BridgeGetDescription();
     MyHue.BridgeGetConfig().then(function() {
       SetStatus("Bridge Config Received, Getting Data");
       MyHue.BridgeGetData().then(function() {
         localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
+        localStorage.MyHueBridgeID = MyHue.BridgeID; // Cache BridgeID
         DataReceived();
         SetStatus("Connected");
         HeartbeatInterval = setInterval(onHeartbeat, 2500);
@@ -70,6 +75,7 @@ app
         SetStatus("Please press connect button on the hue Bridge");
         MyHue.BridgeCreateUser(app.name).then(function() {
           localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
+          localStorage.MyHueBridgeID = MyHue.BridgeID; // Cache BridgeID
           SetStatus("Connected");
           HeartbeatInterval = setInterval(onHeartbeat, 2500);
         }, function() {
@@ -79,6 +85,7 @@ app
     }, function() {
       SetStatus("Unable to Retreive Bridge Configuration");
       delete localStorage.MyHueBridgeIP; // un-Cache BridgeIP
+      delete localStorage.MyHueBridgeID; // un-Cache BridgeID
     } );
   }
 
@@ -89,12 +96,23 @@ app
     if (MyHue.BridgeIP !== "") { // Preset/Previous BridgeIP
       ReConnect();
     } else if (localStorage.MyHueBridgeIP) { // Cached BridgeIP
+      SetStatus("Reconnecting");
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
-      ReConnect();
+      MyHue.BridgeID = localStorage.MyHueBridgeID;
+      MyHue.Username = MyHue.BridgeCache[MyHue.BridgeID];
+      MyHue.BridgeGetData().then(function() {
+        SetStatus("Connected");
+        HeartbeatInterval = setInterval(onHeartbeat, 2500);
+      }, function() {
+        SetStatus("Unable to Retreive Bridge Data");
+        delete localStorage.MyHueBridgeIP; // un-Cache BridgeIP
+        delete localStorage.MyHueBridgeID; // un-Cache BridgeID
+        Discover();
+      } );
     } else {
       Discover();
     }
-}
+  }
 
   function Discover() {
     clearInterval(HeartbeatInterval);
@@ -123,7 +141,7 @@ app
   function onHeartbeat() {
     MyHue.BridgeGetData().then(function UpdateUI() {
       DataReceived();
-      setTimeout(function() { $rootScope.$apply(); }, 1);
+      $rootScope.$apply();
     }, function BridgeGetDataFailed() {
       SetStatus("Disconnected");
       setTimeout(function() {

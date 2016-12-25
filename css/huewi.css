@@ -26,7 +26,8 @@ h3 {
 }
 h4 {
   text-align: center;
-  margin-bottom: 0px;
+  margin-top: 0px;
+  margin-bottom: 2px;
 }
 @media screen and (orientation:landscape) {
   .grouplight {
@@ -134,6 +135,8 @@ nav {
   display: inline;
 }
 #navcontainer {
+  width: auto;
+  height: auto;
   position: fixed;
   left: -1px;
   top: -1px;
@@ -144,15 +147,16 @@ nav {
   border-width: 1px;
   border-color: rgba(250, 240, 230, 0.50);
   border-bottom-right-radius: 5px;
-  padding: 5px;
+  padding: 0px;
 }
 #navbutton
 {
-  float: right;
   padding: 5px;
 }
 #navdrawer {
+  padding-top: 0px;
   padding-left: 16px;
+  padding-right: 16px;
   padding-bottom: 0px;
   display: none;
 }

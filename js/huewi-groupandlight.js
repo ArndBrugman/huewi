@@ -147,19 +147,38 @@ app
   };
 
   $scope.Relax = function() {
-    $scope.SetCTBrightness(467, 144);
+    $scope.SetCTBrightness(447, 144);
+    //"state":{"on":true,"bri":144,"hue":12585,"sat":224,"effect":"none","xy":[0.5019,0.4152],"ct":447,"alert":"select","colormode":"xy","reachable":true}
   };
   
   $scope.Reading = function() {
-    $scope.SetCTBrightness(343, 240);
+    $scope.SetCTBrightness(346, 254);
+    //"state":{"on":true,"bri":254,"hue":13524,"sat":200,"effect":"none","xy":[0.4450,0.4067],"ct":346,"alert":"select","colormode":"xy","reachable":true}
   };
   
   $scope.Concentrate = function() {
-    $scope.SetCTBrightness(231, 219);
+    $scope.SetCTBrightness(234, 254);
+    //"state":{"on":true,"bri":254,"hue":15324,"sat":121,"effect":"none","xy":[0.3698,0.3723],"ct":234,"alert":"select","colormode":"xy","reachable":true}
   };
   
   $scope.Energize = function() {
-    $scope.SetCTBrightness(156, 203);
+    $scope.SetCTBrightness(153, 254);
+    //"state":{"on":true,"bri":254,"hue":34075,"sat":251,"effect":"none","xy":[0.3144,0.3302],"ct":153,"alert":"select","colormode":"xy","reachable":true}
+  };
+  
+  $scope.Bright = function() {
+    $scope.SetCTBrightness(367, 254);
+    //"state":{"on":true,"bri":254,"hue":34075,"sat":251,"effect":"none","xy":[0.4578,0.4100],"ct":367,"alert":"select","colormode":"xy","reachable":true}
+  };
+  
+  $scope.Dimmed = function() {
+    $scope.SetCTBrightness(365, 77);
+    //"state":{"on":true,"bri":77,"hue":14956,"sat":140,"effect":"none","xy":[0.4571,0.4097],"ct":365,"alert":"select","colormode":"xy","reachable":true}
+  };
+  
+  $scope.Nightlight = function() {
+    $scope.SetCTBrightness(500, 1);
+    //"state":{"on":true,"bri":1,"hue":10778,"sat":251,"effect":"none","xy":[0.5609,0.4042],"ct":500,"alert":"select","colormode":"xy","reachable":true}
   };
   
   $scope.GoldenHour = function() {
