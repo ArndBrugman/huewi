@@ -96,10 +96,10 @@ app
     if (MyHue.BridgeIP !== "") { // Preset/Previous BridgeIP
       ReConnect();
     } else if (localStorage.MyHueBridgeIP) { // Cached BridgeIP
-      SetStatus("Reconnecting");
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
       MyHue.BridgeID = localStorage.MyHueBridgeID;
       MyHue.Username = MyHue.BridgeCache[MyHue.BridgeID];
+      SetStatus("Reconnecting");
       MyHue.BridgeGetData().then(function() {
         SetStatus("Connected");
         HeartbeatInterval = setInterval(onHeartbeat, 2500);
