@@ -1,4 +1,4 @@
-<h3>Bridge {{MyHue.BridgeIP}} {{MyHue.BridgeName}}</h3>
+<h3>Bridge {{MyHue.BridgeIP}}, "{{MyHue.BridgeName}}", {{MyHue.BridgeID}}</h3>
 
 <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
 
@@ -13,7 +13,10 @@
 
 <button type="button" class="btn preset" ng-click="Discover()" ng-hide="MyHue.ScanningNetwork">Discover</button>
 <button type="button" class="btn preset" ng-click="Scan()" ng-hide="MyHue.ScanningNetwork">Scan</button>
-<button type="button" class="btn preset" ng-click="MyHue.ScanningNetwork = false" ng-show="MyHue.ScanningNetwork">Cancel</button>
+<div ng-show="MyHue.ScanningNetwork">
+  <div type="text" class="preset" style="display:inline-block">Scanning Network...</div>
+  <button type="button" class="btn preset" ng-click="MyHue.ScanningNetwork = false" ng-show="MyHue.ScanningNetwork">Cancel</button>
+</div>
 <button type="button" class="btn preset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true)" ng-hide="MyHue.ScanningNetwork">Reload</button>
 <div type="text" class="preset" style="display:inline-block" ng-hide="MyHue.ScanningNetwork">Manual:</div>
 <input type="text" class="preset" ng-model="ManualBridge" ng-hide="MyHue.ScanningNetwork"></input>
