@@ -61,7 +61,7 @@ app
   function ReConnect() { // IP is known and stored in MyHue.BridgeIP
     clearInterval(HeartbeatInterval);
     SetStatus("Getting Bridge Config");
-//MyHue.BridgeGetDescription();
+    MyHue.BridgeGetDescription();
     MyHue.BridgeGetConfig().then(function() {
       SetStatus("Bridge Config Received, Getting Data");
       MyHue.BridgeGetData().then(function() {
@@ -96,7 +96,6 @@ app
       ReConnect();
     } else if (localStorage.MyHueBridgeIP) { // Cached BridgeIP
       MyHue.BridgeIP = localStorage.MyHueBridgeIP;
-//return ReConnect();
       MyHue.BridgeID = localStorage.MyHueBridgeID;
       MyHue.Username = MyHue.BridgeCache[MyHue.BridgeID];
       SetStatus("Reconnecting");
