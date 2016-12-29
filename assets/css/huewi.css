@@ -86,6 +86,7 @@ h4 {
   margin-bottom: 24px;
 }
 .content {
+  padding-bottom: 16px;
 }
 input[type="text"] {
   text-align: center;
@@ -135,9 +136,6 @@ canvas {
   margin-left: auto;
   margin-right: 0px;
 }
-nav {
-  display: inline;
-}
 #navcontainer {
   width: auto;
   height: auto;
@@ -155,7 +153,7 @@ nav {
 }
 #navbutton
 {
-  padding: 5px;
+  padding: 8px;
 }
 #navdrawer {
   padding-top: 0px;
@@ -170,6 +168,8 @@ nav {
   bottom: -1px;
   height: auto;
   width: 100%;
+  padding-top: 4px;
+  padding-bottom: 4px;
   text-align: center;
   background: rgba(250, 240, 230, 0.10);
   color: rgba(250, 240, 230, 0.85);

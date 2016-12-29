@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html ng-app="huewi" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"ng-app="huewi">
 
 <head>
   <title>hue Web Interface</title>
@@ -12,8 +12,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-  <html manifest="huewi.appcache">
-
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript"></script>
@@ -23,31 +21,33 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js" type="text/javascript"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.min.js" type="text/javascript"></script>
 
-  <script src="js/timebasedgradient.js" type="text/javascript"></script>
-  <script src="js/navdrawer.js" type="text/javascript"></script>
+
+  <script type="text/javascript" src="app/huewi.js"></script>
+
+  <script type="text/javascript" src="assets/js/orderobjectby.js"></script>
+  <script type="text/javascript" src="assets/js/timebasedgradient.js"></script>
+  <script type="text/javascript" src="assets/js/navdrawer.js"></script>
+  <script type="text/javascript" src="assets/js/menu.js"></script>
   
-  <script src="https://arndbrugman.github.io/huepi/huepi.js" type="text/javascript"></script>
-  <!--script src="../huepi/huepi.js" type="text/javascript"></script-->
+  <script type="text/javascript" src="assets/js/hueconnector.js"></script>
+  <script type="text/javascript" src="app/huewi-controller.js"></script>
+  
+  <!--script type="text/javascript" src="https://arndbrugman.github.io/huepi/huepi.js"></script-->
+  <script type="text/javascript" src="../huepi/huepi.js"></script>
 
-  <script src="js/huewi.js" type="text/javascript"></script>
-  <script src="js/orderobjectby.js" type="text/javascript"></script>
-  <script src="js/menu.js" type="text/javascript"></script>
-
-  <script src="js/hueconnector.js" type="text/javascript"></script>
-  <script src="js/huewi-controller.js" type="text/javascript"></script>
-  <script src="js/huewi-groups.js" type="text/javascript"></script>
-  <script src="js/huewi-lights.js" type="text/javascript"></script>
-  <script src="js/huewi-groupandlight.js" type="text/javascript"></script>
-  <script src="js/huewi-schedules.js" type="text/javascript"></script>
-  <script src="js/huewi-scenes.js" type="text/javascript"></script>
-  <script src="js/huewi-sensors.js" type="text/javascript"></script>
-  <script src="js/huewi-rules.js" type="text/javascript"></script>
-  <script src="js/huewi-bridge.js" type="text/javascript"></script>
-  <script src="js/huewi-about.js" type="text/javascript"></script>
+  <script type="text/javascript" src="app/components/huewi-groups.js"></script>
+  <script type="text/javascript" src="app/components/huewi-lights.js"></script>
+  <script type="text/javascript" src="app/components/huewi-groupandlight.js"></script>
+  <script type="text/javascript" src="app/components/huewi-schedules.js"></script>
+  <script type="text/javascript" src="app/components/huewi-scenes.js"></script>
+  <script type="text/javascript" src="app/components/huewi-sensors.js"></script>
+  <script type="text/javascript" src="app/components/huewi-rules.js"></script>
+  <script type="text/javascript" src="app/components/huewi-bridge.js"></script>
+  <script type="text/javascript" src="app/components/huewi-about.js"></script>
 
   <!--script src="js/cordova.js" type="text/javascript"></script-->
 
-  <link rel="stylesheet" href="css/huewi.css">
+  <link rel="stylesheet" href="assets/css/huewi.css">
 
 </head>
 
@@ -57,7 +57,6 @@
     <div class="container" id="Groups">
       <div huewi-groups class="content">
       </div><!-- /content -->
-      <div class="onlandscape"><br><br></div><!-- Spacing only on Landscape after Groups/Rooms -->
     </div><!-- /container -->
 
     <div class="container" id="Lights">
@@ -103,7 +102,7 @@
 
   <div id="navcontainer" class="timebasedgradient">
     <div id="navbutton" class="glyphicon glyphicon-menu-hamburger"></div>
-    <div id="navdrawer">
+    <nav id="navdrawer">
         <h4 ng-click="SetMenuItem('About')">Settings</h4>
         <div class="list-group">
         <li class="list-group-item" ng-click="SetMenuItem('Schedules')">Schedules</li>
@@ -114,7 +113,7 @@
       <div class="list-group">
         <li class="list-group-item" ng-click="SetMenuItem('Bridge')">Bridge</li>
       </div>
-    </div>
+    </nav>
   </div><!-- /navcontainer -->
 
   <div class="status timebasedgradient">
