@@ -1,7 +1,7 @@
 <h3>Lights</h3>
 
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="Light in MyHue.Lights" ng-class="{ grayed:!Light.state.reachable }">
+  <div class="list-group-item" ng-repeat="Light in MyHue.Lights | orderObjectBy:'name'" ng-class="{ grayed:!Light.state.reachable }">
     <div style="display:inline-block; width:29%" ng-click="SetMenuItem('Light', Light.id)">
       {{Light.name}}
     </div>

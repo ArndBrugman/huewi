@@ -6,7 +6,7 @@ app
 .directive("huewiAbout", function() {
   return {
     restrict: "EA",
-    templateUrl: "huewi-about.html",
+    templateUrl: "app/components/huewi-about.html",
     controller: "huewiAboutController"
   };
 })

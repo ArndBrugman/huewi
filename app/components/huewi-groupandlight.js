@@ -6,16 +6,16 @@ app
 .directive("huewiGroupandlight", function() {
   return {
     restrict: "EA",
-    templateUrl: "huewi-groupandlight.html",
+    templateUrl: "app/components/huewi-groupandlight.html",
     controller: "huewiGroupAndLightController"
   };
 })
 
 .controller("huewiGroupAndLightController", ["$scope", "hueConnector", "Menu", function($scope, hueConnector, Menu) {
   var hueImage = new Image();
-  hueImage.src = "img/hue.png";
+  hueImage.src = "assets/img/hue.png";
   var ctImage = new Image();
-  ctImage.src = "img/ct.png";
+  ctImage.src = "assets/img/ct.png";
   $scope._Name = "GroupAndLight";
   $scope.OrgName = $scope._Name;
 
