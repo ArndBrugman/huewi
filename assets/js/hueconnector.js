@@ -100,6 +100,7 @@ app
       MyHue.Username = MyHue.BridgeCache[MyHue.BridgeID];
       SetStatus("Reconnecting");
       MyHue.BridgeGetData().then(function() {
+        DataReceived();
         SetStatus("Connected");
         HeartbeatInterval = setInterval(onHeartbeat, 2500);
       }, function() {
@@ -115,6 +116,7 @@ app
 
   function Discover() {
     clearInterval(HeartbeatInterval);
+    MyHue.Username = "";
     SetStatus("Discovering Bridge via Portal");
     MyHue.PortalDiscoverLocalBridges().then(function() {
       SetStatus("Bridge Discovered");
@@ -126,6 +128,7 @@ app
 
   function Scan() {
     clearInterval(HeartbeatInterval);
+    MyHue.Username = "";
     SetStatus("Scanning Network for Bridge");
     MyHue.NetworkDiscoverLocalBridges().then(function() {
       SetStatus("Bridge Found");
@@ -151,7 +154,7 @@ app
   }
 
   function DataReceived() {
-    MyHue.Groups["0"] = {name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", action: {bri:155}};
+    MyHue.Groups["0"] = {name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", action: {bri:123}};
 
     function StateToHTMLColor(State, Model) {
       function ToHexString(In) {
@@ -179,14 +182,21 @@ app
       } else return "#ffcc88"; 
     }
   
-    for (var Key in MyHue.Groups) {
-      MyHue.Groups[Key].id = Key;
-      MyHue.Groups[Key].HTMLColor = StateToHTMLColor(MyHue.Groups[Key].action);
-    }
-
+    var LightsOnBrightness = 0;
+    var LightsOnCount = 0;
     for (Key in MyHue.Lights) {
       MyHue.Lights[Key].id = Key;
       MyHue.Lights[Key].HTMLColor = StateToHTMLColor(MyHue.Lights[Key].state, MyHue.Lights[Key].modelid);
+      if (MyHue.Lights[Key].state.on) {
+        LightsOnCount ++;
+        LightsOnBrightness += MyHue.Lights[Key].state.bri;
+      }
+    }
+    MyHue.Groups["0"].action.bri = Math.round(LightsOnBrightness / LightsOnCount);
+    
+    for (var Key in MyHue.Groups) {
+      MyHue.Groups[Key].id = Key;
+      MyHue.Groups[Key].HTMLColor = StateToHTMLColor(MyHue.Groups[Key].action);
     }
   }
 
