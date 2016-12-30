@@ -115,6 +115,7 @@ app
 
   function Discover() {
     clearInterval(HeartbeatInterval);
+    MyHue.Username = "";
     SetStatus("Discovering Bridge via Portal");
     MyHue.PortalDiscoverLocalBridges().then(function() {
       SetStatus("Bridge Discovered");
@@ -126,6 +127,7 @@ app
 
   function Scan() {
     clearInterval(HeartbeatInterval);
+    MyHue.Username = "";
     SetStatus("Scanning Network for Bridge");
     MyHue.NetworkDiscoverLocalBridges().then(function() {
       SetStatus("Bridge Found");

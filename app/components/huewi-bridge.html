@@ -1,39 +1,64 @@
-<h3>Bridge {{MyHue.BridgeIP}}, "{{MyHue.BridgeName}}", {{MyHue.BridgeID}}</h3>
+<h3>Bridge</h3>
 
 <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
 
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges" ng-click="MyHue.ScanningNetwork = false; MyHue.BridgeIP = Value.internalipaddress; Connect()">
-    <div style="display:inline-block; width:69%">
-      {{Value.internalipaddress}}<span ng-show="Value.internalipaddress===MyHue.BridgeIP">, "{{MyHue.BridgeName}}"</span>, {{Value.id}}
+  <div class="list-group-item">
+    <button type="button" class="btn preset" ng-click="Discover()" ng-hide="MyHue.ScanningNetwork">Discover</button>
+    <button type="button" class="btn preset" ng-click="Scan()" ng-hide="MyHue.ScanningNetwork">Scan</button>
+    <div ng-show="MyHue.ScanningNetwork">
+      <div type="text" class="preset" style="display:inline-block">Scanning Network...</div>
+      <button type="button" class="btn preset" ng-click="MyHue.ScanningNetwork = false" ng-show="MyHue.ScanningNetwork">Cancel</button>
     </div>
-    <div ng-show="Value.internalipaddress===MyHue.BridgeIP" style="display:inline-block; width:29%; text-align: right">Current</div>
+    <button type="button" class="btn preset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true)" ng-hide="MyHue.ScanningNetwork">Reload</button>
+    <div type="text" class="preset" style="display:inline-block" ng-hide="MyHue.ScanningNetwork">Manual:</div>
+    <input type="text" class="preset" ng-model="ManualBridge" ng-hide="MyHue.ScanningNetwork"></input>
+    <button type="button" class="btn preset" ng-click="Connect(ManualBridge)" ng-hide="MyHue.ScanningNetwork">Connect</button>
   </div>
 </div>
 
-<button type="button" class="btn preset" ng-click="Discover()" ng-hide="MyHue.ScanningNetwork">Discover</button>
-<button type="button" class="btn preset" ng-click="Scan()" ng-hide="MyHue.ScanningNetwork">Scan</button>
-<div ng-show="MyHue.ScanningNetwork">
-  <div type="text" class="preset" style="display:inline-block">Scanning Network...</div>
-  <button type="button" class="btn preset" ng-click="MyHue.ScanningNetwork = false" ng-show="MyHue.ScanningNetwork">Cancel</button>
-</div>
-<button type="button" class="btn preset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true)" ng-hide="MyHue.ScanningNetwork">Reload</button>
-<div type="text" class="preset" style="display:inline-block" ng-hide="MyHue.ScanningNetwork">Manual:</div>
-<input type="text" class="preset" ng-model="ManualBridge" ng-hide="MyHue.ScanningNetwork"></input>
-<button type="button" class="btn preset" ng-click="Connect(ManualBridge)" ng-hide="MyHue.ScanningNetwork">Connect</button>
-
-<div><br></div>
-
-<div class="list-group">
-  <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist | orderObjectBy : 'last use date' : true">
-    <div style="display:inline-block; width:69%">
-      {{Value.id}} : {{Value.name}}<br>
-      Created: {{Value["create date"]}}, 
-      LastUsed: {{Value["last use date"]}}
+<div class="list-group fading" ng-hide="MyHue.BridgeName === '' || MyHue.Username === ''">
+  <h4>Bridge "{{MyHue.BridgeName}}"</h4>
+  <div class="list-group fading" ng-hide="MyHue.BridgeName === '' || MyHue.Username === ''">
+    <div class="list-group-item">
+      <div class="list-group fading" ng-show="MyHue.BridgeConfig.linkbutton">
+        <div class="list-group-item"><h4>Linkbutton was pressed</h4></div>
+      </div>
+      <span type="text" class="preset" style="display:inline-block"><b>API-version</b> {{MyHue.BridgeConfig.apiversion}}</span>
+      <span type="text" class="preset" style="display:inline-block"><b>Software-version</b> {{MyHue.BridgeConfig.swversion}}</span>
+      <span type="text" class="preset" style="display:inline-block"><b>IP</b> {{MyHue.BridgeIP}}</span>
+      <span type="text" class="preset" style="display:inline-block"><b>MAC</b> {{MyHue.BridgeConfig.mac}}</span>
+      <span type="text" class="preset" style="display:inline-block"><b>Identifier</b> {{MyHue.BridgeConfig.bridgeid}}</span>
+      <span type="text" class="preset" style="display:inline-block"><b>Model</b> {{MyHue.BridgeConfig.modelid}}</span>
     </div>
-    <div ng-show="Value.id===MyHue.Username" style="display:inline-block; width:29%; text-align: right">Active Key</div>
-    <div style="display:inline-block; width:69%"></div>
-    <div ng-click="MyHue.BridgeDeleteUser(Value.id)" style="display:inline-block; width:29%; text-align: right">Delete Key</div>
+  </div>
+</div>
+
+<div class="list-group fading" ng-hide="MyHue.LocalBridges.length == 0">
+  <h4>Bridges on Network</h4>
+  <div class="list-group">
+    <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges" ng-click="MyHue.ScanningNetwork = false; MyHue.BridgeIP = Value.internalipaddress; Connect()">
+      <div style="display:inline-block; width:69%">
+        {{Value.internalipaddress}}<span ng-show="Value.internalipaddress===MyHue.BridgeIP">, "{{MyHue.BridgeName}}"</span>, {{Value.id}}
+      </div>
+      <div ng-show="Value.internalipaddress===MyHue.BridgeIP" style="display:inline-block; width:29%; text-align: right">Current</div>
+    </div>
+  </div>
+</div>
+
+<div class="list-group fading" ng-hide="MyHue.BridgeName === '' || MyHue.Username === '' || !MyHue.BridgeConfig.whitelist || MyHue.BridgeConfig.whitelist.length == 0">
+<h4>Whitelist authorisations</h4>
+  <div class="list-group">
+    <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist | orderObjectBy : 'last use date' : true">
+      <div style="display:inline-block; width:69%">
+        {{Value.id}} : {{Value.name}}<br>
+        Created: {{Value["create date"]}}, 
+        LastUsed: {{Value["last use date"]}}
+      </div>
+      <div ng-show="Value.id===MyHue.Username" style="display:inline-block; width:29%; text-align: right">Active Key</div>
+      <div style="display:inline-block; width:69%"></div>
+      <div ng-click="MyHue.BridgeDeleteUser(Value.id)" style="display:inline-block; width:29%; text-align: right">Delete Key</div>
+    </div>
   </div>
 </div>
 
