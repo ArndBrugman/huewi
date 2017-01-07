@@ -2,9 +2,10 @@
 
 <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
 
+<h4>Filter: <input type="text" id="SceneFilter" ng-model="SceneFilter"></h4>{{SceneFilter}}
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Scenes">
-    {{Key}} - {{Value.name}}
+  <div class="list-group-item" ng-repeat="Scene in MyHue.Scenes | addKey | asArray | filter:SceneFilter">
+    {{Scene.__key}} - {{Scene.name}} (by {{Scene.owner}})
   </div>
 </div>
 
