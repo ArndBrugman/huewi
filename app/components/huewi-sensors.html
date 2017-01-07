@@ -2,9 +2,17 @@
 
 <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
 
+<h4>Filter: <input type="text" id="SensorFilter" ng-model="SensorFilter"></h4>{{SensorFilter}}
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Sensors">
-    {{Key}} - {{Value.name}}
+  <div class="list-group-item" ng-repeat="Sensor in MyHue.Sensors | addKey | asArray | filter:SensorFilter" ng-class="{ grayed:!Sensor.config.on }" ng-click="Details(Sensor.__key)">
+    {{Sensor.__key}} - {{Sensor.name}} ({{Sensor.type}} - {{Sensor.modelid}} )
+    <div class="list-group-item" ng-show="Sensor.__key===Details()">
+    	<b>Config :</b></br>
+    	{{stringify(Sensor.config)}}
+    </br>
+    	<b>State :</b></br>
+    	{{stringify(Sensor.state)}}
+    </div>
   </div>
 </div>
 
