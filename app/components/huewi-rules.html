@@ -2,9 +2,23 @@
 
 <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
 
+<h4>Filter: <input type="text" id="RuleFilter" ng-model="RuleFilter"></h4>{{RuleFilter}}
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Rules">
-    {{Key}} - {{Value.name}}
+  <div class="list-group-item" ng-repeat="Rule in MyHue.Rules | addKey | asArray | filter:RuleFilter" ng-class="{ grayed:Rule.status != 'enabled' }" ng-click="Details(Rule.__key)">
+    {{Rule.__key}} - {{Rule.name}}
+    <div class="list-group-item" ng-show="Rule.__key===Details()">
+    	<b>Conditions :</b></br>
+    	<span ng-repeat="Condition in Rule.conditions">
+    		{ {{Condition.address}} {{Condition.operator}} <span ng-show="Condition.value!=''">'{{Condition.value}}'</span> }
+    		<span ng-hide=$last> And <br></span>
+    	</span>
+    </br>
+    	<b>Actions :</b></br>
+    	<span ng-repeat="Action in Rule.actions">
+    		{ {{Action.method}} {{Action.address}} {{Action.body}} }
+				<span ng-hide=$last> Plus <br></span>
+    	</span>
+    </div>
   </div>
 </div>
 

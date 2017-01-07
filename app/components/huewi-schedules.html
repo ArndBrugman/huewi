@@ -2,9 +2,10 @@
 
 <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
 
+<h4>Filter: <input type="text" id="ScheduleFilter" ng-model="ScheduleFilter"></h4>{{SensorFilter}}
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.Schedules">
-    {{Key}} - {{Value.name}}
+  <div class="list-group-item" ng-repeat="Schedule in MyHue.Schedules | addKey | asArray | filter:ScheduleFilter" ng-class="{ grayed:Schedule.status != 'enabled' }">
+    {{Schedule.__key}} - {{Schedule.name}}
   </div>
 </div>
 

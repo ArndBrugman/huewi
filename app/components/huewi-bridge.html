@@ -18,7 +18,7 @@
 </div>
 
 <div class="list-group fading" ng-hide="MyHue.BridgeName === '' || MyHue.Username === ''">
-  <h4>Bridge "{{MyHue.BridgeName}}"</h4>
+  <h4>'{{MyHue.BridgeName}}' (Current Bridge)</h4>
   <div class="list-group fading" ng-hide="MyHue.BridgeName === '' || MyHue.Username === ''">
     <div class="list-group-item">
       <div class="list-group fading" ng-show="MyHue.BridgeConfig.linkbutton">
@@ -37,11 +37,11 @@
 <div class="list-group fading" ng-hide="MyHue.LocalBridges.length == 0">
   <h4>Bridges on Network</h4>
   <div class="list-group">
-    <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.LocalBridges" ng-click="MyHue.ScanningNetwork = false; MyHue.BridgeIP = Value.internalipaddress; Connect()">
+    <div class="list-group-item" ng-repeat="Bridge in MyHue.LocalBridges" ng-click="MyHue.ScanningNetwork = false; MyHue.BridgeIP = Bridge.internalipaddress; Connect()">
       <div style="display:inline-block; width:69%">
-        {{Value.internalipaddress}}<span ng-show="Value.internalipaddress===MyHue.BridgeIP">, "{{MyHue.BridgeName}}"</span>, {{Value.id}}
+        {{Bridge.internalipaddress}}<span ng-show="Bridge.internalipaddress===MyHue.BridgeIP">, "{{MyHue.BridgeName}}"</span>, {{Bridge.id}}
       </div>
-      <div ng-show="Value.internalipaddress===MyHue.BridgeIP" style="display:inline-block; width:29%; text-align: right">Current</div>
+      <div ng-show="Bridge.internalipaddress===MyHue.BridgeIP" style="display:inline-block; width:29%; text-align: right">Current</div>
     </div>
   </div>
 </div>
@@ -49,15 +49,15 @@
 <div class="list-group fading" ng-hide="MyHue.BridgeName === '' || MyHue.Username === '' || !MyHue.BridgeConfig.whitelist || MyHue.BridgeConfig.whitelist.length == 0">
 <h4>Whitelist authorisations</h4>
   <div class="list-group">
-    <div class="list-group-item" ng-repeat="(Key, Value) in MyHue.BridgeConfig.whitelist | orderObjectBy : 'last use date' : true">
+    <div class="list-group-item" ng-repeat="Listed in MyHue.BridgeConfig.whitelist | addKey | asArray | noSpaces | orderBy:'last_use_date':true">
       <div style="display:inline-block; width:69%">
-        {{Value.id}} : {{Value.name}}<br>
-        Created: {{Value["create date"]}}, 
-        LastUsed: {{Value["last use date"]}}
+        {{Listed.__key}} : {{Listed.name}}<br>
+        Created: {{Listed["create date"]}}, 
+        LastUsed: {{Listed["last use date"]}}
       </div>
-      <div ng-show="Value.id===MyHue.Username" style="display:inline-block; width:29%; text-align: right">Active Key</div>
+      <div ng-show="Listed.__key===MyHue.Username" style="display:inline-block; width:29%; text-align: right">Active Key</div>
       <div style="display:inline-block; width:69%"></div>
-      <div ng-click="MyHue.BridgeDeleteUser(Value.id)" style="display:inline-block; width:29%; text-align: right">Delete Key</div>
+      <div ng-click="MyHue.BridgeDeleteUser(Listed.__key)" style="display:inline-block; width:29%; text-align: right">Delete Key</div>
     </div>
   </div>
 </div>

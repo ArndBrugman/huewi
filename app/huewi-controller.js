@@ -8,6 +8,10 @@ app
   window.hue = hueConnector.MyHue(); // For Debugging TESTCODE
   $scope.UpdateScheduled = false;
 
+  $scope.stringify = function(value) {
+    return JSON.stringify(value);
+  };
+
   $scope.$watch(function() {
     return hueConnector.Status();
     }, function WatchStatus(NewStatus, OldStatus) {
@@ -84,13 +88,9 @@ app
 
   document.onkeyup = function(event) {
     if (angular.element("#HueStatus").scope().GetMenuItem() !== "") {
-      // Escape & Enter will close open Overlays.
+      // Escape will close open Overlays.
       if ((event.keyCode === 27)) { // Escape
         angular.element("#HueStatus").scope().SetMenuItem("Escape");
-        setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
-      }
-      if ((event.keyCode === 13)) { // Enter
-        angular.element("#HueStatus").scope().SetMenuItem("");
         setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
       }
     }
