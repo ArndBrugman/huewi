@@ -38,7 +38,15 @@ app
           hueConnector.MyHue().LightAlertSelect(Menu.GetId());       
           $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[Menu.GetId()].name;
         }
+        $scope.UpdateMarkers();
       }
+    }
+  );
+
+  $scope.$watch(function() {
+    return hueConnector.MyHue().Lights;
+    }, function WatchStatus(NewItem, OldItem) {
+      $scope.UpdateMarkers();
     }
   );
 
@@ -52,6 +60,11 @@ app
 
   $(window).resize(function(){
     $scope.Redraw();
+    $scope.UpdateMarkers();
+  });
+
+  $("#GroupAndLight").bind("scroll", function(){
+    $scope.UpdateMarkers();
   });
 
   $scope.Redraw = function() {
@@ -76,6 +89,58 @@ app
     ctContext.drawImage(ctImage, 0, 0, ctCanvas.width, ctCanvas.height); // ReDraw
   };
 
+  $scope.UpdateMarkers = function() {
+    var canvasPosition;
+    var parentPosition;
+    var State;
+    var x, y;
+
+    if (Menu.GetItem() === "Group") {
+      State = hueConnector.MyHue().Groups[Menu.GetId()].action;
+    } else if (Menu.GetItem() === "Light") {
+      State = hueConnector.MyHue().Lights[Menu.GetId()].state;
+    } else return;
+
+var RGB;
+var HueAngSatBri;
+var xy;
+var ct = State.ct;
+
+    if (State && State.colormode) { // Group 0 (All available lights) doesn"t have all properties
+      if (State.colormode === "hs") {
+        RGB = huepi.HelperHueAngSatBritoRGB(State.hue * 360 / 65535, State.sat / 255, State.bri / 255);
+        xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
+        RGB = huepi.HelperXYtoRGB(xy.x, xy.y, State.bri / 255);
+      } else if (State.colormode === "xy") {
+        RGB = huepi.HelperXYtoRGB(State.xy[0], State.xy[1], State.bri / 255);
+      } else if (State.colormode === "ct") {
+        RGB = huepi.HelperColortemperaturetoRGB(Math.round(1000000 / State.ct));
+        xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
+        RGB = huepi.HelperXYtoRGB(xy.x, xy.y, State.bri / 255);
+      }
+    }
+
+HueAngSatBri = huepi.HelperRGBtoHueAngSatBri(RGB.Red, RGB.Green, RGB.Blue);
+
+x = HueAngSatBri.Sat*Math.sin(HueAngSatBri.Ang/180*Math.PI)*$("#hueCanvas").width()/2+$("#hueCanvas").width()/2;
+y = HueAngSatBri.Sat*Math.cos(HueAngSatBri.Ang/180*Math.PI)*$("#hueCanvas").height()/-2+$("#hueCanvas").height()/2;
+    canvasPosition = $("#hueCanvas").offset();
+    parentPosition = $("#hueCanvas").parent().offset();
+    canvasPosition.left-=parentPosition.left;
+    canvasPosition.top-=parentPosition.top;
+    $("#hueMarker").css('left', x-$("#hueMarker").width()/2+canvasPosition.left);
+    $("#hueMarker").css('top', y-$("#hueMarker").height()/2+canvasPosition.top);
+
+x = RGB.Blue*$("#ctCanvas").width();
+y = (1-HueAngSatBri.Bri)*$("#ctCanvas").height();
+    canvasPosition = $("#ctCanvas").offset();
+    parentPosition = $("#ctCanvas").parent().offset();
+    canvasPosition.left-=parentPosition.left;
+    canvasPosition.top-=parentPosition.top;
+    $("#ctMarker").css('left', x-$("#ctMarker").width()/2+canvasPosition.left);
+    $("#ctMarker").css('top', y-$("#ctMarker").height()/2+canvasPosition.top);
+  }
+
   $("#hueCanvas").on("click", function(event) {
     var x = event.offsetX;
     var y = event.offsetY;
@@ -84,22 +149,28 @@ app
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
     var HueAngSatBri = huepi.HelperRGBtoHueAngSatBri(HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
     if (Menu.GetItem() === "Group") {
+      hueConnector.MyHue().GroupOn(Menu.GetId());
       hueConnector.MyHue().GroupSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, hueConnector.MyHue().Groups[Menu.GetId()].action.bri);
     } else if (Menu.GetItem() === "Light") {
+      hueConnector.MyHue().LightOn(Menu.GetId());
       hueConnector.MyHue().LightSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, hueConnector.MyHue().Lights[Menu.GetId()].state.bri);
-    }
+    };
+    $scope.UpdateMarkers();
   });
 
   $("#ctCanvas").on("click", function(event) { // 2000..6500
-    var ctGroupCanvas = document.getElementById("ctCanvas");
+    var ctCanvas = document.getElementById("ctCanvas");
     var x = event.offsetX;
     var y = event.offsetY;
-    var ColorTemperature = 2000 + (6500-2000)*(x/ctGroupCanvas.width);
+    var ColorTemperature = 2000 + (6500-2000)*(x/ctCanvas.width);
     if (Menu.GetItem() === "Group") {
+      hueConnector.MyHue().GroupOn(Menu.GetId());
       hueConnector.MyHue().GroupSetColortemperature(Menu.GetId(), ColorTemperature);
     } else if (Menu.GetItem() === "Light") {
+      hueConnector.MyHue().LightOn(Menu.GetId());
       hueConnector.MyHue().LightSetColortemperature(Menu.GetId(), ColorTemperature);
-    }
+    };
+    $scope.UpdateMarkers();
   });
 
   $scope.GroupHasLight = function(LightId) {
@@ -138,9 +209,11 @@ app
 
   $scope.SetCTBrightness = function(CT, Brightness) {
     if (Menu.GetItem() === "Group") {
+      hueConnector.MyHue().GroupOn(Menu.GetId());
       hueConnector.MyHue().GroupSetCT(Menu.GetId(), CT);
       hueConnector.MyHue().GroupSetBrightness(Menu.GetId(), Brightness);
     } else if (Menu.GetItem() === "Light") {
+      hueConnector.MyHue().LightOn(Menu.GetId());
       hueConnector.MyHue().LightSetCT(Menu.GetId(), CT);
       hueConnector.MyHue().LightSetBrightness(Menu.GetId(), Brightness);
     }    
