@@ -2,7 +2,12 @@
 
 <button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
 
-<h4>Filter: <input type="text" id="SensorFilter" ng-model="SensorFilter"></h4>{{SensorFilter}}
+<div>
+  <h4>
+    Filter: <input type="text" id="SensorFilter" ng-model="SensorFilter">
+    <button type="button" class="btn btn-sm" ng-show="SensorFilter!=''" ng-click="SensorFilter=''">Clear</button>
+  </h4>
+</div>
 <div class="list-group">
   <div class="list-group-item" ng-repeat="Sensor in MyHue.Sensors | addKey | asArray | filter:SensorFilter" ng-class="{ grayed:!Sensor.config.on }" ng-click="Details(Sensor.__key)">
     {{Sensor.__key}} - {{Sensor.name}} ({{Sensor.type}} - {{Sensor.modelid}} )

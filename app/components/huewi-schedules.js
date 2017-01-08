@@ -12,6 +12,7 @@ app
 })
 
 .controller("huewiSchedulesController", ["$scope", "hueConnector", function($scope, hueConnector) {
+	$scope.ScheduleFilter='';
 }]);
 
 

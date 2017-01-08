@@ -12,6 +12,7 @@ app
 })
 
 .controller("huewiScenesController", ["$scope", "hueConnector", function($scope, hueConnector) {
+    $scope.SceneFilter='';
 }]);
 
 

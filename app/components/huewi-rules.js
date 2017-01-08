@@ -12,7 +12,8 @@ app
 })
 
 .controller("huewiRulesController", ["$scope", "hueConnector", function($scope, hueConnector) {
-	$scope._Details = "-1";
+	 $scope.RuleFilter='';
+   $scope._Details = "-1";
 
 	 $scope.Details = function (NewValue) { // Getter/Setter function
     if (angular.isDefined(NewValue))
