@@ -48,23 +48,25 @@ app
 
   $scope.SetGroupBrightness = function(GroupId) {
     if ($scope.UpdateScheduled === false)
-    { 
+    {
       $scope.UpdateScheduled = true;
-      setTimeout(function(){
-        hueConnector.MyHue().GroupSetBrightness(GroupId, hueConnector.MyHue().Groups[GroupId].action.bri, 2);
-        $scope.UpdateScheduled = false;
-      }, 200);
+      hueConnector.MyHue().GroupSetBrightness(GroupId, hueConnector.MyHue().Groups[GroupId].action.bri, 2).then(function(value) {
+        setTimeout(function(){$scope.UpdateScheduled = false;},200);
+      }, function(reason) {
+        setTimeout(function(){$scope.UpdateScheduled = false;},200);
+      });
     }
   };
 
   $scope.SetLightBrightness = function(LightId) {
     if ($scope.UpdateScheduled === false)
-    { 
+    {
       $scope.UpdateScheduled = true;
-      setTimeout(function(){
-        hueConnector.MyHue().LightSetBrightness(LightId , hueConnector.MyHue().Lights[LightId].state.bri, 2);
-        $scope.UpdateScheduled = false;
-      }, 200);
+      hueConnector.MyHue().LightSetBrightness(LightId , hueConnector.MyHue().Lights[LightId].state.bri, 2).then(function(value) {
+        setTimeout(function(){$scope.UpdateScheduled = false;},200);
+      }, function(reason) {
+        setTimeout(function(){$scope.UpdateScheduled = false;},200);
+      });
     }
   };
 
