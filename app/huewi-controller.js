@@ -78,6 +78,10 @@ app
     return Menu.GetItem();
   };
 
+  $scope.SetMenuId = function(NewId) {
+    return Menu.SetId(NewId);
+  };
+
   $scope.GetMenuId = function() {
     return Menu.GetId();
   };
