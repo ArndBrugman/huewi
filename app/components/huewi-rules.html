@@ -1,17 +1,17 @@
 <h3>Rules</h3>
 
-<button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
+<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button><br>
 
 <div>
   <h4>
-    Filter: <input type="text" id="RuleFilter" ng-model="RuleFilter">
-    <button type="button" class="btn btn-sm" ng-show="RuleFilter!=''" ng-click="RuleFilter=''">Clear</button>
+    Filter: <input type="text" ng-model="vm.Filter">
+    <button type="button" class="btn btn-sm" ng-show="vm.Filter!=''" ng-click="vm.Filter=''">Clear</button>
   </h4>
 </div>
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="Rule in MyHue.Rules | addKey | asArray | filter:RuleFilter" ng-class="{ grayed:Rule.status != 'enabled' }" ng-click="Details(Rule.__key)">
+  <div class="list-group-item" ng-repeat="Rule in vm.MyHue.Rules | addKey | asArray | filter:vm.Filter" ng-class="{ grayed:Rule.status != 'enabled' }" ng-click="vm.Details(Rule.__key)">
     {{Rule.__key}} - {{Rule.name}}
-    <div class="list-group-item" ng-show="Rule.__key===Details()">
+    <div class="list-group-item" ng-show="Rule.__key===vm.Details()">
     	<b>Conditions :</b></br>
     	<span ng-repeat="Condition in Rule.conditions">
     		{ {{Condition.address}} {{Condition.operator}} <span ng-show="Condition.value!=''">'{{Condition.value}}'</span> }
@@ -27,4 +27,4 @@
   </div>
 </div>
 
-<button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
+<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button>

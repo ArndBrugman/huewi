@@ -7,13 +7,21 @@ app
   return {
     restrict: "EA",
     templateUrl: "app/components/huewi-about.html",
-    controller: "huewiAboutController"
+    controller: "huewiAboutController",
+    controllerAs: 'vm',
+    scope: {},
+    bindToController: true
   };
 })
 
-.controller("huewiAboutController", ["$scope", "hueConnector", function($scope, hueConnector) {
-  $scope.version = '1.x';
-  $scope.angular = angular;
+.controller("huewiAboutController", ["$scope", "hueConnector", "Menu", function($scope, hueConnector, Menu) {
+  var vm = this;
+
+  vm.MyHue = hueConnector.MyHue;
+  vm.Menu = Menu;
+  
+  vm.Version = '1.x';
+  vm.AngularVersion = angular.version;
 }]);
 
 

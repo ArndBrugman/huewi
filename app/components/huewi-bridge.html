@@ -1,65 +1,65 @@
 <h3>Bridge</h3>
 
-<button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
+<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button><br>
 
 <div class="list-group">
   <div class="list-group-item">
-    <button type="button" class="btn preset" ng-click="Discover()" ng-hide="MyHue.ScanningNetwork">Discover</button>
-    <button type="button" class="btn preset" ng-click="Scan()" ng-hide="MyHue.ScanningNetwork">Scan</button>
-    <div ng-show="MyHue.ScanningNetwork">
+    <button type="button" class="btn preset" ng-click="vm.hueConnector.Discover()" ng-hide="vm.MyHue.ScanningNetwork">Discover</button>
+    <button type="button" class="btn preset" ng-click="vm.hueConnector.Scan()" ng-hide="vm.MyHue.ScanningNetwork">Scan</button>
+    <div ng-show="vm.MyHue.ScanningNetwork">
       <div type="text" class="preset" style="display:inline-block">Scanning Network...</div>
-      <button type="button" class="btn preset" ng-click="MyHue.ScanningNetwork = false" ng-show="MyHue.ScanningNetwork">Cancel</button>
+      <button type="button" class="btn preset" ng-click="vm.MyHue.ScanningNetwork = false" ng-show="vm.MyHue.ScanningNetwork">Cancel</button>
     </div>
-    <button type="button" class="btn preset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true)" ng-hide="MyHue.ScanningNetwork">Reload</button>
-    <div type="text" class="preset" style="display:inline-block" ng-hide="MyHue.ScanningNetwork">Manual:</div>
-    <input type="text" class="preset" ng-model="ManualBridge" ng-hide="MyHue.ScanningNetwork"></input>
-    <button type="button" class="btn preset" ng-click="Connect(ManualBridge)" ng-hide="MyHue.ScanningNetwork">Connect</button>
+    <button type="button" class="btn preset" onclick="delete localStorage.MyHueBridgeIP; window.location.reload(true)" ng-hide="vm.MyHue.ScanningNetwork">Reload</button>
+    <div type="text" class="preset" style="display:inline-block" ng-hide="vm.MyHue.ScanningNetwork">Manual:</div>
+    <input type="text" class="preset" ng-model="vm.ManualBridge" ng-hide="vm.MyHue.ScanningNetwork"></input>
+    <button type="button" class="btn preset" ng-click="vm.hueConnector.Connect(ManualBridge)" ng-hide="vm.MyHue.ScanningNetwork">Connect</button>
   </div>
 </div>
 
-<div class="list-group fading" ng-hide="MyHue.BridgeName === '' || MyHue.Username === ''">
-  <h4>'{{MyHue.BridgeName}}' (Current Bridge)</h4>
-  <div class="list-group fading" ng-hide="MyHue.BridgeName === '' || MyHue.Username === ''">
+<div class="list-group fading" ng-hide="vm.MyHue.BridgeName === '' || vm.MyHue.Username === ''">
+  <h4>'{{vm.MyHue.BridgeName}}' (Current Bridge)</h4>
+  <div class="list-group fading" ng-hide="vm.MyHue.BridgeName === '' || vm.MyHue.Username === ''">
     <div class="list-group-item">
-      <div class="list-group fading" ng-show="MyHue.BridgeConfig.linkbutton">
+      <div class="list-group fading" ng-show="vm.MyHue.BridgeConfig.linkbutton">
         <div class="list-group-item"><h4>Linkbutton was pressed</h4></div>
       </div>
-      <span type="text" class="preset" style="display:inline-block"><b>API-version</b> {{MyHue.BridgeConfig.apiversion}}</span>
-      <span type="text" class="preset" style="display:inline-block"><b>Software-version</b> {{MyHue.BridgeConfig.swversion}}</span>
-      <span type="text" class="preset" style="display:inline-block"><b>IP</b> {{MyHue.BridgeIP}}</span>
-      <span type="text" class="preset" style="display:inline-block"><b>MAC</b> {{MyHue.BridgeConfig.mac}}</span>
-      <span type="text" class="preset" style="display:inline-block"><b>Identifier</b> {{MyHue.BridgeConfig.bridgeid}}</span>
-      <span type="text" class="preset" style="display:inline-block"><b>Model</b> {{MyHue.BridgeConfig.modelid}}</span>
+      <span type="text" class="preset" style="display:inline-block"><b>API-version</b> {{vm.MyHue.BridgeConfig.apiversion}}</span>
+      <span type="text" class="preset" style="display:inline-block"><b>Software-version</b> {{vm.MyHue.BridgeConfig.swversion}}</span>
+      <span type="text" class="preset" style="display:inline-block"><b>IP</b> {{vm.MyHue.BridgeIP}}</span>
+      <span type="text" class="preset" style="display:inline-block"><b>MAC</b> {{vm.MyHue.BridgeConfig.mac}}</span>
+      <span type="text" class="preset" style="display:inline-block"><b>Identifier</b> {{vm.MyHue.BridgeConfig.bridgeid}}</span>
+      <span type="text" class="preset" style="display:inline-block"><b>Model</b> {{vm.MyHue.BridgeConfig.modelid}}</span>
     </div>
   </div>
 </div>
 
-<div class="list-group fading" ng-hide="MyHue.LocalBridges.length == 0">
+<div class="list-group fading" ng-hide="vm.MyHue.LocalBridges.length == 0">
   <h4>Bridges on Network</h4>
   <div class="list-group">
-    <div class="list-group-item" ng-repeat="Bridge in MyHue.LocalBridges" ng-click="MyHue.ScanningNetwork = false; MyHue.BridgeIP = Bridge.internalipaddress; Connect()">
+    <div class="list-group-item" ng-repeat="Bridge in vm.MyHue.LocalBridges" ng-click="vm.MyHue.ScanningNetwork = false; vm.MyHue.BridgeIP = Bridge.internalipaddress; vm.hueConnector.Connect()">
       <div style="display:inline-block; width:69%">
-        {{Bridge.internalipaddress}}<span ng-show="Bridge.internalipaddress===MyHue.BridgeIP">, "{{MyHue.BridgeName}}"</span>, {{Bridge.id}}
+        {{Bridge.internalipaddress}}<span ng-show="Bridge.internalipaddress===vm.MyHue.BridgeIP">, "{{vm.MyHue.BridgeName}}"</span>, {{Bridge.id}}
       </div>
-      <div ng-show="Bridge.internalipaddress===MyHue.BridgeIP" style="display:inline-block; width:29%; text-align: right">Current</div>
+      <div ng-show="Bridge.internalipaddress===vm.MyHue.BridgeIP" style="display:inline-block; width:29%; text-align: right">Current</div>
     </div>
   </div>
 </div>
 
-<div class="list-group fading" ng-hide="MyHue.BridgeName === '' || MyHue.Username === '' || !MyHue.BridgeConfig.whitelist || MyHue.BridgeConfig.whitelist.length == 0">
+<div class="list-group fading" ng-hide="vm.MyHue.BridgeName === '' || vm.MyHue.Username === '' || !vm.MyHue.BridgeConfig.whitelist || vm.MyHue.BridgeConfig.whitelist.length == 0">
 <h4>Whitelist authorisations</h4>
   <div class="list-group">
-    <div class="list-group-item" ng-repeat="Listed in MyHue.BridgeConfig.whitelist | addKey | asArray | noSpaces | orderBy:'last_use_date':true">
+    <div class="list-group-item" ng-repeat="Listed in vm.MyHue.BridgeConfig.whitelist | addKey | asArray | noSpaces | orderBy:'last_use_date':true">
       <div style="display:inline-block; width:69%">
         {{Listed.__key}} : {{Listed.name}}<br>
         Created: {{Listed["create date"]}}, 
         LastUsed: {{Listed["last use date"]}}
       </div>
-      <div ng-show="Listed.__key===MyHue.Username" style="display:inline-block; width:29%; text-align: right">Active Key</div>
+      <div ng-show="Listed.__key===vm.MyHue.Username" style="display:inline-block; width:29%; text-align: right">Active Key</div>
       <div style="display:inline-block; width:69%"></div>
-      <div ng-click="MyHue.BridgeDeleteUser(Listed.__key)" style="display:inline-block; width:29%; text-align: right">Delete Key</div>
+      <div ng-click="vm.MyHue.BridgeDeleteUser(Listed.__key)" style="display:inline-block; width:29%; text-align: right">Delete Key</div>
     </div>
   </div>
 </div>
 
-<button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
+<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button><br>

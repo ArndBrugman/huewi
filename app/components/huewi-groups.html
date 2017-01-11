@@ -1,20 +1,19 @@
-<h3 ng-click="ChangeType()" ng-show="GroupType==='Room'" >Rooms</h3>
-<h3 ng-click="ChangeType()" ng-show="GroupType==='LightGroup'" >Groups</h3>
+<h3 ng-click="vm.ChangeType()" ng-show="vm.GroupType==='Room'" >Rooms</h3>
+<h3 ng-click="vm.ChangeType()" ng-show="vm.GroupType==='LightGroup'" >Groups</h3>
 
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="Group in MyHue.Groups | addKey | asArray | orderBy:'name' | filter:{type:GroupType} | filter:'!huelabs'">
-    <div style="display:inline-block; width:29%" ng-click="SetMenuItem('Group', Group.__key)">
+  <div class="list-group-item" ng-repeat="Group in vm.MyHue.Groups | addKey | asArray | orderBy:'name' | filter:{type:vm.GroupType} | filter:'!huelabs'">
+    <div style="display:inline-block; width:29%" ng-click="vm.Menu.SetItem('Group', Group.__key)">
     	{{Group.name}}
     </div>
     <div style="display:inline-block; width:49%" >
-      <input type="range" min="1" max="254" ng-show="(Group.action.on) || (Group.state.any_on) || (Group.__key === '0')" ng-model="Group.action.bri"
-      ng-change="SetGroupBrightness(Group.__key)" ng-mousedown="SetActive(Group.__key)" ng-mouseup="SetActive(-1)" ng-mouseleave="SetActive(-1)"/>
+      <input type="range" min="1" max="254" ng-show="(Group.action.on) || (Group.state.any_on) || (Group.__key === '0')" ng-model="Group.action.bri" ng-change="vm.SetGroupBrightness(Group.__key)" ng-mousedown="vm.SetGroupId(Group.__key)" ng-mouseup="vm.SetGroupId('-1')" ng-mouseleave="vm.SetGroupId('-1')"/>
     </div>
     <div style="display:inline-block; width:19%" class="right">
-      <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(Group.__key)" ng-show="(Group.action.on) || (Group.__key === '0')">
+      <button type="button" class="btn btn-sm right" ng-click="vm.MyHue.GroupOff(Group.__key)" ng-show="(Group.action.on) || (Group.__key === '0')">
         <span class="glyphicon glyphicon-off" style="color:{{Group.HTMLColor}}" aria-hidden="true"></span>
       </button>
-      <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(Group.__key)" ng-hide="(Group.action.on) && (Group.__key != '0')">
+      <button type="button" class="btn btn-sm right" ng-click="vm.MyHue.GroupOn(Group.__key)" ng-hide="(Group.action.on) && (Group.__key != '0')">
         <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
       </button>
     </div>
