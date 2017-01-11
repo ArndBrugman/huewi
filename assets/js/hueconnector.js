@@ -4,21 +4,33 @@
 app
 
 .factory("hueConnector", ["$rootScope", function ($rootScope) {
-  var MyHue = new huepi();
-  var HeartbeatInterval;
-  var Status = "Disconnected";
-  var ReconnectInterval;
+  var vm = this;
+    
+  vm.MyHue = new huepi();
   // Demo Data while Connecting...
-  MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"}, 
+  vm.MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"}, 
    {name: "Demo Group", type: "LightGroup", action: {on:"true"}},
    {name: "Living Group", type: "LightGroup", action: {on:"false"}},
    {name: "Dining Group", type: "LightGroup", action: {on:"false"}}, 
    {name: "Demo Room", type: "Room", action: {on:"true"}}, 
    {name: "Living Room", type: "Room", action: {on:"false"}}, 
    {name: "Dining Room", type: "Room", action: {on:"false"}}];
-  MyHue.Lights = [{name: "Demo Light", state: {on:"true",reachable:"true"}}, 
+  vm.MyHue.Lights = [{name: "Demo Light", state: {on:"true",reachable:"true"}}, 
    {name: "Living Light", state: {on:"false",reachable:"true"}}, 
    {name: "Dining Light", state: {on:"false",reachable:"true"}}];
+
+  vm.Status = "Disconnected";
+
+  var Service = {
+    MyHue: vm.MyHue,
+    GetStatus: function(){return vm.Status},
+    Connect: Connect,
+    Discover: Discover,
+    Scan: Scan
+  };
+
+  var HeartbeatInterval;
+  var ReconnectInterval;
   
   if (window.cordova) {
     document.addEventListener("deviceready", onStartup, false);
@@ -35,10 +47,10 @@ app
   function onResume() {
     Connect();
     TimeBasedGradientUpdate(); // After Connect(); for faster (Re)Connection.
-    MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
+    vm.MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
 
     ReconnectInterval = setInterval(function() { // Reconnects on Statusses of 'Unable', to retry
-      if ((Status.indexOf("Unable")>-1) && (!MyHue.ScanningNetwork)) {
+      if ((vm.Status.indexOf("Unable")>-1) && (!vm.MyHue.ScanningNetwork)) {
         Connect();
       }
     }, 1234);
@@ -50,31 +62,31 @@ app
   }
 
   function SetStatus(NewStatus) {
-    Status = NewStatus;
-    console.log(Status);
+    vm.Status = NewStatus;
+    console.log(vm.Status);
     try {
       $rootScope.$apply(); // Force UI update
     }
     catch (error) {}
   }
 
-  function ReConnect() { // IP is known and stored in MyHue.BridgeIP
+  function ReConnect() { // IP is known and stored in vm.MyHue.BridgeIP
     clearInterval(HeartbeatInterval);
     SetStatus("Getting Bridge Config");
-    MyHue.BridgeGetDescription();
-    MyHue.BridgeGetConfig().then(function() {
+    vm.MyHue.BridgeGetDescription();
+    vm.MyHue.BridgeGetConfig().then(function() {
       SetStatus("Bridge Config Received, Getting Data");
-      MyHue.BridgeGetData().then(function() {
-        localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
-        localStorage.MyHueBridgeID = MyHue.BridgeID; // Cache BridgeID
+      vm.MyHue.BridgeGetData().then(function() {
+        localStorage.MyHueBridgeIP = vm.MyHue.BridgeIP; // Cache BridgeIP
+        localStorage.MyHueBridgeID = vm.MyHue.BridgeID; // Cache BridgeID
         DataReceived();
         SetStatus("Connected");
         HeartbeatInterval = setInterval(onHeartbeat, 2500);
       }, function() {
         SetStatus("Please press connect button on the hue Bridge");
-        MyHue.BridgeCreateUser(app.name).then(function() {
-          localStorage.MyHueBridgeIP = MyHue.BridgeIP; // Cache BridgeIP
-          localStorage.MyHueBridgeID = MyHue.BridgeID; // Cache BridgeID
+        vm.MyHue.BridgeCreateUser(app.name).then(function() {
+          localStorage.MyHueBridgeIP = vm.MyHue.BridgeIP; // Cache BridgeIP
+          localStorage.MyHueBridgeID = vm.MyHue.BridgeID; // Cache BridgeID
           SetStatus("Connected");
           HeartbeatInterval = setInterval(onHeartbeat, 2500);
         }, function() {
@@ -90,16 +102,16 @@ app
 
   function Connect(NewBridgeAddress) { // IP is Unknown, Fetch it and ReConnect on it
     clearInterval(HeartbeatInterval);
-    MyHue.Username = "";
-    MyHue.BridgeIP = NewBridgeAddress || MyHue.BridgeIP;
-    if (MyHue.BridgeIP !== "") { // Preset/Previous BridgeIP
+    vm.MyHue.Username = "";
+    vm.MyHue.BridgeIP = NewBridgeAddress || vm.MyHue.BridgeIP;
+    if (vm.MyHue.BridgeIP !== "") { // Preset/Previous BridgeIP
       ReConnect();
     } else if (localStorage.MyHueBridgeIP) { // Cached BridgeIP
-      MyHue.BridgeIP = localStorage.MyHueBridgeIP;
-      MyHue.BridgeID = localStorage.MyHueBridgeID;
-      MyHue.Username = MyHue.BridgeCache[MyHue.BridgeID];
+      vm.MyHue.BridgeIP = localStorage.MyHueBridgeIP;
+      vm.MyHue.BridgeID = localStorage.MyHueBridgeID;
+      vm.MyHue.Username = vm.MyHue.BridgeCache[vm.MyHue.BridgeID];
       SetStatus("Reconnecting");
-      MyHue.BridgeGetData().then(function() {
+      vm.MyHue.BridgeGetData().then(function() {
         DataReceived();
         SetStatus("Connected");
         HeartbeatInterval = setInterval(onHeartbeat, 2500);
@@ -116,9 +128,9 @@ app
 
   function Discover() {
     clearInterval(HeartbeatInterval);
-    MyHue.Username = "";
+    vm.MyHue.Username = "";
     SetStatus("Discovering Bridge via Portal");
-    MyHue.PortalDiscoverLocalBridges().then(function() {
+    vm.MyHue.PortalDiscoverLocalBridges().then(function() {
       SetStatus("Bridge Discovered");
       ReConnect();
     }, function() { // else
@@ -128,9 +140,9 @@ app
 
   function Scan() {
     clearInterval(HeartbeatInterval);
-    MyHue.Username = "";
+    vm.MyHue.Username = "";
     SetStatus("Scanning Network for Bridge");
-    MyHue.NetworkDiscoverLocalBridges().then(function() {
+    vm.MyHue.NetworkDiscoverLocalBridges().then(function() {
       SetStatus("Bridge Found");
       ReConnect();
     }, function() { // else
@@ -141,7 +153,7 @@ app
   }
 
   function onHeartbeat() {
-    MyHue.BridgeGetData().then(function UpdateUI() {
+    vm.MyHue.BridgeGetData().then(function UpdateUI() {
       DataReceived();
       $rootScope.$apply();
     }, function BridgeGetDataFailed() {
@@ -154,7 +166,7 @@ app
   }
 
   function DataReceived() {
-    MyHue.Groups["0"] = {name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", action: {bri:123}};
+    vm.MyHue.Groups["0"] = {name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", action: {bri:123}};
 
     function StateToHTMLColor(State, Model) {
       function ToHexString(In) {
@@ -184,40 +196,23 @@ app
   
     var LightsOnBrightness = 0;
     var LightsOnCount = 0;
-    for (Key in MyHue.Lights) {
-      MyHue.Lights[Key].id = Key;
-      MyHue.Lights[Key].HTMLColor = StateToHTMLColor(MyHue.Lights[Key].state, MyHue.Lights[Key].modelid);
-      if (MyHue.Lights[Key].state.on) {
+    for (Key in vm.MyHue.Lights) {
+      vm.MyHue.Lights[Key].id = Key;
+      vm.MyHue.Lights[Key].HTMLColor = StateToHTMLColor(vm.MyHue.Lights[Key].state, vm.MyHue.Lights[Key].modelid);
+      if (vm.MyHue.Lights[Key].state.on) {
         LightsOnCount ++;
-        LightsOnBrightness += MyHue.Lights[Key].state.bri;
+        LightsOnBrightness += vm.MyHue.Lights[Key].state.bri;
       }
     }
-    MyHue.Groups["0"].action.bri = Math.round(LightsOnBrightness / LightsOnCount);
+    vm.MyHue.Groups["0"].action.bri = Math.round(LightsOnBrightness / LightsOnCount);
     
-    for (var Key in MyHue.Groups) {
-      MyHue.Groups[Key].id = Key;
-      MyHue.Groups[Key].HTMLColor = StateToHTMLColor(MyHue.Groups[Key].action);
+    for (var Key in vm.MyHue.Groups) {
+      vm.MyHue.Groups[Key].id = Key;
+      vm.MyHue.Groups[Key].HTMLColor = StateToHTMLColor(vm.MyHue.Groups[Key].action);
     }
   }
 
-return {
-    MyHue : function () {
-      return MyHue;
-    },
-    Status : function() {
-      return Status;
-    },
-    Connect : function(NewBridgeAddress) {
-      return Connect(NewBridgeAddress);
-    },
-    Discover : function() {
-      return Discover();
-    },
-    Scan : function() {
-      return Scan();
-    }
-  };
-
+  return Service;
 }]);
 
 

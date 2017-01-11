@@ -1,32 +1,30 @@
-<h3><input type="text" id="GroupLightName" ng-model="Name" ng-model-options="{ getterSetter: true }"></h3>
+<h3><input type="text" id="GroupLightName" ng-model="vm.Name" ng-model-options="{getterSetter: true}"></h3>
 
-<button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
+<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button><br>
 
 <div>
-  <div ng-show="GetMenuItem() === 'Group'" >
+  <div ng-show="vm.Menu.GetItem() === 'Group'" >
     <div style="display:inline-block; width:79%" >
-      <input type="range" min="1" max="254" ng-show="((MyHue.Groups[GetMenuId()].action.on) || (MyHue.Groups[GetMenuId()].state.any_on) || (GetMenuId() == 0))" ng-model="MyHue.Groups[GetMenuId()].action.bri" 
-      ng-change="SetGroupBrightness(GetMenuId())" ng-mousedown="SetActive(GetMenuId())" ng-mouseup="SetActive(-1)" ng-mouseleave="SetActive(-1)"/>
+      <input type="range" min="1" max="254" ng-show="((vm.MyHue.Groups[vm.Menu.GetId()].action.on) || (vm.MyHue.Groups[vm.Menu.GetId()].state.any_on) || (vm.Menu.GetId() == 0))" ng-model="vm.MyHue.Groups[vm.Menu.GetId()].action.bri" ng-change="vm.SetGroupLightBrightness(vm.Menu.GetId())" ng-mousedown="vm.SetGroupLightId(vm.Menu.GetId())" ng-mouseup="vm.SetGroupLightId('-1')" ng-mouseleave="vm.SetGroupLightId('-1')"/>
     </div>
     <div style="display:inline-block; width:19%" class="right">
-      <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOff(GetMenuId())" ng-show="((MyHue.Groups[GetMenuId()].action.on) || (GetMenuId() == 0))">
-        <span class="glyphicon glyphicon-off" style="color:{{MyHue.Groups[GetMenuId()].HTMLColor}}" aria-hidden="true"></span>
+      <button type="button" class="btn btn-sm right" ng-click="vm.MyHue.GroupOff(vm.Menu.GetId())" ng-show="((vm.MyHue.Groups[vm.Menu.GetId()].action.on) || (vm.Menu.GetId() == 0))">
+        <span class="glyphicon glyphicon-off" style="color:{{vm.MyHue.Groups[vm.Menu.GetId()].HTMLColor}}" aria-hidden="true"></span>
       </button>
-      <button type="button" class="btn btn-sm right" ng-click="MyHue.GroupOn(GetMenuId())" ng-hide="MyHue.Groups[GetMenuId()].action.on">
+      <button type="button" class="btn btn-sm right" ng-click="vm.MyHue.GroupOn(vm.Menu.GetId())" ng-hide="vm.MyHue.Groups[vm.Menu.GetId()].action.on">
         <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
       </button>
     </div>
   </div>
-  <div ng-show="GetMenuItem() === 'Light'" >
+  <div ng-show="vm.Menu.GetItem() === 'Light'" >
     <div style="display:inline-block; width:79%" >
-      <input type="range" min="1" max="254" ng-show="MyHue.Lights[GetMenuId()].state.on" ng-model="MyHue.Lights[GetMenuId()].state.bri" 
-      ng-change="SetLightBrightness(GetMenuId())" ng-mousedown="SetActive(GetMenuId())" ng-mouseup="SetActive(-1)" ng-mouseleave="SetActive(-1)"/>
+      <input type="range" min="1" max="254" ng-show="vm.MyHue.Lights[vm.Menu.GetId()].state.on" ng-model="vm.MyHue.Lights[vm.Menu.GetId()].state.bri" ng-change="vm.SetGroupLightBrightness(vm.Menu.GetId())" ng-mousedown="vm.SetGroupLightId(vm.Menu.GetId())" ng-mouseup="vm.SetGroupLightId('-1')" ng-mouseleave="vm.SetGroupLightId('-1')"/>
     </div>
-    <div style="display:inline-block; width:19%" class="right" ng-show="MyHue.Lights[GetMenuId()].state.reachable">
-      <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOff(GetMenuId())" ng-show="MyHue.Lights[GetMenuId()].state.on">
-        <span class="glyphicon glyphicon-off" style="color:{{MyHue.Lights[GetMenuId()].HTMLColor}}" aria-hidden="true"></span>
+    <div style="display:inline-block; width:19%" class="right" ng-show="vm.MyHue.Lights[vm.Menu.GetId()].state.reachable">
+      <button type="button" class="btn btn-sm right" ng-click="vm.MyHue.LightOff(vm.Menu.GetId())" ng-show="vm.MyHue.Lights[vm.Menu.GetId()].state.on">
+        <span class="glyphicon glyphicon-off" style="color:{{vm.MyHue.Lights[vm.Menu.GetId()].HTMLColor}}" aria-hidden="true"></span>
       </button>
-      <button type="button" class="btn btn-sm right" ng-click="MyHue.LightOn(GetMenuId())" ng-hide="MyHue.Lights[GetMenuId()].state.on">
+      <button type="button" class="btn btn-sm right" ng-click="vm.MyHue.LightOn(vm.Menu.GetId())" ng-hide="vm.MyHue.Lights[vm.Menu.GetId()].state.on">
         <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
       </button>
     </div>
@@ -41,14 +39,14 @@
     <canvas id="ctCanvas">It seems your device doesn"t support the required HTML5 Canvas</canvas>
     <div><br><br></div>
     <div>
-      <button type="button" class="btn btn-sm preset" ng-click="Relax()">Relax</button>
-      <button type="button" class="btn btn-sm preset" ng-click="Reading()">Reading</button>
-      <button type="button" class="btn btn-sm preset" ng-click="Concentrate()">Concentrate</button>
-      <button type="button" class="btn btn-sm preset" ng-click="Energize()">Energize</button>
-      <button type="button" class="btn btn-sm preset" ng-click="Bright()">Bright</button>
-      <button type="button" class="btn btn-sm preset" ng-click="Dimmed()">Dimmed</button>
-      <button type="button" class="btn btn-sm preset" ng-click="Nightlight()">Nightlight</button>
-      <button type="button" class="btn btn-sm preset" ng-click="GoldenHour()">Golden hour</button>
+      <button type="button" class="btn btn-sm preset" ng-click="vm.Relax()">Relax</button>
+      <button type="button" class="btn btn-sm preset" ng-click="vm.Reading()">Reading</button>
+      <button type="button" class="btn btn-sm preset" ng-click="vm.Concentrate()">Concentrate</button>
+      <button type="button" class="btn btn-sm preset" ng-click="vm.Energize()">Energize</button>
+      <button type="button" class="btn btn-sm preset" ng-click="vm.Bright()">Bright</button>
+      <button type="button" class="btn btn-sm preset" ng-click="vm.Dimmed()">Dimmed</button>
+      <button type="button" class="btn btn-sm preset" ng-click="vm.Nightlight()">Nightlight</button>
+      <button type="button" class="btn btn-sm preset" ng-click="vm.GoldenHour()">Golden hour</button>
     </div>
     <div class="onportait"><br></div><!-- Spacing on Portait after ColorTemp -->
   </div><!-- /content -->
@@ -68,8 +66,8 @@
 <div><br><br></div>
 
 <div class="content">
-  <div ng-show="(GetMenuItem() === 'Group') && (GetMenuId()!=='0')" >
-    <span class="grouplight" ng-repeat="Light in MyHue.Lights | addKey">
+  <div ng-show="(GetMenuItem() === 'Group') && (vm.Menu.GetId()!=='0')" >
+    <span class="grouplight" ng-repeat="Light in vm.MyHue.Lights | addKey">
       <span ng-click="GroupToggleLight(Light.__key)">
         <span ng-show="GroupHasLight(Light.__key)" class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>
         <span ng-hide="GroupHasLight(Light.__key)" class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
@@ -79,4 +77,4 @@
   </div>
 </div>
 
-<button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
+<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button>

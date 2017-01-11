@@ -7,20 +7,31 @@ app
   return {
     restrict: "EA",
     templateUrl: "app/components/huewi-sensors.html",
-    controller: "huewiSensorsController"
+    controller: "huewiSensorsController",
+    controllerAs: 'vm',
+    scope: {},
+    bindToController: true
   };
 })
 
-.controller("huewiSensorsController", ["$scope", "hueConnector", function($scope, hueConnector) {
-	$scope._Details = "-1";
+.controller("huewiSensorsController", ["$scope", "hueConnector", "Menu", function($scope, hueConnector, Menu) {
+  var vm = this;
 
-	 $scope.Details = function(NewValue) { // Getter/Setter function
+  vm.MyHue = hueConnector.MyHue;
+  vm.Menu = Menu;
+  
+  vm.Filter = "";
+  vm._Details = "-1";
+  vm.Details = Details;
+
+  function Details(NewValue) { // Getter/Setter function
     if (angular.isDefined(NewValue))
-      if ($scope._Details === NewValue)
-       $scope._Details = "-1"; // Same, Close current Details(-1)
-      else $scope._Details = NewValue; // Set
-    return $scope._Details; // Get
+      if (vm._Details === NewValue)
+       vm._Details = "-1"; // Same, Close current Details(-1)
+      else vm._Details = NewValue; // Set
+    return vm._Details; // Get
   };
+
 }]);
 
 

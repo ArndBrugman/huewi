@@ -7,67 +7,91 @@ app
   return {
     restrict: "EA",
     templateUrl: "app/components/huewi-groupandlight.html",
-    controller: "huewiGroupAndLightController"
+    controller: "huewiGroupAndLightController",
+    controllerAs: 'vm',
+    scope: {},
+    bindToController: true
   };
 })
 
 .controller("huewiGroupAndLightController", ["$scope", "hueConnector", "Menu", function($scope, hueConnector, Menu) {
+  var vm = this;
+
+  vm.MyHue = hueConnector.MyHue;
+  vm.Menu = Menu;
+  vm._Name = "GroupAndLight";
+  vm.OrgName = vm._Name;
+  vm.GroupLightId = "-1";
+  vm.UpdateScheduled = false;
+
+  vm.Name = Name;
+
+  vm.SetGroupLightId = SetGroupLightId;
+  vm.SetGroupLightBrightness = SetGroupLightBrightness;
+
+  vm.Relax = Relax;
+  vm.Reading = Reading;
+  vm.Concentrate = Concentrate;
+  vm.Energize = Energize;
+  vm.Bright = Bright;
+  vm.Dimmed = Dimmed;
+  vm.Nightlight = Nightlight;
+  vm.GoldenHour = GoldenHour;
+
   var hueImage = new Image();
   hueImage.src = "assets/img/hue.png";
   var ctImage = new Image();
   ctImage.src = "assets/img/ct.png";
-  $scope._Name = "GroupAndLight";
-  $scope.OrgName = $scope._Name;
 
   $scope.$watch(function() {
     return Menu.GetItem();
     }, function WatchStatus(NewItem, OldItem) {
     if (Menu.GetItem() === "Escape") { // a Escape-key is Hit
         if (OldItem === "Group") {
-          if (hueConnector.MyHue().Groups[Menu.GetId()].name != $scope.OrgName)
-            hueConnector.MyHue().GroupSetName(Menu.GetId(), $scope.OrgName);
+          if (vm.MyHue.Groups[Menu.GetId()].name != vm.OrgName)
+            vm.MyHue.GroupSetName(Menu.GetId(), vm.OrgName);
         } else if (OldItem=== "Light") {
-          if (hueConnector.MyHue().Lights[Menu.GetId()].name != $scope.OrgName)
-          hueConnector.MyHue().LightSetName(Menu.GetId(), $scope.OrgName);
+          if (vm.MyHue.Lights[Menu.GetId()].name != vm.OrgName)
+          vm.MyHue.LightSetName(Menu.GetId(), vm.OrgName);
         }
     } else { // NewItem Selected
         if (Menu.GetItem() === "Group") {
-          hueConnector.MyHue().GroupAlertSelect(Menu.GetId());
-          $scope.OrgName = $scope._Name = hueConnector.MyHue().Groups[Menu.GetId()].name;
+          vm.MyHue.GroupAlertSelect(Menu.GetId());
+          vm.OrgName = vm._Name = vm.MyHue.Groups[Menu.GetId()].name;
         } else if (Menu.GetItem() === "Light") {
-          hueConnector.MyHue().LightAlertSelect(Menu.GetId());       
-          $scope.OrgName = $scope._Name = hueConnector.MyHue().Lights[Menu.GetId()].name;
+          vm.MyHue.LightAlertSelect(Menu.GetId());       
+          vm.OrgName = vm._Name = vm.MyHue.Lights[Menu.GetId()].name;
         }
-        $scope.UpdateMarkers();
+        UpdateMarkers();
       }
     }
   );
 
   $scope.$watch(function() {
-    return hueConnector.MyHue().Lights;
+    return vm.MyHue.Lights;
     }, function WatchStatus(NewItem, OldItem) {
-      $scope.UpdateMarkers();
+      UpdateMarkers();
     }
   );
 
   hueImage.onload = function() {
-    $scope.Redraw();
+    Redraw();
   };
 
   ctImage.onload = function() {
-    $scope.Redraw();
+    Redraw();
   };
 
   $(window).resize(function(){
-    $scope.Redraw();
-    $scope.UpdateMarkers();
+    Redraw();
+    UpdateMarkers();
   });
 
   $("#GroupAndLight").bind("scroll", function(){
-    $scope.UpdateMarkers();
+    UpdateMarkers();
   });
 
-  $scope.Redraw = function() {
+  function Redraw() {
     var hueCanvas = document.getElementById("hueCanvas");
     var hueContext = hueCanvas.getContext("2d");
     var ctCanvas = document.getElementById("ctCanvas");
@@ -89,16 +113,16 @@ app
     ctContext.drawImage(ctImage, 0, 0, ctCanvas.width, ctCanvas.height); // ReDraw
   };
 
-  $scope.UpdateMarkers = function() {
+  function UpdateMarkers() {
     var canvasPosition;
     var parentPosition;
     var State;
     var x, y;
 
     if (Menu.GetItem() === "Group") {
-      State = hueConnector.MyHue().Groups[Menu.GetId()].action;
+      State = vm.MyHue.Groups[Menu.GetId()].action;
     } else if (Menu.GetItem() === "Light") {
-      State = hueConnector.MyHue().Lights[Menu.GetId()].state;
+      State = vm.MyHue.Lights[Menu.GetId()].state;
     } else return;
 
 var RGB;
@@ -149,13 +173,13 @@ y = (1-HueAngSatBri.Bri)*$("#ctCanvas").height();
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
     var HueAngSatBri = huepi.HelperRGBtoHueAngSatBri(HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
     if (Menu.GetItem() === "Group") {
-      hueConnector.MyHue().GroupOn(Menu.GetId());
-      hueConnector.MyHue().GroupSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, hueConnector.MyHue().Groups[Menu.GetId()].action.bri);
+      vm.MyHue.GroupOn(Menu.GetId());
+      vm.MyHue.GroupSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, vm.MyHue.Groups[Menu.GetId()].action.bri);
     } else if (Menu.GetItem() === "Light") {
-      hueConnector.MyHue().LightOn(Menu.GetId());
-      hueConnector.MyHue().LightSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, hueConnector.MyHue().Lights[Menu.GetId()].state.bri);
+      vm.MyHue.LightOn(Menu.GetId());
+      vm.MyHue.LightSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, vm.MyHue.Lights[Menu.GetId()].state.bri);
     };
-    $scope.UpdateMarkers();
+    UpdateMarkers();
   });
 
   $("#ctCanvas").on("click", function(event) { // 2000..6500
@@ -164,100 +188,122 @@ y = (1-HueAngSatBri.Bri)*$("#ctCanvas").height();
     var y = event.offsetY;
     var ColorTemperature = 2000 + (6500-2000)*(x/ctCanvas.width);
     if (Menu.GetItem() === "Group") {
-      hueConnector.MyHue().GroupOn(Menu.GetId());
-      hueConnector.MyHue().GroupSetColortemperature(Menu.GetId(), ColorTemperature);
+      vm.MyHue.GroupOn(Menu.GetId());
+      vm.MyHue.GroupSetColortemperature(Menu.GetId(), ColorTemperature);
     } else if (Menu.GetItem() === "Light") {
-      hueConnector.MyHue().LightOn(Menu.GetId());
-      hueConnector.MyHue().LightSetColortemperature(Menu.GetId(), ColorTemperature);
+      vm.MyHue.LightOn(Menu.GetId());
+      vm.MyHue.LightSetColortemperature(Menu.GetId(), ColorTemperature);
     };
-    $scope.UpdateMarkers();
+    UpdateMarkers();
   });
 
-  $scope.GroupHasLight = function(LightId) {
+  function GroupHasLight(LightId) {
     if (Menu.GetItem() === "Group") {
       if (Menu.GetId() != "0") {
-        if (hueConnector.MyHue().Groups[Menu.GetId()].lights.indexOf(LightId)>=0)
+        if (vm.MyHue.Groups[Menu.GetId()].lights.indexOf(LightId)>=0)
           return true;
       }
     }
     return false;
   };
   
-  $scope.GroupToggleLight = function(LightId) {
+  function GroupToggleLight(LightId) {
     if (Menu.GetItem() === "Group") {
-      hueConnector.MyHue().LightAlertSelect(LightId);
-      if ($scope.GroupHasLight(LightId))
-        hueConnector.MyHue().Groups[Menu.GetId()].lights.splice(
-          hueConnector.MyHue().Groups[Menu.GetId()].lights.indexOf(LightId),1);
-      else hueConnector.MyHue().Groups[Menu.GetId()].lights.push(LightId);
-      hueConnector.MyHue().GroupSetLights(Menu.GetId(), hueConnector.MyHue().Groups[Menu.GetId()].lights);
+      vm.MyHue.LightAlertSelect(LightId);
+      if (GroupHasLight(LightId))
+        vm.MyHue.Groups[Menu.GetId()].lights.splice(
+          vm.MyHue.Groups[Menu.GetId()].lights.indexOf(LightId),1);
+      else vm.MyHue.Groups[Menu.GetId()].lights.push(LightId);
+      vm.MyHue.GroupSetLights(Menu.GetId(), vm.MyHue.Groups[Menu.GetId()].lights);
     }
   };
 
-  $scope.Name = function(NewName) { // Getter/Setter function
-    if (angular.isDefined(NewName))
-    { // Set
-      $scope._Name = NewName;
+  function Name(NewName) { // Getter/Setter function
+    if (angular.isDefined(NewName)) { // Set
+      vm._Name = NewName;
       if (Menu.GetItem() === "Group") {
-        hueConnector.MyHue().GroupSetName(Menu.GetId(), NewName);
+        vm.MyHue.GroupSetName(Menu.GetId(), NewName);
       } else if (Menu.GetItem() === "Light") {
-        hueConnector.MyHue().LightSetName(Menu.GetId(), NewName);
+        vm.MyHue.LightSetName(Menu.GetId(), NewName);
       }
     }
-    return $scope._Name; // Get
+    return vm._Name; // Get
   };
 
-  $scope.SetCTBrightness = function(CT, Brightness) {
+  function SetGroupLightId(NewId) {
+    vm.GroupLightId = NewId;
+  }
+
+  function SetGroupLightBrightness(CurrentGroupLight) {
+    if (vm.GroupLightId ==='-1') 
+      return;
+    if (vm.UpdateScheduled === false)
+    {
+      var Deferred;
+
+      vm.UpdateScheduled = true;
+      if (Menu.GetItem() === 'Group')
+        Deferred = vm.MyHue.GroupSetBrightness(Menu.GetId(), vm.MyHue.Groups[Menu.GetId()].action.bri, 2);
+      else (Menu.GetItem() === 'Light')
+        Deferred = vm.MyHue.LightSetBrightness(Menu.GetId() , vm.MyHue.Lights[Menu.GetId()].state.bri, 2);
+      Deferred.then(function(value) {
+        setTimeout(function(){vm.UpdateScheduled = false;},50);
+      }, function(reason) {
+        setTimeout(function(){vm.UpdateScheduled = false;},50);
+      });
+    }
+  };
+
+  function SetCTBrightness(CT, Brightness) {
     if (Menu.GetItem() === "Group") {
-      hueConnector.MyHue().GroupOn(Menu.GetId());
-      hueConnector.MyHue().GroupSetCT(Menu.GetId(), CT);
-      hueConnector.MyHue().GroupSetBrightness(Menu.GetId(), Brightness);
+      vm.MyHue.GroupOn(Menu.GetId());
+      vm.MyHue.GroupSetCT(Menu.GetId(), CT);
+      vm.MyHue.GroupSetBrightness(Menu.GetId(), Brightness);
     } else if (Menu.GetItem() === "Light") {
-      hueConnector.MyHue().LightOn(Menu.GetId());
-      hueConnector.MyHue().LightSetCT(Menu.GetId(), CT);
-      hueConnector.MyHue().LightSetBrightness(Menu.GetId(), Brightness);
+      vm.MyHue.LightOn(Menu.GetId());
+      vm.MyHue.LightSetCT(Menu.GetId(), CT);
+      vm.MyHue.LightSetBrightness(Menu.GetId(), Brightness);
     }    
   };
 
-  $scope.Relax = function() {
-    $scope.SetCTBrightness(447, 144);
+  function Relax() {
+    SetCTBrightness(447, 144);
     //"state":{"on":true,"bri":144,"hue":12585,"sat":224,"effect":"none","xy":[0.5019,0.4152],"ct":447,"alert":"select","colormode":"xy","reachable":true}
   };
   
-  $scope.Reading = function() {
-    $scope.SetCTBrightness(346, 254);
+  function Reading() {
+    SetCTBrightness(346, 254);
     //"state":{"on":true,"bri":254,"hue":13524,"sat":200,"effect":"none","xy":[0.4450,0.4067],"ct":346,"alert":"select","colormode":"xy","reachable":true}
   };
   
-  $scope.Concentrate = function() {
-    $scope.SetCTBrightness(234, 254);
+  function Concentrate() {
+    SetCTBrightness(234, 254);
     //"state":{"on":true,"bri":254,"hue":15324,"sat":121,"effect":"none","xy":[0.3698,0.3723],"ct":234,"alert":"select","colormode":"xy","reachable":true}
   };
   
-  $scope.Energize = function() {
-    $scope.SetCTBrightness(153, 254);
+  function Energize() {
+    SetCTBrightness(153, 254);
     //"state":{"on":true,"bri":254,"hue":34075,"sat":251,"effect":"none","xy":[0.3144,0.3302],"ct":153,"alert":"select","colormode":"xy","reachable":true}
   };
   
-  $scope.Bright = function() {
-    $scope.SetCTBrightness(367, 254);
+  function Bright() {
+    SetCTBrightness(367, 254);
     //"state":{"on":true,"bri":254,"hue":34075,"sat":251,"effect":"none","xy":[0.4578,0.4100],"ct":367,"alert":"select","colormode":"xy","reachable":true}
   };
   
-  $scope.Dimmed = function() {
-    $scope.SetCTBrightness(365, 77);
+  function Dimmed() {
+    SetCTBrightness(365, 77);
     //"state":{"on":true,"bri":77,"hue":14956,"sat":140,"effect":"none","xy":[0.4571,0.4097],"ct":365,"alert":"select","colormode":"xy","reachable":true}
   };
   
-  $scope.Nightlight = function() {
-    $scope.SetCTBrightness(500, 1);
+  function Nightlight() {
+    SetCTBrightness(500, 1);
     //"state":{"on":true,"bri":1,"hue":10778,"sat":251,"effect":"none","xy":[0.5609,0.4042],"ct":500,"alert":"select","colormode":"xy","reachable":true}
   };
   
-  $scope.GoldenHour = function() {
-    $scope.SetCTBrightness(400, 125);
+  function GoldenHour() {
+    SetCTBrightness(400, 125);
   };
-
 }]);
 
 

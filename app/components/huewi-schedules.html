@@ -1,12 +1,17 @@
 <h3>Schedules</h3>
 
-<button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button><br>
+<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button><br>
 
-<h4>Filter: <input type="text" id="ScheduleFilter" ng-model="ScheduleFilter"></h4>{{SensorFilter}}
+<div>
+  <h4>
+    Filter: <input type="text" ng-model="vm.Filter">
+    <button type="button" class="btn btn-sm" ng-show="vm.Filter!=''" ng-click="vm.Filter=''">Clear</button>
+  </h4>
+</div>
 <div class="list-group">
-  <div class="list-group-item" ng-repeat="Schedule in MyHue.Schedules | addKey | asArray | filter:ScheduleFilter" ng-class="{ grayed:Schedule.status != 'enabled' }">
+  <div class="list-group-item" ng-repeat="Schedule in vm.MyHue.Schedules | addKey | asArray | filter:vm.Filter" ng-class="{ grayed:Schedule.status != 'enabled' }">
     {{Schedule.__key}} - {{Schedule.name}}
   </div>
 </div>
 
-<button type="button" class="btn btn-sm right" ng-click="SetMenuItem('')">Close</button>
+<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button>
