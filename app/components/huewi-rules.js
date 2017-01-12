@@ -1,38 +1,38 @@
 (function () {
-'use strict';
+  'use strict';
 
-app
+  app
 
-.directive('huewiRules', function () {
-  return {
-    restrict: 'EA',
-    templateUrl: 'app/components/huewi-rules.html',
-    controller: 'huewiRulesController',
-    controllerAs: 'vm',
-    scope: {},
-    bindToController: true
-  };
-})
+  .directive('huewiRules', function () {
+    return {
+      restrict: 'EA',
+      templateUrl: 'app/components/huewi-rules.html',
+      controller: 'huewiRulesController',
+      controllerAs: 'vm',
+      scope: {},
+      bindToController: true
+    };
+  })
 
-.controller('huewiRulesController', ['$scope', 'hueConnector', 'Menu', function($scope, hueConnector, Menu) {
-  var vm = this;
+  .controller('huewiRulesController', ['$scope', 'hueConnector', 'Menu', function($scope, hueConnector, Menu) {
+    var vm = this;
 
-  vm.MyHue = hueConnector.MyHue;
-  vm.Menu = Menu;
+    vm.MyHue = hueConnector.MyHue;
+    vm.Menu = Menu;
 
-  vm.Filter = '';
-  vm._Details = '-1';
-  vm.Details = Details;
+    vm.Filter = '';
+    vm._Details = '-1';
+    vm.Details = Details;
 
-  function Details(NewValue) { // Getter/Setter function
-    if (angular.isDefined(NewValue))
+    function Details(NewValue) { // Getter/Setter function
+      if (angular.isDefined(NewValue))
       if (vm._Details === NewValue)
-       vm._Details = '-1'; // Same, Close current Details(-1)
+      vm._Details = '-1'; // Same, Close current Details(-1)
       else vm._Details = NewValue; // Set
-    return vm._Details; // Get
-  };
+      return vm._Details; // Get
+    }
 
-}]);
+  }]);
 
 
 })();
