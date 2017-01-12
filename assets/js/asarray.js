@@ -1,9 +1,9 @@
 (function () {
-"use strict";
+'use strict';
 
 app
 
-.filter("asArray", function() {
+.filter('asArray', function() {
   return function(items) {
     if (!items) return items;
     var asArray = []; // Add items in the Array

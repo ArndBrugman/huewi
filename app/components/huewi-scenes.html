@@ -1,17 +1,17 @@
 <h3>Scenes</h3>
 
-<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button><br>
+<button type='button' class='btn btn-sm right' ng-click='vm.Menu.SetItem("")'>Close</button><br>
 
 <div>
   <h4>
-    Filter: <input type="text" ng-model="vm.Filter">
-    <button type="button" class="btn btn-sm" ng-show="vm.Filter!=''" ng-click="vm.Filter=''">Clear</button>
+    Filter: <input type='text' ng-model='vm.Filter'>
+    <button type='button' class='btn btn-sm' ng-show='vm.Filter!=""' ng-click='vm.Filter=""'>Clear</button>
   </h4>
 </div>
-<div class="list-group">
-  <div class="list-group-item" ng-repeat="Scene in vm.MyHue.Scenes | addKey | asArray | filter:vm.Filter">
-    {{Scene.__key}} - {{Scene.name}} (by {{Scene.owner}})
+<div class='list-group'>
+  <div class='list-group-item' ng-repeat='Scene in vm.MyHue.Scenes | addKey | asArray | filter:vm.Filter'>
+    {{Scene.name}} - <small>{{Scene.__key}} (by {{Scene.owner}})</small>
   </div>
 </div>
 
-<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button>
+<button type='button' class='btn btn-sm right' ng-click='vm.Menu.SetItem("")'>Close</button>

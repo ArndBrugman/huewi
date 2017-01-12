@@ -1,12 +1,12 @@
 (function () {
-"use strict";
+'use strict';
 
 app
 
-.factory("Menu", function() {
-  var Item = "Connecting";
-  var Id = "";
-  
+.factory('Menu', function() {
+  var Item = 'Connecting';
+  var Id = '';
+
   var Service = {
     SetItem: SetItem,
     GetItem: GetItem,

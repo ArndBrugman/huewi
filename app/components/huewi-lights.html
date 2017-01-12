@@ -1,19 +1,19 @@
 <h3>Lights</h3>
 
-<div class="list-group">
-  <div class="list-group-item" ng-repeat="Light in vm.MyHue.Lights | addKey | asArray | orderBy:'name'" ng-class="{ grayed:!Light.state.reachable }">
-    <div style="display:inline-block; width:29%" ng-click="vm.Menu.SetItem('Light', Light.__key)">
+<div class='list-group'>
+  <div class='list-group-item' ng-repeat='Light in vm.MyHue.Lights | addKey | asArray | orderBy:"name"' ng-class='{ grayed:!Light.state.reachable }'>
+    <div style='display:inline-block; width:29%' ng-click='vm.Menu.SetItem("Light", Light.__key)'>
       {{Light.name}}
     </div>
-    <div style="display:inline-block; width:49%" >
-      <input type="range" min="1" max="254" ng-show="Light.state.on" ng-model="Light.state.bri" ng-change="vm.SetLightBrightness(Light.__key)" ng-mousedown="vm.SetLightId(Light.__key)" ng-mouseup="vm.SetLightId('-1')" ng-mouseleave="vm.SetLightId('-1')"/>
+    <div style='display:inline-block; width:49%' >
+      <input type='range' min='1' max='254' ng-show='Light.state.on' ng-model='Light.state.bri' ng-change='vm.SetLightBrightness(Light.__key)' ng-mousedown='vm.SetLightId(Light.__key)' ng-mouseup='vm.SetLightId("-1")' ng-mouseleave='vm.SetLightId("-1")'/>
     </div>
-    <div style="display:inline-block; width:19%" class="right" ng-show="Light.state.reachable">
-      <button type="button" class="btn btn-sm right" ng-click="vm.MyHue.LightOff(Light.__key)" ng-show="Light.state.on">
-        <span class="glyphicon glyphicon-off" style="color:{{Light.HTMLColor}}" aria-hidden="true"></span>
+    <div style='display:inline-block; width:19%' class='right' ng-show='Light.state.reachable'>
+      <button type='button' class='btn btn-sm right' ng-click='vm.MyHue.LightOff(Light.__key)' ng-show='Light.state.on'>
+        <span class='glyphicon glyphicon-off' style='color:{{Light.HTMLColor}}' aria-hidden='true'></span>
       </button>
-      <button type="button" class="btn btn-sm right" ng-click="vm.MyHue.LightOn(Light.__key)" ng-hide="Light.state.on">
-        <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
+      <button type='button' class='btn btn-sm right' ng-click='vm.MyHue.LightOn(Light.__key)' ng-hide='Light.state.on'>
+        <span class='glyphicon glyphicon-certificate' aria-hidden='true'></span>
       </button>
     </div>
   </div>

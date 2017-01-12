@@ -1,26 +1,26 @@
 (function () {
-"use strict";
+'use strict';
 
 app
 
-.directive("huewiLights", function() {
+.directive('huewiLights', function() {
   return {
-    restrict: "EA",
-    templateUrl: "app/components/huewi-lights.html",
-    controller: "huewiLightsController",
+    restrict: 'EA',
+    templateUrl: 'app/components/huewi-lights.html',
+    controller: 'huewiLightsController',
     controllerAs: 'vm',
     scope: {},
     bindToController: true
   };
 })
 
-.controller("huewiLightsController", ["$scope", "hueConnector", "Menu", function($scope, hueConnector, Menu) {
+.controller('huewiLightsController', ['$scope', 'hueConnector', 'Menu', function($scope, hueConnector, Menu) {
   var vm = this;
 
   vm.MyHue = hueConnector.MyHue;
   vm.Menu = Menu;
 
-  vm.LightId = "-1";
+  vm.LightId = '-1';
 
   vm.SetLightId = SetLightId;
   vm.SetLightBrightness = SetLightBrightness;
@@ -32,7 +32,7 @@ app
   }
 
   function SetLightBrightness(CurrentLight) {
-    if (vm.LightId ==='-1') 
+    if (vm.LightId ==='-1')
       return;
     if (vm.UpdateScheduled === false)
     {

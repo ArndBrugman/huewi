@@ -1,40 +1,40 @@
 (function () {
-"use strict";
-  
+'use strict';
+
 app
 
-.directive("huewiGroups", function() {
+.directive('huewiGroups', function() {
   return {
-    restrict: "EA",
-    templateUrl: "app/components/huewi-groups.html",
-    controller: "huewiGroupsController",
+    restrict: 'EA',
+    templateUrl: 'app/components/huewi-groups.html',
+    controller: 'huewiGroupsController',
     controllerAs: 'vm',
     scope: {},
     bindToController: true
   };
 })
 
-.controller("huewiGroupsController", ["$scope", "hueConnector", "Menu", function($scope, hueConnector, Menu) {
+.controller('huewiGroupsController', ['$scope', 'hueConnector', 'Menu', function($scope, hueConnector, Menu) {
   var vm = this;
 
   vm.MyHue = hueConnector.MyHue;
   vm.Menu = Menu;
 
-  vm.GroupType = "Room"; // LightGroup or Room
-  vm.GroupId = "-1";
-  
+  vm.GroupType = 'Room'; // LightGroup or Room
+  vm.GroupId = '-1';
+
   vm.ChangeType = ChangeType;
   vm.SetGroupId = SetGroupId;
   vm.SetGroupBrightness = SetGroupBrightness;
-  
+
   vm.UpdateScheduled = false;
 
   function ChangeType()
   {
-    if (vm.GroupType === "LightGroup") {
-      vm.GroupType = "Room";
+    if (vm.GroupType === 'LightGroup') {
+      vm.GroupType = 'Room';
     } else {
-      vm.GroupType = "LightGroup";
+      vm.GroupType = 'LightGroup';
     }
   };
 
@@ -43,7 +43,7 @@ app
   }
 
   function SetGroupBrightness(CurrentGroup) {
-    if (vm.GroupId ==='-1') 
+    if (vm.GroupId ==='-1')
       return;
     if (vm.UpdateScheduled === false)
     {

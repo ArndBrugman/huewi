@@ -5,18 +5,18 @@ app
 
 .factory("hueConnector", ["$rootScope", function ($rootScope) {
   var vm = this;
-    
+
   vm.MyHue = new huepi();
   // Demo Data while Connecting...
-  vm.MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"}, 
+  vm.MyHue.Groups = [{name: "All available lights", type: "LightGroup", HTMLColor: "#ffcc88", id:"0"},
    {name: "Demo Group", type: "LightGroup", action: {on:"true"}},
    {name: "Living Group", type: "LightGroup", action: {on:"false"}},
-   {name: "Dining Group", type: "LightGroup", action: {on:"false"}}, 
-   {name: "Demo Room", type: "Room", action: {on:"true"}}, 
-   {name: "Living Room", type: "Room", action: {on:"false"}}, 
+   {name: "Dining Group", type: "LightGroup", action: {on:"false"}},
+   {name: "Demo Room", type: "Room", action: {on:"true"}},
+   {name: "Living Room", type: "Room", action: {on:"false"}},
    {name: "Dining Room", type: "Room", action: {on:"false"}}];
-  vm.MyHue.Lights = [{name: "Demo Light", state: {on:"true",reachable:"true"}}, 
-   {name: "Living Light", state: {on:"false",reachable:"true"}}, 
+  vm.MyHue.Lights = [{name: "Demo Light", state: {on:"true",reachable:"true"}},
+   {name: "Living Light", state: {on:"false",reachable:"true"}},
    {name: "Dining Light", state: {on:"false",reachable:"true"}}];
 
   vm.Status = "Disconnected";
@@ -31,7 +31,7 @@ app
 
   var HeartbeatInterval;
   var ReconnectInterval;
-  
+
   if (window.cordova) {
     document.addEventListener("deviceready", onStartup, false);
     document.addEventListener("pause", onPause, false);
@@ -39,6 +39,8 @@ app
   } else {
     $(document).ready(onStartup);
   }
+
+  return Service;
 
   function onStartup() {
     onResume();
@@ -191,9 +193,9 @@ app
           RGB = huepi.HelperXYtoRGBforModel(xy.x, xy.y, State.bri / 255, Model);
         }
         return "#" + ToHexString(RGB.Red * 255) + ToHexString(RGB.Green * 255) + ToHexString(RGB.Blue * 255);
-      } else return "#ffcc88"; 
+      } else return "#ffcc88";
     }
-  
+
     var LightsOnBrightness = 0;
     var LightsOnCount = 0;
     for (Key in vm.MyHue.Lights) {
@@ -205,14 +207,13 @@ app
       }
     }
     vm.MyHue.Groups["0"].action.bri = Math.round(LightsOnBrightness / LightsOnCount);
-    
+
     for (var Key in vm.MyHue.Groups) {
       vm.MyHue.Groups[Key].id = Key;
       vm.MyHue.Groups[Key].HTMLColor = StateToHTMLColor(vm.MyHue.Groups[Key].action);
     }
   }
 
-  return Service;
 }]);
 
 
