@@ -191,11 +191,11 @@
     UpdateMarkers();
   });
 
-  $('#ctCanvas').on('click', function(event) { // 2000..6500
+  $('#ctCanvas').on('click', function(event) { // 2200..6500
     var ctCanvas = document.getElementById('ctCanvas');
     var x = event.offsetX;
     var y = event.offsetY;
-    var ColorTemperature = 2000 + (6500-2000)*(x/ctCanvas.width);
+    var ColorTemperature = 2200 + (6500-2200)*(x/ctCanvas.width);
     if (Menu.GetItem() === 'Group') {
       vm.MyHue.GroupOn(Menu.GetId());
       vm.MyHue.GroupSetColortemperature(Menu.GetId(), ColorTemperature);
