@@ -133,15 +133,17 @@
       var RGB;
       var HueAngSatBri;
       var xy;
-      var ct = State.ct;
+      var Colortemperature = 1000000 / State.ct;
 
       if (State && State.colormode) { // Group 0 (All available lights) doesn't have all properties
       if (State.colormode === 'hs') {
         RGB = huepi.HelperHueAngSatBritoRGB(State.hue * 360 / 65535, State.sat / 255, State.bri / 255);
         xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
         RGB = huepi.HelperXYtoRGB(xy.x, xy.y, State.bri / 255);
+        Colortemperature = huepi.HelperRGBtoColortemperature(RGB.Red, RGB.Green, RGB.Blue);
       } else if (State.colormode === 'xy') {
         RGB = huepi.HelperXYtoRGB(State.xy[0], State.xy[1], State.bri / 255);
+        Colortemperature = huepi.HelperRGBtoColortemperature(RGB.Red, RGB.Green, RGB.Blue);
       } else if (State.colormode === 'ct') {
         RGB = huepi.HelperColortemperaturetoRGB(Math.round(1000000 / State.ct));
         xy = huepi.HelperRGBtoXY(RGB.Red, RGB.Green, RGB.Blue);
@@ -160,8 +162,10 @@
     $('#hueMarker').css('left', x-$('#hueMarker').width()/2+canvasPosition.left);
     $('#hueMarker').css('top', y-$('#hueMarker').height()/2+canvasPosition.top);
 
-    x = RGB.Blue*$('#ctCanvas').width();
-    y = (1-HueAngSatBri.Bri)*$('#ctCanvas').height();
+    if (Colortemperature < 2200) Colortemperature = 2200;
+    if (Colortemperature > 6500) Colortemperature = 6500;
+    x = (Colortemperature - 2200)/(6500 - 2200)*$('#ctCanvas').width();
+    y = (1-(State.bri/254))*$('#ctCanvas').height();
     canvasPosition = $('#ctCanvas').offset();
     parentPosition = $('#ctCanvas').parent().offset();
     canvasPosition.left-=parentPosition.left;
@@ -321,7 +325,7 @@
     function GoldenHour() {
       SetCTBrightness(400, 125);
     }
-    
+
   }]);
 
 
