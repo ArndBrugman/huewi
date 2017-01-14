@@ -1,1 +1,1 @@
-var app = angular.module("huewi", ["ngAnimate"]);
+var app = angular.module('huewi', ['ngAnimate']);

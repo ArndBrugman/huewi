@@ -1,17 +1,19 @@
 <h3>Schedules</h3>
 
-<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button><br>
+<button type='button' class='btn btn-sm right' ng-click='vm.Menu.SetItem("")'>Close</button><br>
 
 <div>
   <h4>
-    Filter: <input type="text" ng-model="vm.Filter">
-    <button type="button" class="btn btn-sm" ng-show="vm.Filter!=''" ng-click="vm.Filter=''">Clear</button>
+    Filter: <input type='text' ng-model='vm.Filter'>
+    <button type='button' class='btn btn-sm' ng-show='vm.Filter!=""' ng-click='vm.Filter=""'>Clear</button>
   </h4>
 </div>
-<div class="list-group">
-  <div class="list-group-item" ng-repeat="Schedule in vm.MyHue.Schedules | addKey | asArray | filter:vm.Filter" ng-class="{ grayed:Schedule.status != 'enabled' }">
+<div class='list-group'>
+  <div class='list-group-item' ng-repeat='Schedule in vm.MyHue.Schedules | addKey | asArray | filter:vm.Filter' ng-class='{ grayed:Schedule.status != "enabled" }'>
     {{Schedule.__key}} - {{Schedule.name}}
+    <small>
+    </small>
   </div>
 </div>
 
-<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button>
+<button type='button' class='btn btn-sm right' ng-click='vm.Menu.SetItem("")'>Close</button>

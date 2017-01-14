@@ -1,24 +1,26 @@
 <h3>Sensors</h3>
 
-<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button><br>
+<button type='button' class='btn btn-sm right' ng-click='vm.Menu.SetItem("")'>Close</button><br>
 
 <div>
   <h4>
-    Filter: <input type="text" ng-model="vm.Filter">
-    <button type="button" class="btn btn-sm" ng-show="vm.Filter!=''" ng-click="vm.Filter=''">Clear</button>
+    Filter: <input type='text' ng-model='vm.Filter'>
+    <button type='button' class='btn btn-sm' ng-show='vm.Filter!=""' ng-click='vm.Filter=""'>Clear</button>
   </h4>
 </div>
-<div class="list-group">
-  <div class="list-group-item" ng-repeat="Sensor in vm.MyHue.Sensors | addKey | asArray | filter:vm.Filter" ng-class="{ grayed:!Sensor.config.on }" ng-click="vm.Details(Sensor.__key)">
+<div class='list-group'>
+  <div class='list-group-item' ng-repeat='Sensor in vm.MyHue.Sensors | addKey | asArray | filter:vm.Filter' ng-class='{ grayed:!Sensor.config.on }' ng-click='vm.Details(Sensor.__key)'>
     {{Sensor.__key}} - {{Sensor.name}} ({{Sensor.type}} - {{Sensor.modelid}} )
-    <div class="list-group-item" ng-show="Sensor.__key===vm.Details()">
-    	<b>Config :</b></br>
-    	{{Sensor.config}}
-    </br>
-    	<b>State :</b></br>
-    	{{Sensor.state}}
+    <div class='list-group-item' ng-show='Sensor.__key===vm.Details()'>
+      <small>
+      	<b>Config :</b></br>
+      	{{Sensor.config}}
+        </br>
+      	<b>State :</b></br>
+      	{{Sensor.state}}
+      </small>
     </div>
   </div>
 </div>
 
-<button type="button" class="btn btn-sm right" ng-click="vm.Menu.SetItem('')">Close</button>
+<button type='button' class='btn btn-sm right' ng-click='vm.Menu.SetItem("")'>Close</button>
