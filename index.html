@@ -59,52 +59,66 @@
 
 </head>
 
-<body id='HueStatus' ng-controller='huewiController as vm'>
+<body ng-controller='huewiController as vm'>
 
   <div class='overlay timebasedgradient'>
-    <div class='container' id='Groups'>
+    <div class='container' id='huewiGroups'>
       <div huewi-groups class='content'>
       </div><!-- /content -->
     </div><!-- /container -->
 
-    <div class='container' id='Lights'>
+    <div class='container' id='huewiLights'>
       <div huewi-lights class='content'>
       </div><!-- /content -->
     </div><!-- /container -->
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='GroupAndLight' ng-show='vm.Menu.GetItem() === "Group" || vm.Menu.GetItem() === "Light"'>
-    <div huewi-groupandlight class='inlay content timebasedgradient'>
+  <div class='overlay fading' ng-show='vm.Menu.GetItem() === "Group" || vm.Menu.GetItem() === "Light"'>
+    <div class='inlay content timebasedgradient'>
+      <div huewi-groupandlight id=huewiGroupAndLight' class='fading' ng-if='vm.Menu.GetItem() === "Group" || vm.Menu.GetItem() === "Light"'>
+      </div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Schedules' ng-show='vm.Menu.GetItem() === "Schedules"'>
-    <div huewi-schedules class='inlay content timebasedgradient'>
+  <div class='overlay fading' ng-show='vm.Menu.GetItem() === "Schedules"'>
+    <div class='inlay content timebasedgradient'>
+      <div huewi-schedules id='huewiSchedules' class='fading' ng-if='vm.Menu.GetItem() === "Schedules"'>
+      </div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Scenes' ng-show='vm.Menu.GetItem() === "Scenes"'>
-    <div huewi-scenes class='inlay content timebasedgradient'>
+  <div class='overlay fading'ng-show='vm.Menu.GetItem() === "Scenes"'>
+    <div class='inlay content timebasedgradient'>
+      <div huewi-scenes id='huewiScenes' class='fading' ng-if='vm.Menu.GetItem() === "Scenes"'>
+      </div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Sensors' ng-show='vm.Menu.GetItem() === "Sensors"'>
-    <div huewi-sensors class='inlay content timebasedgradient'>
+  <div class='overlay fading' ng-show='vm.Menu.GetItem() === "Sensors"'>
+    <div class='inlay content timebasedgradient'>
+      <div huewi-sensors id='huewiSensors' class='fading' ng-if='vm.Menu.GetItem() === "Sensors"'>
+      </div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Rules' ng-show='vm.Menu.GetItem() === "Rules"''>
-    <div huewi-rules class='inlay content timebasedgradient'>
+  <div class='overlay fading' ng-show='vm.Menu.GetItem() === "Rules"'>
+    <div class='inlay content timebasedgradient'>
+      <div huewi-rules id='huewiRules' class='fading' ng-if='vm.Menu.GetItem() === "Rules"'>
+      </div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='Bridge' ng-show='vm.hueConnector.GetStatus() === "!Connected" || vm.Menu.GetItem() === "Bridge"'>
-    <div huewi-bridge class='inlay content timebasedgradient'>
+  <div class='overlay fading' ng-show='vm.hueConnector.GetStatus() === "!Connected" || vm.Menu.GetItem() === "Bridge"'>
+    <div class='inlay content timebasedgradient'>
+      <div huewi-bridge id='huewiBridge' class='fading' ng-if='vm.hueConnector.GetStatus() === "!Connected" || vm.Menu.GetItem() === "Bridge"'>
+      </div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
-  <div class='overlay fading' id='About' ng-show='vm.Menu.GetItem() === "About"'>
-    <div huewi-about class='inlay content timebasedgradient'>
+  <div class='overlay fading' ng-show='vm.Menu.GetItem() === "About"'>
+    <div class='inlay content timebasedgradient'>
+      <div huewi-about id='huewiAbout' class='fading' ng-if='vm.Menu.GetItem() === "About"'>
+      </div>
     </div><!-- /inlay content -->
   </div><!-- /overlay -->
 
@@ -121,16 +135,19 @@
       <div class='list-group'>
         <li class='list-group-item' ng-click='vm.Menu.SetItem("Bridge")'>Bridge</li>
       </div>
+      <div class='list-group'>
+        <li class='list-group-item' ng-click='vm.Menu.SetItem("About")'>About hueWI</li>
+      </div>
     </nav><!-- /navdrawer -->
   </div><!-- /navcontainer -->
 
   <div class='status timebasedgradient'>
     <h4>hue Web Interface</h4>
-    <div id='HueStatusbar'>
+    <div id='huewiStatusbar'>
       <div>{{vm.hueConnector.GetStatus()}}</div>
       <div>Bridge IP: {{vm.MyHue.BridgeIP}}</div>
       <div>Bridge Name: {{vm.MyHue.BridgeName}}</div>
-    </div><!-- /HueStatusbar -->
+    </div><!-- /huewiStatusbar -->
   </div><!-- /status -->
 
 </body><!-- /huewiController -->

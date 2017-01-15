@@ -51,7 +51,7 @@
     ctImage.src = 'assets/img/ct.png';
 
     $scope.$watch(function() {
-      return Menu.GetItem();
+      return vm.Menu.GetItem();
     }, function WatchStatus(NewItem, OldItem) {
       if (Menu.GetItem() === 'Escape') { // a Escape-key is Hit
         if (OldItem === 'Group') {
@@ -89,17 +89,12 @@
 
     $(window).resize(function(){
       Redraw();
-      UpdateMarkers();
-    });
-
-    $('#GroupAndLight').bind('scroll', function(){
-      UpdateMarkers();
     });
 
     function Redraw() {
-      var hueCanvas = document.getElementById('hueCanvas');
+      var hueCanvas = document.getElementById('huewihueCanvas');
       var hueContext = hueCanvas.getContext('2d');
-      var ctCanvas = document.getElementById('ctCanvas');
+      var ctCanvas = document.getElementById('huewictCanvas');
       var ctContext = ctCanvas.getContext('2d');
       // Canvas size should be set by script not css, otherwise getting HueImagePixel doesn't match canvas sizes
       if ($(window).width() > $(window).height()) {
@@ -116,6 +111,7 @@
       ctCanvas.width = hueCanvas.width;
       ctCanvas.height = ctCanvas.width / 2;
       ctContext.drawImage(ctImage, 0, 0, ctCanvas.width, ctCanvas.height); // ReDraw
+      UpdateMarkers();
     }
 
     function UpdateMarkers() {
@@ -153,31 +149,31 @@
 
     HueAngSatBri = huepi.HelperRGBtoHueAngSatBri(RGB.Red, RGB.Green, RGB.Blue);
 
-    x = HueAngSatBri.Sat*Math.sin(HueAngSatBri.Ang/180*Math.PI)*$('#hueCanvas').width()/2+$('#hueCanvas').width()/2;
-    y = HueAngSatBri.Sat*Math.cos(HueAngSatBri.Ang/180*Math.PI)*$('#hueCanvas').height()/-2+$('#hueCanvas').height()/2;
-    canvasPosition = $('#hueCanvas').offset();
-    parentPosition = $('#hueCanvas').parent().offset();
+    x = HueAngSatBri.Sat*Math.sin(HueAngSatBri.Ang/180*Math.PI)*$('#huewihueCanvas').width()/2+$('#huewihueCanvas').width()/2;
+    y = HueAngSatBri.Sat*Math.cos(HueAngSatBri.Ang/180*Math.PI)*$('#huewihueCanvas').height()/-2+$('#huewihueCanvas').height()/2;
+    canvasPosition = $('#huewihueCanvas').offset();
+    parentPosition = $('#huewihueCanvas').parent().offset();
     canvasPosition.left-=parentPosition.left;
     canvasPosition.top-=parentPosition.top;
-    $('#hueMarker').css('left', x-$('#hueMarker').width()/2+canvasPosition.left);
-    $('#hueMarker').css('top', y-$('#hueMarker').height()/2+canvasPosition.top);
+    $('#huewihueMarker').css('left', x-$('#huewihueMarker').width()/2+canvasPosition.left);
+    $('#huewihueMarker').css('top', y-$('#huewihueMarker').height()/2+canvasPosition.top);
 
     if (Colortemperature < 2200) Colortemperature = 2200;
     if (Colortemperature > 6500) Colortemperature = 6500;
-    x = (Colortemperature - 2200)/(6500 - 2200)*$('#ctCanvas').width();
-    y = (1-(State.bri/254))*$('#ctCanvas').height();
-    canvasPosition = $('#ctCanvas').offset();
-    parentPosition = $('#ctCanvas').parent().offset();
+    x = (Colortemperature - 2200)/(6500 - 2200)*$('#huewictCanvas').width();
+    y = (1-(State.bri/254))*$('#huewictCanvas').height();
+    canvasPosition = $('#huewictCanvas').offset();
+    parentPosition = $('#huewictCanvas').parent().offset();
     canvasPosition.left-=parentPosition.left;
     canvasPosition.top-=parentPosition.top;
-    $('#ctMarker').css('left', x-$('#ctMarker').width()/2+canvasPosition.left);
-    $('#ctMarker').css('top', y-$('#ctMarker').height()/2+canvasPosition.top);
+    $('#huewictMarker').css('left', x-$('#huewictMarker').width()/2+canvasPosition.left);
+    $('#huewictMarker').css('top', y-$('#huewictMarker').height()/2+canvasPosition.top);
   }
 
-  $('#hueCanvas').on('click', function(event) {
+  $('#huewihueCanvas').on('click', function(event) {
     var x = event.offsetX;
     var y = event.offsetY;
-    var HueContext = document.getElementById('hueCanvas').getContext('2d');
+    var HueContext = document.getElementById('huewihueCanvas').getContext('2d');
     var HueImagedata = HueContext.getImageData(x, y, 1, 1); // one Pixel at Cursor
     var HueImagePixel = HueImagedata.data; // data[] RGB of Pixel
     var HueAngSatBri = huepi.HelperRGBtoHueAngSatBri(HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
@@ -191,8 +187,8 @@
     UpdateMarkers();
   });
 
-  $('#ctCanvas').on('click', function(event) { // 2200..6500
-    var ctCanvas = document.getElementById('ctCanvas');
+  $('#huewictCanvas').on('click', function(event) { // 2200..6500
+    var ctCanvas = document.getElementById('huewictCanvas');
     var x = event.offsetX;
     var y = event.offsetY;
     var ColorTemperature = 2200 + (6500-2200)*(x/ctCanvas.width);
@@ -206,7 +202,7 @@
     UpdateMarkers();
   });
 
-  function GroupHasLight(LightId) {
+  function GroupHasLight(LightId) { // Should move to huepi
     if (Menu.GetItem() === 'Group') {
       if (Menu.GetId() != '0') {
         if (vm.MyHue.Groups[Menu.GetId()].lights.indexOf(LightId)>=0)
@@ -216,7 +212,7 @@
     return false;
   }
 
-  function GroupToggleLight(LightId) {
+  function GroupToggleLight(LightId) { // Should move to huepi
     if (Menu.GetItem() === 'Group') {
       vm.MyHue.LightAlertSelect(LightId);
       if (GroupHasLight(LightId))

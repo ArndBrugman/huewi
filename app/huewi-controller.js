@@ -16,8 +16,8 @@
       return vm.hueConnector.GetStatus();
     }, function WatchStatus(NewStatus, OldStatus) {
       if (NewStatus!=='Connected')
-      $('#HueStatusbar').slideDown(350);
-      else setTimeout(function() { $('#HueStatusbar').slideUp(750); }, 1);
+      $('#huewiStatusbar').slideDown(350);
+      else setTimeout(function() { $('#huewiStatusbar').slideUp(750); }, 1);
     });
 
     $scope.$watch(function() {

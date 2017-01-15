@@ -11,7 +11,7 @@ html, body {
   user-select: none;
 }
 a:link, a:visited {
-  text-decoration: none;
+  text-decoration: underline;
   color: inherit;
 }
 .fading {
@@ -102,9 +102,6 @@ input[type="text"] {
   background: rgba(250, 240, 230, 0.05);
   border-style: none;
   border-radius: 5px;
-}
-#GroupLightName {
-  width: 100%;
 }
 .list-group-item {
   left: 0px;

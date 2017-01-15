@@ -1,4 +1,4 @@
-<h3><input type='text' id='GroupLightName' ng-model='vm.Name' ng-model-options='{getterSetter: true}'></h3>
+<h3><input type='text' ng-model='vm.Name' ng-model-options='{getterSetter: true}'></h3>
 
 <button type='button' class='btn btn-sm right' ng-click='vm.Menu.SetItem("")'>Close</button><br>
 
@@ -31,13 +31,14 @@
   </div>
 </div>
 
-<div class='container' id='ColorTemp'>
+<div class='container'>
   <div class='content'>
-    <span class='marker' id='ctMarker'>
-      <span class='glyphicon glyphicon-record' aria-hidden='true'></span>
+    <span class='marker' id='huewictMarker'>
+      <span class='glyphicon glyphicon-record' aria-hidden='true'>
+      </span>
     </span>
-    <canvas id='ctCanvas'>It seems your device doesn't support the required HTML5 Canvas</canvas>
-    <div><br><br></div>
+    <canvas id='huewictCanvas'>It seems your device doesn't support the required HTML5 Canvas</canvas>
+    <!--div><br><br></div-->
     <div>
       <button type='button' class='btn btn-sm preset' ng-click='vm.Relax()'>Relax</button>
       <button type='button' class='btn btn-sm preset' ng-click='vm.Reading()'>Reading</button>
@@ -48,22 +49,23 @@
       <button type='button' class='btn btn-sm preset' ng-click='vm.Nightlight()'>Nightlight</button>
       <button type='button' class='btn btn-sm preset' ng-click='vm.GoldenHour()'>Golden hour</button>
     </div>
-    <div class='onportait'><br></div><!-- Spacing on Portait after ColorTemp -->
+    <div class='onportait'><!--br--></div><!-- Spacing on Portait after ColorTemp -->
   </div><!-- /content -->
 </div><!-- /container -->
 
-<div class='container' id='hueColor'>
+<div class='container'>
   <div class='content'>
     <div>
-      <span class='marker' id='hueMarker'>
-        <span class='glyphicon glyphicon-record' aria-hidden='true'></span>
+      <span class='marker' id='huewihueMarker'>
+        <span class='glyphicon glyphicon-record' aria-hidden='true'>
+        </span>
       </span>
-      <canvas id='hueCanvas'>It seems your device doesn't support the required HTML5 Canvas</canvas>
+      <canvas id='huewihueCanvas'>It seems your device doesn't support the required HTML5 Canvas</canvas>
     </div>
   </div><!-- /content -->
 </div><!-- /container -->
 
-<div><br><br></div>
+<!--div><br><br></div-->
 
 <div class='content'>
   <div ng-show='(vm.Menu.GetItem() === "Group") && (vm.Menu.GetId()!=="0")' >
