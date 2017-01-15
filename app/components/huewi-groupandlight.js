@@ -179,10 +179,10 @@
     var HueAngSatBri = huepi.HelperRGBtoHueAngSatBri(HueImagePixel[0]/255, HueImagePixel[1]/255, HueImagePixel[2]/255);
     if (Menu.GetItem() === 'Group') {
       vm.MyHue.GroupOn(Menu.GetId());
-      vm.MyHue.GroupSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, vm.MyHue.Groups[Menu.GetId()].action.bri);
+      vm.MyHue.GroupSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, vm.MyHue.Groups[Menu.GetId()].action.bri/255);
     } else if (Menu.GetItem() === 'Light') {
       vm.MyHue.LightOn(Menu.GetId());
-      vm.MyHue.LightSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, vm.MyHue.Lights[Menu.GetId()].state.bri);
+      vm.MyHue.LightSetHueAngSatBri(Menu.GetId(), HueAngSatBri.Ang, HueAngSatBri.Sat, vm.MyHue.Lights[Menu.GetId()].state.bri/255);
     }
     UpdateMarkers();
   });
