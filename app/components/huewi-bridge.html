@@ -49,15 +49,17 @@
 <div class='list-group fading' ng-hide='vm.MyHue.BridgeName === "" || vm.MyHue.Username === "" || !vm.MyHue.BridgeConfig.whitelist || vm.MyHue.BridgeConfig.whitelist.length == 0'>
 <h4>Whitelist authorisations</h4>
   <div class='list-group'>
-    <div class='list-group-item' ng-repeat='Listed in vm.MyHue.BridgeConfig.whitelist | addKey | asArray | noSpaces | orderBy:"last_use_date":true'>
+    <div class='list-group-item' ng-repeat='Listed in vm.MyHue.BridgeConfig.whitelist | addKey | asArray | noSpaces | orderBy:"last_use_date":true' ng-click='vm.Details(Listed.__key)'>
       <div style='display:inline-block; width:69%'>
-        {{Listed.name}} : <small>{{Listed.__key}}<br>
-        Created: {{Listed['create_date']}},
-        LastUsed: {{Listed['last_use_date']}}</small>
+        {{Listed.name}}
+        <span ng-show='Listed.__key===vm.MyHue.Username'>(Active)</span>
+        <div ng-show='Listed.__key===vm.Details()'>
+          <small>{{Listed.__key}}<br>
+          Created: {{Listed['create_date']}}<br>
+          LastUsed: {{Listed['last_use_date']}}</small>
+        </div>
       </div>
-      <div ng-show='Listed.__key===vm.MyHue.Username' style='display:inline-block; width:29%; text-align: right'>Active Key</div>
-      <div style='display:inline-block; width:69%'></div>
-      <div ng-click='vm.MyHue.BridgeDeleteUser(Listed.__key)' style='display:inline-block; width:29%; text-align: right'>Delete Key</div>
+      <span ng-click='vm.MyHue.BridgeDeleteUser(Listed.__key)' style='display:inline-block; width:29%; text-align: right'>Delete Key</span>
     </div>
   </div>
 </div>
