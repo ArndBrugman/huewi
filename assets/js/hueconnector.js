@@ -8,16 +8,21 @@
 
     vm.MyHue = new huepi();
     // Demo Data while Connecting...
+    vm.MyHue.Lights = [{name: 'Demo Light'},
+    {name: 'Living Light'},
+    {name: 'Dining Light'}];
     vm.MyHue.Groups = [{name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88', id:'0'},
-    {name: 'Demo Group', type: 'LightGroup', action: {on:'true'}},
-    {name: 'Living Group', type: 'LightGroup', action: {on:'false'}},
-    {name: 'Dining Group', type: 'LightGroup', action: {on:'false'}},
-    {name: 'Demo Room', type: 'Room', action: {on:'true'}},
-    {name: 'Living Room', type: 'Room', action: {on:'false'}},
-    {name: 'Dining Room', type: 'Room', action: {on:'false'}}];
-    vm.MyHue.Lights = [{name: 'Demo Light', state: {on:'true',reachable:'true'}},
-    {name: 'Living Light', state: {on:'false',reachable:'true'}},
-    {name: 'Dining Light', state: {on:'false',reachable:'true'}}];
+    {name: 'Demo Group', type: 'LightGroup'},
+    {name: 'Living Group', type: 'LightGroup'},
+    {name: 'Dining Group', type: 'LightGroup'},
+    {name: 'Demo Room', type: 'Room'},
+    {name: 'Living Room', type: 'Room'},
+    {name: 'Dining Room', type: 'Room'}];
+    vm.MyHue.Lights[0].state=vm.MyHue.Lights[1].state=vm.MyHue.Lights[2].state=
+    vm.MyHue.Groups[0].action=vm.MyHue.Groups[1].action=vm.MyHue.Groups[2].action=vm.MyHue.Groups[3].action=
+    vm.MyHue.Groups[4].action=vm.MyHue.Groups[5].action=vm.MyHue.Groups[6].action=
+    {'on':true,'bri':144,'hue':12585,'sat':224,'effect':'none','xy':[0.5019,0.4152],'ct':447,'alert':'select','colormode':'xy','reachable':true};
+    DataReceived();
 
     vm.Status = 'Disconnected';
 
