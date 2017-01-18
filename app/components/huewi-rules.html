@@ -11,7 +11,7 @@
 <div class='list-group'>
   <div class='list-group-item' ng-repeat='Rule in vm.MyHue.Rules | addKey | asArray | filter:vm.Filter' ng-class='{ grayed:Rule.status != "enabled" }' ng-click='vm.Details(Rule.__key)'>
     {{Rule.__key}} - {{Rule.name}}
-    <div class='list-group-item' ng-show='Rule.__key===vm.Details()'>
+    <div class='list-group-item' ng-if='Rule.__key===vm.Details()'>
       <small>
       	<b>Conditions :</b></br>
       	<span ng-repeat='Condition in Rule.conditions'>

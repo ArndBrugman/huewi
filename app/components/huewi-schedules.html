@@ -11,7 +11,7 @@
 <div class='list-group'>
   <div class='list-group-item' ng-repeat='Schedule in vm.MyHue.Schedules | addKey | asArray | filter:vm.Filter' ng-class='{ grayed:Schedule.status != "enabled" }' ng-click='vm.Details(Schedule.__key)'>
     {{Schedule.__key}} - {{Schedule.name}}
-    <div class='list-group-item' ng-show='Schedule.__key===vm.Details()'>
+    <div class='list-group-item' ng-if='Schedule.__key===vm.Details()'>
       <small>
         Localtime: {{Schedule.localtime}} Time: {{Schedule.time}} (Created: {{Schedule.created}})<br>
         {{Schedule.command.method}} {{Schedule.command.address}} {{Schedule.command.body}}

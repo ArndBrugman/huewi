@@ -11,7 +11,7 @@
 <div class='list-group'>
   <div class='list-group-item' ng-repeat='Scene in vm.MyHue.Scenes | addKey | asArray | filter:vm.Filter' ng-click='vm.Details(Scene.__key)'>
     {{Scene.name}}
-    <div class='list-group-item' ng-show='Scene.__key===vm.Details()'>
+    <div class='list-group-item' ng-if='Scene.__key===vm.Details()'>
       <small>
         {{Scene.__key}} (owned by {{Scene.owner}})<br>
         Lights: {{Scene.lights}}<br>

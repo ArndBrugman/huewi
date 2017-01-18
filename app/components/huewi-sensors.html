@@ -11,7 +11,7 @@
 <div class='list-group'>
   <div class='list-group-item' ng-repeat='Sensor in vm.MyHue.Sensors | addKey | asArray | filter:vm.Filter' ng-class='{ grayed:!Sensor.config.on }' ng-click='vm.Details(Sensor.__key)'>
     {{Sensor.__key}} - {{Sensor.name}} ({{Sensor.type}} - {{Sensor.modelid}} )
-    <div class='list-group-item' ng-show='Sensor.__key===vm.Details()'>
+    <div class='list-group-item' ng-if='Sensor.__key===vm.Details()'>
       <small>
       	<b>Config: </b></br>
       	{{Sensor.config}}
