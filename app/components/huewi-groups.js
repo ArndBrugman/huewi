@@ -45,13 +45,12 @@
     function SetGroupBrightness(CurrentGroup) {
       //if (vm.GroupId ==='-1')
       //return;
-      if (vm.UpdateScheduled === false)
+      if ((vm.UpdateScheduled === false) && (CurrentGroup))
       {
         vm.UpdateScheduled = true;
+        setTimeout(function(){vm.UpdateScheduled = false;},50);
         vm.MyHue.GroupSetBrightness(CurrentGroup, vm.MyHue.Groups[CurrentGroup].action.bri, 2).then(function(value) {
-          setTimeout(function(){vm.UpdateScheduled = false;},100);
         }, function(reason) {
-          setTimeout(function(){vm.UpdateScheduled = false;},100);
         });
       }
     }
