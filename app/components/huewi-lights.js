@@ -32,8 +32,8 @@
     }
 
     function SetLightBrightness(CurrentLight) {
-      if (vm.LightId ==='-1')
-      return;
+      //if (vm.LightId ==='-1')
+      //return;
       if (vm.UpdateScheduled === false)
       {
         vm.UpdateScheduled = true;
