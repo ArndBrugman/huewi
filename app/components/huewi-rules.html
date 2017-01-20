@@ -1,32 +1,37 @@
 <h3>Rules</h3>
 
-<button type='button' class='btn btn-sm right' ng-click='vm.Menu.SetItem("")'>Close</button><br>
+<div class='row'>
+  <button type='button' class='btn btn-sm col-xs-offset-10 col-xs-2 col-sm-offset-10 col-sm-2 col-md-offset-11 col-md-1 col-lg-offset-11 col-lg-1' ng-click='vm.Menu.SetItem("")'>Close</button><br><br>
+</div>
 
-<div>
+<div class='row'>
   <h4>
     Filter: <input type='text' ng-model='vm.Filter'>
     <button type='button' class='btn btn-sm' ng-show='vm.Filter!=""' ng-click='vm.Filter=""'>Clear</button>
   </h4>
 </div>
-<div class='list-group'>
-  <div class='list-group-item' ng-repeat='Rule in vm.MyHue.Rules | addKey | asArray | filter:vm.Filter' ng-class='{ grayed:Rule.status != "enabled" }' ng-click='vm.Details(Rule.__key)'>
-    {{Rule.__key}} - {{Rule.name}}
+<div class='list-group row'>
+  <div class='list-group-item' ng-repeat='Rule in vm.MyHue.Rules | addKey | asArray | orderBy:"name" | filter:vm.Filter' ng-class='{ grayed:Rule.status != "enabled" }' ng-click='vm.Details(Rule.__key)'>
+    {{Rule.name}}
     <div class='list-group-item' ng-if='Rule.__key===vm.Details()'>
+      Rule {{Rule.__key}}<br>
       <small>
       	<b>Conditions :</b></br>
       	<span ng-repeat='Condition in Rule.conditions'>
       		{ {{Condition.address}} {{Condition.operator}} <span ng-show='Condition.value!=""'>'{{Condition.value}}'</span> }
-      		<span ng-hide=$last> And <br></span>
+      		<span ng-hide=$last> & <br></span>
       	</span>
         </br>
       	<b>Actions :</b></br>
       	<span ng-repeat='Action in Rule.actions'>
       		{ {{Action.method}} {{Action.address}} {{Action.body}} }
-  				<span ng-hide=$last> Plus <br></span>
+  				<span ng-hide=$last> + <br></span>
       	</span>
       </small>
     </div>
   </div>
 </div>
 
-<button type='button' class='btn btn-sm right' ng-click='vm.Menu.SetItem("")'>Close</button>
+<div class='row'>
+  <button type='button' class='btn btn-sm col-xs-offset-10 col-xs-2 col-sm-offset-10 col-sm-2 col-md-offset-11 col-md-1 col-lg-offset-11 col-lg-1' ng-click='vm.Menu.SetItem("")'>Close</button><br><br>
+</div>
