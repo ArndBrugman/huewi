@@ -44,8 +44,8 @@
     }
 
     function SetGroupBrightness(CurrentGroup) {
-      if (vm.GroupId ==='-1')
-      return;
+      //if (vm.GroupId ==='-1')
+      //return;
       if (vm.UpdateScheduled === false)
       {
         vm.UpdateScheduled = true;
