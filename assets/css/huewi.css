@@ -11,7 +11,7 @@ html, body {
   user-select: none;
 }
 a:link, a:visited {
-  text-decoration: none;
+  text-decoration: underline;
   color: inherit;
 }
 .fading {
@@ -34,19 +34,9 @@ h4 {
   margin-bottom: 2px;
 }
 @media screen and (orientation:landscape) {
-  .grouplight {
-    display: inline-block;
-    width: 24.5%;
-  }
   .container {
     float: left;
     width: 50%;
-    height: 100%;
-  }
-  .preset {
-    width: 32%;
-    margin-top: 4px;
-    margin-bottom: 4px;
   }
   .onportrait {
     display: none;
@@ -56,19 +46,9 @@ h4 {
   }
 }
 @media screen and (orientation:portrait) {
-  .grouplight {
-    display: inline-block;
-    width: 49.5%;
-  }
   .container {
     float: left;
     width: 100%;
-    height: auto;
-  }
-  .preset {
-    width: 49%;
-    margin-top: 4px;
-    margin-bottom: 4px;
   }
   .onportrait {
     display: all;
@@ -76,6 +56,10 @@ h4 {
   .onlandscape {
     display: none;
   }
+}
+.container {
+  padding-left: 32px;
+  padding-right: 32px;
 }
 .overlay {
   position: fixed;
@@ -95,22 +79,13 @@ h4 {
   margin-right: 24px;
   margin-bottom: 24px;
 }
-.content {
-  padding-bottom: 16px;
-}
 input[type="text"] {
   text-align: center;
   background: rgba(250, 240, 230, 0.05);
   border-style: none;
   border-radius: 5px;
 }
-#GroupLightName {
-  width: 100%;
-}
 .list-group-item {
-  left: 0px;
-  bottom: 0px;
-  height: auto;
   width: 100%;
   background: rgba(250, 240, 230, 0.10);
 }
@@ -139,16 +114,6 @@ canvas {
   text-align: center;
   pbackground: rgba(200, 200, 200, 0.35);
   color: rgba(50, 40, 30, 1);
-}
-.left {
-  display: block;
-  margin-left: 0px;
-  margin-right: auto;
-}
-.right {
-  display: block;
-  margin-left: auto;
-  margin-right: 0px;
 }
 #navcontainer {
   width: auto;

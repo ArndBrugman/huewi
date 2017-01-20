@@ -32,15 +32,14 @@
     }
 
     function SetLightBrightness(CurrentLight) {
-      if (vm.LightId ==='-1')
-      return;
-      if (vm.UpdateScheduled === false)
+      //if (vm.LightId ==='-1')
+      //return;
+      if ((vm.UpdateScheduled === false) && (CurrentLight))
       {
         vm.UpdateScheduled = true;
+        setTimeout(function(){vm.UpdateScheduled = false;},50);
         vm.MyHue.LightSetBrightness(CurrentLight, vm.MyHue.Lights[CurrentLight].state.bri, 2).then(function(value) {
-          setTimeout(function(){vm.UpdateScheduled = false;},50);
         }, function(reason) {
-          setTimeout(function(){vm.UpdateScheduled = false;},50);
         });
       }
     }

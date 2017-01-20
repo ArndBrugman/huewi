@@ -1,19 +1,28 @@
 <h3>Schedules</h3>
 
-<button type='button' class='btn btn-sm right' ng-click='vm.Menu.SetItem("")'>Close</button><br>
+<div class='row'>
+  <button type='button' class='btn btn-sm col-xs-offset-10 col-xs-2 col-sm-offset-10 col-sm-2 col-md-offset-11 col-md-1 col-lg-offset-11 col-lg-1' ng-click='vm.Menu.SetItem("")'>Close</button><br><br>
+</div>
 
-<div>
+<div class='row'>
   <h4>
     Filter: <input type='text' ng-model='vm.Filter'>
     <button type='button' class='btn btn-sm' ng-show='vm.Filter!=""' ng-click='vm.Filter=""'>Clear</button>
   </h4>
 </div>
-<div class='list-group'>
-  <div class='list-group-item' ng-repeat='Schedule in vm.MyHue.Schedules | addKey | asArray | filter:vm.Filter' ng-class='{ grayed:Schedule.status != "enabled" }'>
-    {{Schedule.__key}} - {{Schedule.name}}
-    <small>
-    </small>
+<div class='list-group row'>
+  <div class='list-group-item' ng-repeat='Schedule in vm.MyHue.Schedules | addKey | asArray | orderBy:"name" | filter:vm.Filter' ng-class='{ grayed:Schedule.status != "enabled" }' ng-click='vm.Details(Schedule.__key)'>
+    {{Schedule.name}}
+    <div class='list-group-item' ng-if='Schedule.__key===vm.Details()'>
+      Schedule {{Schedule.__key}}<br>
+      <small>
+        Localtime: {{Schedule.localtime}} Time: {{Schedule.time}} (Created: {{Schedule.created}})<br>
+        {{Schedule.command.method}} {{Schedule.command.address}} {{Schedule.command.body}}
+      </small>
+    </div>
   </div>
 </div>
 
-<button type='button' class='btn btn-sm right' ng-click='vm.Menu.SetItem("")'>Close</button>
+<div class='row'>
+  <button type='button' class='btn btn-sm col-xs-offset-10 col-xs-2 col-sm-offset-10 col-sm-2 col-md-offset-11 col-md-1 col-lg-offset-11 col-lg-1' ng-click='vm.Menu.SetItem("")'>Close</button><br><br>
+</div>
