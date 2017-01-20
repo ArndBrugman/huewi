@@ -40,6 +40,7 @@
 
     function SetGroupId(NewId) {
       vm.GroupId = NewId;
+      preventDefault();
     }
 
     function SetGroupBrightness(CurrentGroup) {
@@ -54,6 +55,7 @@
           setTimeout(function(){vm.UpdateScheduled = false;},50);
         });
       }
+      preventDefault();
     }
 
   }]);
