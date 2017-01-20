@@ -40,7 +40,6 @@
 
     function SetGroupId(NewId) {
       vm.GroupId = NewId;
-      preventDefault();
     }
 
     function SetGroupBrightness(CurrentGroup) {
@@ -50,12 +49,11 @@
       {
         vm.UpdateScheduled = true;
         vm.MyHue.GroupSetBrightness(CurrentGroup, vm.MyHue.Groups[CurrentGroup].action.bri, 2).then(function(value) {
-          setTimeout(function(){vm.UpdateScheduled = false;},50);
+          setTimeout(function(){vm.UpdateScheduled = false;},100);
         }, function(reason) {
-          setTimeout(function(){vm.UpdateScheduled = false;},50);
+          setTimeout(function(){vm.UpdateScheduled = false;},100);
         });
       }
-      preventDefault();
     }
 
   }]);

@@ -7,7 +7,7 @@
       {{Group.name}}
     </div>
     <div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>
-      <input type='range' min='1' max='254' ng-show='(Group.action.on) || (Group.state.any_on) || (Group.__key === "0")' ng-model='Group.action.bri' ontouchstart='vm.SetGroupId(Group.__key)' ontouchmove='vm.SetGroupBrightness(Group.__key)' ontouchend='vm.SetGroupId("-1")' ng-mousedown='vm.SetGroupId(Group.__key)' ng-change='vm.SetGroupBrightness(Group.__key)' ng-mouseup='vm.SetGroupId("-1")' ng-mouseleave='vm.SetGroupId("-1")' onclick='vm.SetGroupBrightness(Group.__key)'/>
+      <input type='range' min='1' max='254' ng-show='(Group.action.on) || (Group.state.any_on) || (Group.__key === "0")' ng-model='Group.action.bri' ng-touchstart='vm.SetGroupId(Group.__key)' ng-touchmove='vm.SetGroupBrightness(Group.__key)' ng-touchend='vm.SetGroupId("-1")' ng-mousedown='vm.SetGroupId(Group.__key)' ng-change='vm.SetGroupBrightness(Group.__key)' ng-mouseup='vm.SetGroupId("-1")' ng-mouseleave='vm.SetGroupId("-1")' ng-click='vm.SetGroupBrightness(Group.__key)'/>
     </div>
     <div class='col-xs-2 col-sm-2 col-md-2 col-lg-2'>
       <button type='button' class='btn btn-sm' ng-click='vm.MyHue.GroupOff(Group.__key)' ng-show='(Group.action.on) || (Group.__key === "0")'>

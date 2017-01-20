@@ -6,7 +6,7 @@
       {{Light.name}}
     </div>
     <div class='col-xs-6 col-sm-6 col-md-6 col-lg-6' >
-      <input type='range' min='1' max='254' ng-show='Light.state.on' ng-model='Light.state.bri' ng-change='vm.SetLightBrightness(Light.__key)' ng-mousedown='vm.SetLightId(Light.__key)' ng-mouseup='vm.SetLightId("-1")' ng-mouseleave='vm.SetLightId("-1")'/>
+      <input type='range' min='1' max='254' ng-show='Light.state.on' ng-model='Light.state.bri' ng-touchstart='vm.SetLightId(Light.__key)' ng-touchmove='vm.SetLightBrightness(Light.__key)' ng-touchend='vm.SetLightId("-1")' ng-mousedown='vm.SetLightId(Light.__key)' ng-change='vm.SetLightBrightness(Light.__key)' ng-mouseup='vm.SetLightId("-1")' ng-mouseleave='vm.SetLightId("-1")' ng-click='vm.SetLightBrightness(Light.__key)'/>
     </div>
     <div class='col-xs-2 col-sm-2 col-md-2 col-lg-2' ng-show='Light.state.reachable'>
       <button type='button' class='btn btn-sm' ng-click='vm.MyHue.LightOff(Light.__key)' ng-show='Light.state.on'>
