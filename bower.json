@@ -2,11 +2,12 @@
   "name": "huewi",
   "version": "1.0.1",
   "dependencies": {
-    "jquery": "3.1.1",
-    "bootstrap": "3.3.7",
-    "angular": "1.6.1",
-    "angular-animate": "1.6.1",
-    "angular-touch": "1.6.1"
+    "jquery": "^3.1.1",
+    "bootstrap": "^3.3.7",
+    "angular": "^1.6.1",
+    "angular-animate": "^1.6.1",
+    "angular-touch": "^1.6.1",
+    "huepi": "^1.0.10"
   },
-  "private": true
+  "private": false
 }
