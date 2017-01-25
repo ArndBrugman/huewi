@@ -43,11 +43,11 @@ gulp.task('scripts', function() {
   'app/huewi.js',
   'app/huewi-controller.js',
   'assets/js/*.js',
-  'app/components/*.js'])
+  'app/components/huewi-*.js'])
     //.pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('default'))
     .pipe(concat('huewi.js'))
-    .pipe(embedTemplates())
+    .pipe(embedTemplates({'basePath':'./'}))
     //.pipe(gulp.dest('dist/assets/js'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(uglify())
@@ -73,17 +73,17 @@ gulp.task('images', function() {
 
 // Webpage
 gulp.task('webpage', function () {
-  gulp.src('*.html')
+  gulp.src('./*.html')
     .pipe(htmlreplace({
         'css': 'assets/css/huewi.min.css',
         'js': 'assets/js/huewi.min.js'
     }))
     .pipe(gulp.dest('dist/'))
-    .pipe(notify({ message: 'Webpages task complete' }));
+    .pipe(notify({ message: 'Webpage task complete' }));
 });
 
 // Components
-gulp.task('components', function () {
+gulp.task('components', function () { // components are embedded in controllers now
   /*gulp.src('app/components/*.html')
     .pipe(gulp.dest('dist/app/components'))
     .pipe(notify({ message: 'Components task complete' }));*/
@@ -103,22 +103,22 @@ gulp.task('default', ['clean'], function() {
 gulp.task('watch', function() {
 
   // Watch .css files
-  gulp.watch('./assets/css/*.css', ['styles']);
+  gulp.watch('./assets/**/*.css', ['styles']);
 
   // Watch .js files assets
-  gulp.watch('./assets/js/*.js', ['scripts']);
+  gulp.watch('./assets/**/*.js', ['scripts']);
 
   // Watch .js files app
   gulp.watch('./app/**/*.js', ['scripts']);
 
   // Watch image files
-  gulp.watch('./assets/img/*.png', ['images']);
+  gulp.watch('./assets/**/*.png', ['images']);
 
-  // Watch webpage files
+  // Watch webpage file
   gulp.watch('./*.html', ['webpage']);
 
   // Watch components files
-  gulp.watch('./app/**/*.html', ['components']);
+  gulp.watch('./assets/**/huewi-*.js', ['components']);
 
   // Create LiveReload server
   livereload.listen();
