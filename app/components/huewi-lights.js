@@ -6,7 +6,7 @@
   .directive('huewiLights', function() {
     return {
       restrict: 'EA',
-      templateUrl: 'app/components/huewi-lights.html',
+      templateUrl: 'huewi-lights.html',
       controller: 'huewiLightsController',
       controllerAs: 'vm',
       scope: {},

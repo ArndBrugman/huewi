@@ -6,7 +6,7 @@
   .directive('huewiGroupandlight', function() {
     return {
       restrict: 'EA',
-      templateUrl: 'app/components/huewi-groupandlight.html',
+      templateUrl: 'huewi-groupandlight.html',
       controller: 'huewiGroupAndLightController',
       controllerAs: 'vm',
       scope: {},

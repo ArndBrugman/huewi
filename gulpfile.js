@@ -14,6 +14,7 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     concat = require('gulp-concat'),
     htmlreplace = require('gulp-html-replace'),
+    embedTemplates = require('gulp-angular-embed-templates');
     notify = require('gulp-notify'),
     cache = require('gulp-cache'),
     livereload = require('gulp-livereload'),
@@ -24,7 +25,7 @@ gulp.task('styles', function() {
   return gulp.src(['bower_components/bootstrap/dist/css/bootstrap.min.css',
   'assets/**/*.css'])
     .pipe(concat('huewi.css'))
-    .pipe(gulp.dest('dist/assets/css'))
+    //.pipe(gulp.dest('dist/assets/css'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(cssnano())
     .pipe(gulp.dest('dist/assets/css'))
@@ -46,7 +47,8 @@ gulp.task('scripts', function() {
     //.pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('default'))
     .pipe(concat('huewi.js'))
-    .pipe(gulp.dest('dist/assets/js'))
+    .pipe(embedTemplates())
+    //.pipe(gulp.dest('dist/assets/js'))
     .pipe(rename({ suffix: '.min' }))
     .pipe(uglify())
     .pipe(gulp.dest('dist/assets/js'))
@@ -82,9 +84,9 @@ gulp.task('webpage', function () {
 
 // Components
 gulp.task('components', function () {
-  gulp.src('app/components/*.html')
+  /*gulp.src('app/components/*.html')
     .pipe(gulp.dest('dist/app/components'))
-    .pipe(notify({ message: 'Components task complete' }));
+    .pipe(notify({ message: 'Components task complete' }));*/
 });
 
 // Clean
@@ -101,13 +103,22 @@ gulp.task('default', ['clean'], function() {
 gulp.task('watch', function() {
 
   // Watch .css files
-  gulp.watch('./**/*.css', ['styles']);
+  gulp.watch('./assets/css/*.css', ['styles']);
 
-  // Watch .js files
-  gulp.watch('./**/*.js', ['scripts']);
+  // Watch .js files assets
+  gulp.watch('./assets/js/*.js', ['scripts']);
+
+  // Watch .js files app
+  gulp.watch('./app/**/*.js', ['scripts']);
 
   // Watch image files
-  gulp.watch('./img/**/*.png', ['images']);
+  gulp.watch('./assets/img/*.png', ['images']);
+
+  // Watch webpage files
+  gulp.watch('./*.html', ['webpage']);
+
+  // Watch components files
+  gulp.watch('./app/**/*.html', ['components']);
 
   // Create LiveReload server
   livereload.listen();

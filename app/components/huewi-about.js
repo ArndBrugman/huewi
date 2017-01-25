@@ -6,7 +6,7 @@
   .directive('huewiAbout', function() {
     return {
       restrict: 'EA',
-      templateUrl: 'app/components/huewi-about.html',
+      templateUrl: 'huewi-about.html',
       controller: 'huewiAboutController',
       controllerAs: 'vm',
       scope: {},
@@ -22,7 +22,7 @@
 
     vm.Version = '1.x';
     vm.AngularVersion = angular.version;
-    
+
   }]);
 
 
