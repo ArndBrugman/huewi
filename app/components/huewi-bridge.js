@@ -6,7 +6,7 @@
   .directive('huewiBridge', function() {
     return {
       restrict: 'EA',
-      templateUrl: 'huewi-bridge.html',
+      templateUrl: 'app/components/huewi-bridge.html',
       controller: 'huewiBridgeController',
       controllerAs: 'vm',
       scope: {},

@@ -6,7 +6,7 @@
   .directive('huewiSchedules', function() {
     return {
       restrict: 'EA',
-      templateUrl: 'huewi-schedules.html',
+      templateUrl: 'app/components/huewi-schedules.html',
       controller: 'huewiSchedulesController',
       controllerAs: 'vm',
       scope: {},
