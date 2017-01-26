@@ -202,7 +202,7 @@
     UpdateMarkers();
   });
 
-  function GroupHasLight(LightId) { // Should move to huepi
+  function GroupHasLight(LightId) { // Should partly be a helper in huepi
     if (Menu.GetItem() === 'Group') {
       if (Menu.GetId() != '0') {
         if (vm.MyHue.Groups[Menu.GetId()].lights.indexOf(LightId)>=0)
@@ -212,7 +212,7 @@
     return false;
   }
 
-  function GroupToggleLight(LightId) { // Should move to huepi
+  function GroupToggleLight(LightId) { // Should partly be a helper in huepi
     if (Menu.GetItem() === 'Group') {
       vm.MyHue.LightAlertSelect(LightId);
       if (GroupHasLight(LightId))

@@ -22,7 +22,7 @@
 
     vm.Version = '1.x';
     vm.AngularVersion = angular.version;
-    
+
   }]);
 
 

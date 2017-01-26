@@ -4,7 +4,7 @@
   <button type='button' class='btn btn-sm col-xs-offset-10 col-xs-2 col-sm-offset-10 col-sm-2 col-md-offset-11 col-md-1 col-lg-offset-11 col-lg-1' ng-click='vm.Menu.SetItem("")'>Close</button><br><br>
 </div>
 
-<div class='row' ng-show='vm.Menu.GetItem() === "Group"' >
+<div class='row' ng-if='vm.Menu.GetItem() === "Group"' >
   <div class='col-xs-10 col-sm-10 col-md-11 col-lg-11'>
     <input type='range' min='1' max='254' ng-show='((vm.MyHue.Groups[vm.Menu.GetId()].action.on) || (vm.MyHue.Groups[vm.Menu.GetId()].state.any_on) || (vm.Menu.GetId() == 0))' ng-model='vm.MyHue.Groups[vm.Menu.GetId()].action.bri' ng-touchstart='vm.SetGroupId(vm.Menu.GetId())' ng-touchmove='vm.SetGroupBrightness(vm.Menu.GetId())' ng-touchend='vm.SetGroupId("-1")' ng-mousedown='vm.SetGroupId(vm.Menu.GetId())' ng-change='vm.SetGroupBrightness(vm.Menu.GetId())' ng-mouseup='vm.SetGroupId("-1")' ng-mouseleave='vm.SetGroupId("-1")' ng-click='vm.SetGroupBrightness(vm.Menu.GetId())'/>
   </div>
@@ -16,7 +16,7 @@
   </button>
 </div>
 
-<div class='row' ng-show='vm.Menu.GetItem() === "Light"' >
+<div class='row' ng-if='vm.Menu.GetItem() === "Light"' >
   <div class='col-xs-10 col-sm-10 col-md-11 col-lg-11'>
     <input type='range' min='1' max='254' ng-show='vm.MyHue.Lights[vm.Menu.GetId()].state.on' ng-model='vm.MyHue.Lights[vm.Menu.GetId()].state.bri' ng-touchstart='vm.SetLightId(vm.Menu.GetId())' ng-touchmove='vm.SetLightBrightness(vm.Menu.GetId())' ng-touchend='vm.SetLightId("-1")' ng-mousedown='vm.SetLightId(vm.Menu.GetId())' ng-change='vm.SetLightBrightness(vm.Menu.GetId())' ng-mouseup='vm.SetLightId("-1")' ng-mouseleave='vm.SetLightId("-1")' ng-click='vm.SetLightBrightness(vm.Menu.GetId())'/>
   </div>
@@ -32,20 +32,22 @@
 
 <div class='row'>
   <div class='container'>
-    <span class='marker' id='huewictMarker'>
-      <span class='glyphicon glyphicon-record' aria-hidden='true'>
-      </span>
-    </span>
-    <canvas id='huewictCanvas'>It seems your device doesn't support the required HTML5 Canvas</canvas>
     <div>
-      <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Relax()'>Relax</button>
-      <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Reading()'>Reading</button>
-      <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Concentrate()'>Concentrate</button>
-      <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Energize()'>Energize</button>
-      <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Bright()'>Bright</button>
-      <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Dimmed()'>Dimmed</button>
-      <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Nightlight()'>Nightlight</button>
-      <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.GoldenHour()'>Golden hour</button>
+      <span class='marker' id='huewictMarker'>
+        <span class='glyphicon glyphicon-record' aria-hidden='true'>
+        </span>
+      </span>
+      <canvas id='huewictCanvas'>It seems your device doesn't support the required HTML5 Canvas</canvas>
+      <div>
+        <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Relax()'>Relax</button>
+        <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Reading()'>Reading</button>
+        <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Concentrate()'>Concentrate</button>
+        <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Energize()'>Energize</button>
+        <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Bright()'>Bright</button>
+        <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Dimmed()'>Dimmed</button>
+        <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.Nightlight()'>Nightlight</button>
+        <button type='button' class='btn btn-sm col-xs-12 col-sm-6 col-md-4 col-lg-3' ng-click='vm.GoldenHour()'>Golden hour</button>
+      </div>
     </div>
     <div class='onportait'><!--br--></div><!-- Spacing on Portait after ColorTemp -->
   </div><!-- /container -->
@@ -62,7 +64,7 @@
 </div><!-- /row -->
 
 <div class='row'>
-  <div ng-show='(vm.Menu.GetItem() === "Group") && (vm.Menu.GetId()!=="0")' >
+  <div ng-if='(vm.Menu.GetItem() === "Group") && (vm.Menu.GetId()!=="0")' >
     <div class='col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-repeat='Light in vm.MyHue.Lights | addKey | asArray | orderBy:"name"'>
       <span ng-click='vm.GroupToggleLight(Light.__key)'>
         <span ng-show='vm.GroupHasLight(Light.__key)' class='glyphicon glyphicon-ok-circle' aria-hidden='true'></span>
