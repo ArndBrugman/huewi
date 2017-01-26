@@ -8,20 +8,26 @@
 
     vm.MyHue = new huepi();
     // Demo Data while Connecting...
-    vm.MyHue.Lights = [{name: 'Demo Light'},
-    {name: 'Living Light'},
-    {name: 'Dining Light'}];
-    vm.MyHue.Groups = [{name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88', id:'0'},
-    {name: 'Demo Group', type: 'LightGroup'},
-    {name: 'Living Group', type: 'LightGroup'},
-    {name: 'Dining Group', type: 'LightGroup'},
-    {name: 'Demo Room', type: 'Room'},
-    {name: 'Living Room', type: 'Room'},
-    {name: 'Dining Room', type: 'Room'}];
-    vm.MyHue.Lights[0].state=vm.MyHue.Lights[1].state=vm.MyHue.Lights[2].state=
-    vm.MyHue.Groups[0].action=vm.MyHue.Groups[1].action=vm.MyHue.Groups[2].action=vm.MyHue.Groups[3].action=
-    vm.MyHue.Groups[4].action=vm.MyHue.Groups[5].action=vm.MyHue.Groups[6].action=
-    {'on':true,'bri':144,'hue':12585,'sat':224,'effect':'none','xy':[0.5019,0.4152],'ct':447,'alert':'select','colormode':'xy','reachable':true};
+    vm.MyHue.Lights['7001'] = {name: 'Demo Light'};
+    vm.MyHue.Lights['7002'] = {name: 'Living Light'};
+    vm.MyHue.Lights['7003'] = {name: 'Dining Light'};
+    vm.MyHue.Groups['9101'] = {name: 'Demo Group', type: 'LightGroup'};
+    vm.MyHue.Groups['9102'] = {name: 'Living Group', type: 'LightGroup'};
+    vm.MyHue.Groups['9103'] = {name: 'Dining Group', type: 'LightGroup'};
+    vm.MyHue.Groups['9201'] = {name: 'Demo Room', type: 'Room'};
+    vm.MyHue.Groups['9202'] = {name: 'Living Room', type: 'Room'};
+    vm.MyHue.Groups['9203'] = {name: 'Dining Room', type: 'Room'};
+    vm.MyHue.Groups['9101'].lights=vm.MyHue.Groups['9102'].lights=vm.MyHue.Groups['9103'].lights=["7001","7002"];
+    vm.MyHue.Groups['9201'].lights=vm.MyHue.Groups['9202'].lights=vm.MyHue.Groups['9203'].lights=["7003","7002"];
+    vm.MyHue.Lights['7001'].state={'on':true,'bri':141,'xy':[0.5,0.4],'colormode':'xy','reachable':true};
+    vm.MyHue.Lights['7002'].state={'on':true,'bri':152,'xy':[0.4,0.5],'colormode':'xy','reachable':true};
+    vm.MyHue.Lights['7003'].state={'on':true,'bri':163,'xy':[0.5,0.5],'colormode':'xy','reachable':true};
+    vm.MyHue.Groups['9101'].action={'on':true,'bri':131,'xy':[0.5,0.4],'colormode':'xy','reachable':true};
+    vm.MyHue.Groups['9102'].action={'on':true,'bri':142,'xy':[0.4,0.5],'colormode':'xy','reachable':true};
+    vm.MyHue.Groups['9103'].action={'on':true,'bri':153,'xy':[0.5,0.5],'colormode':'xy','reachable':true};
+    vm.MyHue.Groups['9201'].action={'on':true,'bri':161,'xy':[0.5,0.4],'colormode':'xy','reachable':true};
+    vm.MyHue.Groups['9202'].action={'on':true,'bri':172,'xy':[0.4,0.5],'colormode':'xy','reachable':true};
+    vm.MyHue.Groups['9203'].action={'on':true,'bri':183,'xy':[0.5,0.5],'colormode':'xy','reachable':true};
     DataReceived();
 
     vm.Status = 'Disconnected';
@@ -170,7 +176,7 @@
     }
 
     function DataReceived() {
-      vm.MyHue.Groups['0'] = {name: 'All available lights', type: 'LightGroup', HTMLColor: '#ffcc88', action: {'xy':[0.5019,0.4152],'colormode':'xy'}};
+      vm.MyHue.Groups['0'] = {name: 'All available lights', type: 'LightGroup', action: {'xy':[0.5019,0.4152],'colormode':'xy'}};
 
       function StateToHTMLColor(State, Model) {
         function ToHexString(In) {
