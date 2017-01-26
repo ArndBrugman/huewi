@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml'ng-app='huewi'>
+
+<head>
+  <title>hue Web Interface</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+  <meta name='mobile-web-app-capable' content='yes' />
+  <meta name='mobile-web-app-title' content='huewi' />
+  <meta name='apple-mobile-web-app-capable' content='yes' />
+  <meta name='apple-mobile-web-app-title' content='huewi' />
+  <meta name='apple-mobile-web-app-status-bar-style' content='black' />
+
+  <meta http-equiv='x-dns-prefetch-control' content='off'>
+
+  <!-- >
+  <h3>Local bower_components ._=+-+=_. Local bower_components  ._=+-+=_. Local bower_components</h3>
+  <link rel='stylesheet' href='./bower_components/bootstrap/dist/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='./assets/css/huewi.css'>
+  <script type='text/javascript' src='./bower_components/jquery/dist/jquery.min.js'></script>
+  <script type='text/javascript' src='./bower_components/bootstrap/dist/js/bootstrap.min.js'></script>
+  <script type='text/javascript' src='./bower_components/angular/angular.min.js'></script>
+  <script type='text/javascript' src='./bower_components/angular-animate/angular-animate.min.js'></script>
+  <script type='text/javascript' src='./bower_components/angular-touch/angular-touch.min.js'></script>
+  < -->
+
+  <link rel="stylesheet" href="assets/css/huewi.min.css">
+
+  <script src="assets/js/huewi.min.js"></script>
+
+</head>
+
+<body ng-controller='huewiController as vm'>
+
+  <div class='overlay timebasedgradient'>
+    <div class='container' id='huewiGroups'>
+      <div huewi-groups>
+      </div><!-- /huewi-groups -->
+    </div><!-- /container -->
+
+    <div class='container' id='huewiLights'>
+      <div huewi-lights><
+      </div><!-- /huewi-lights -->
+      <br>
+    </div><!-- /container -->
+  </div><!-- /overlay -->
+
+  <div class='overlay fading' ng-show='vm.Menu.GetItem() === "Group" || vm.Menu.GetItem() === "Light"'>
+    <div class='inlay timebasedgradient'>
+      <div huewi-groupandlight id='huewiGroupAndLight' class='fading' ng-if='vm.Menu.GetItem() === "Group" || vm.Menu.GetItem() === "Light"'>
+      </div>
+    </div><!-- /inlay -->
+  </div><!-- /overlay -->
+
+  <div class='overlay fading' ng-show='vm.Menu.GetItem() === "Schedules"'>
+    <div class='inlay timebasedgradient'>
+      <div huewi-schedules id='huewiSchedules' class='fading' ng-if='vm.Menu.GetItem() === "Schedules"'>
+      </div>
+    </div><!-- /inlay -->
+  </div><!-- /overlay -->
+
+  <div class='overlay fading'ng-show='vm.Menu.GetItem() === "Scenes"'>
+    <div class='inlay timebasedgradient'>
+      <div huewi-scenes id='huewiScenes' class='fading' ng-if='vm.Menu.GetItem() === "Scenes"'>
+      </div>
+    </div><!-- /inlay -->
+  </div><!-- /overlay -->
+
+  <div class='overlay fading' ng-show='vm.Menu.GetItem() === "Sensors"'>
+    <div class='inlay timebasedgradient'>
+      <div huewi-sensors id='huewiSensors' class='fading' ng-if='vm.Menu.GetItem() === "Sensors"'>
+      </div>
+    </div><!-- /inlay -->
+  </div><!-- /overlay -->
+
+  <div class='overlay fading' ng-show='vm.Menu.GetItem() === "Rules"'>
+    <div class='inlay timebasedgradient'>
+      <div huewi-rules id='huewiRules' class='fading' ng-if='vm.Menu.GetItem() === "Rules"'>
+      </div>
+    </div><!-- /inlay -->
+  </div><!-- /overlay -->
+
+  <div class='overlay fading' ng-show='vm.hueConnector.GetStatus() === "!Connected" || vm.Menu.GetItem() === "Bridge"'>
+    <div class='inlay timebasedgradient'>
+      <div huewi-bridge id='huewiBridge' class='fading' ng-if='vm.hueConnector.GetStatus() === "!Connected" || vm.Menu.GetItem() === "Bridge"'>
+      </div>
+    </div><!-- /inlay -->
+  </div><!-- /overlay -->
+
+  <div class='overlay fading' ng-show='vm.Menu.GetItem() === "About"'>
+    <div class='inlay timebasedgradient'>
+      <div huewi-about id='huewiAbout' class='fading' ng-if='vm.Menu.GetItem() === "About"'>
+      </div>
+    </div><!-- /inlay -->
+  </div><!-- /overlay -->
+
+  <div id='navcontainer' class='timebasedgradient'>
+    <div id='navbutton' class='glyphicon glyphicon-menu-hamburger'></div>
+    <nav id='navdrawer'>
+        <h4 ng-click='vm.Menu.SetItem("About")'>Settings</h4>
+        <div class='list-group'>
+        <li class='list-group-item' ng-click='vm.Menu.SetItem("Schedules")'>Schedules</li>
+        <li class='list-group-item' ng-click='vm.Menu.SetItem("Scenes")'>Scenes</li>
+        <li class='list-group-item' ng-click='vm.Menu.SetItem("Sensors")'>Sensors</li>
+        <li class='list-group-item' ng-click='vm.Menu.SetItem("Rules")'>Rules</li>
+      </div>
+      <div class='list-group'>
+        <li class='list-group-item' ng-click='vm.Menu.SetItem("Bridge")'>Bridge</li>
+      </div>
+      <div class='list-group'>
+        <li class='list-group-item' ng-click='vm.Menu.SetItem("About")'>About hueWI</li>
+      </div>
+    </nav><!-- /navdrawer -->
+  </div><!-- /navcontainer -->
+
+  <div class='status timebasedgradient'>
+    <h4>hue Web Interface</h4>
+    <div id='huewiStatusbar'>
+      <div>{{vm.hueConnector.GetStatus()}}</div>
+      <div>Bridge IP: {{vm.MyHue.BridgeIP}}</div>
+      <div>Bridge Name: {{vm.MyHue.BridgeName}}</div>
+    </div><!-- /huewiStatusbar -->
+  </div><!-- /status -->
+
+  <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-89591545-1', 'auto');ga('send', 'pageview');</script>
+
+</body><!-- /huewiController -->
+
+</html>
