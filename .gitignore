@@ -2,5 +2,4 @@ huewi.sublime-workspace
 huewi.sublime-project
 bower_components/
 node_modules/
-dist/
 *.log
