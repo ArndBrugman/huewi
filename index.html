@@ -93,7 +93,7 @@
     </div><!-- /inlay -->
   </div><!-- /overlay -->
 
-  <div class='overlay fading'ng-show='vm.Menu.GetItem() === "Scenes"'>
+  <div class='overlay fading' ng-show='vm.Menu.GetItem() === "Scenes"'>
     <div class='inlay timebasedgradient'>
       <div huewi-scenes id='huewiScenes' class='fading' ng-if='vm.Menu.GetItem() === "Scenes"'>
       </div>
@@ -142,7 +142,7 @@
         <li class='list-group-item' ng-click='vm.Menu.SetItem("Bridge")'>Bridge</li>
       </div>
       <div class='list-group'>
-        <li class='list-group-item' ng-click='vm.Menu.SetItem("About")'>About hueWI</li>
+        <li class='list-group-item' ng-click='vm.Menu.SetItem("About")'>About</li>
       </div>
     </nav><!-- /navdrawer -->
   </div><!-- /navcontainer -->
@@ -155,6 +155,9 @@
       <div>Bridge Name: {{vm.MyHue.BridgeName}}</div>
     </div><!-- /huewiStatusbar -->
   </div><!-- /status -->
+
+  <div id='fadeinafterloading' class='overlay fading' ng-show='true' style='background:black'>
+  </div>
 
   <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-89591545-1', 'auto');ga('send', 'pageview');</script>
 
