@@ -21,7 +21,7 @@
     vm.MyHue = hueConnector.MyHue;
     vm.Menu = Menu;
 
-    vm.ManualBridge = 'localhost:8000';
+    vm.ManualBridge = '192.168.0.2';
     vm._Details = '-1';
     vm.Details = Details;
 

@@ -65,6 +65,7 @@
 
     function onResume() {
       TimeBasedGradientUpdate(); // Immidiate for correct Colors
+      $('#fadeinafterloading').fadeOut(650);
       Connect();
       vm.MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
     }

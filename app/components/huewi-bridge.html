@@ -6,16 +6,17 @@
 
 <div class='list-group row'>
   <div class='list-group-item col-xs-12 col-sm-12 col-md-12 col-lg-12'>
-    <button type='button' class='btn btn-sm col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-click='vm.hueConnector.Discover()' ng-hide='vm.MyHue.ScanningNetwork'>Discover</button>
-    <button type='button' class='btn btn-sm col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-click='vm.hueConnector.Scan()' ng-hide='vm.MyHue.ScanningNetwork'>Scan</button>
+    <button type='button' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-click='vm.hueConnector.Discover()' ng-hide='vm.MyHue.ScanningNetwork'>Discover</button>
+    <button type='button' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-click='vm.hueConnector.Scan()' ng-hide='vm.MyHue.ScanningNetwork'>Scan</button>
     <div ng-show='vm.MyHue.ScanningNetwork'>
-      <div type='text' class='col-xs-6 col-sm-4 col-md-3 col-lg-2'>Scanning Network...</div>
-      <button type='button' class='btn btn-sm col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-click='vm.MyHue.ScanningNetwork = false' ng-show='vm.MyHue.ScanningNetwork'>Cancel</button>
+      <span type='text' class=' btn btn-sm  col-xs-4 col-sm-4 col-md-2 col-lg-2'>Scanning</span>
+      <span type='text' class=' btn btn-sm  col-xs-4 col-sm-4 col-md-2 col-lg-2'>Network</span>
+      <button type='button' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-click='vm.MyHue.ScanningNetwork = false'>Cancel</button>
     </div>
-    <button type='button' class='btn btn-sm col-xs-6 col-sm-4 col-md-3 col-lg-2' onclick='delete localStorage.MyHueBridgeIP; window.location.reload(true)' ng-hide='vm.MyHue.ScanningNetwork'>Reload</button>
-    <div type='text' class='col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-hide='vm.MyHue.ScanningNetwork'>Manual Bride:</div>
-    <input type='text' class='col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-model='vm.ManualBridge' ng-hide='vm.MyHue.ScanningNetwork'></input>
-    <button type='button' class='btn btn-sm col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-click='vm.hueConnector.Connect(vm.ManualBridge)' ng-hide='vm.MyHue.ScanningNetwork'>Connect</button>
+    <button type='button' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' onclick='delete localStorage.MyHueBridgeIP; window.location.reload(true)' ng-hide='vm.MyHue.ScanningNetwork'>Reload</button>
+    <span type='text' class=' btn btn-sm  col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-hide='vm.MyHue.ScanningNetwork'>Manual Bridge:</span>
+    <input type='text' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-model='vm.ManualBridge' ng-hide='vm.MyHue.ScanningNetwork'></input>
+    <button type='button' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-click='vm.hueConnector.Connect(vm.ManualBridge)' ng-hide='vm.MyHue.ScanningNetwork'>Connect</button>
   </div>
 </div>
 
