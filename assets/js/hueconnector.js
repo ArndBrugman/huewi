@@ -60,12 +60,12 @@
     return Service;
 
     function onStartup() {
+      $('#fadeafterloading').fadeOut(1234,'swing');
       onResume();
     }
 
     function onResume() {
-      TimeBasedGradientUpdate(); // Immidiate for correct Colors
-      $('#fadeinafterloading').fadeOut(650);
+      TimeBasedGradientUpdate(); // Immediate for correct Colors
       Connect();
       vm.MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
     }
@@ -91,7 +91,6 @@
     function ResumeConnection() {
       vm.MyHue.BridgeGetData().then(function() {
         localStorage.MyHueBridgeIP = vm.MyHue.BridgeIP; // Cache BridgeIP
-        localStorage.MyHueBridgeID = vm.MyHue.BridgeID; // Cache BridgeID
         DataReceived();
         SetStatus('Connected');
         HeartbeatInterval = setInterval(onHeartbeat, 2500);
@@ -99,7 +98,6 @@
         SetStatus('Please press connect button on the hue Bridge');
         vm.MyHue.BridgeCreateUser(app.name).then(function() {
           localStorage.MyHueBridgeIP = vm.MyHue.BridgeIP; // Cache BridgeIP
-          localStorage.MyHueBridgeID = vm.MyHue.BridgeID; // Cache BridgeID
           SetStatus('Connected');
           HeartbeatInterval = setInterval(onHeartbeat, 2500);
         }, function() {
@@ -119,7 +117,6 @@
       }, function() {
         SetStatus('Unable to Retreive Bridge Configuration');
         delete localStorage.MyHueBridgeIP; // un-Cache BridgeIP
-        delete localStorage.MyHueBridgeID; // un-Cache BridgeID
       } );
     }
 
@@ -127,11 +124,7 @@
     function Connect(NewBridgeAddress) {
       clearInterval(HeartbeatInterval);
       vm.MyHue.BridgeIP = NewBridgeAddress || localStorage.MyHueBridgeIP || '';
-      vm.MyHue.BridgeID = localStorage.MyHueBridgeID || '';
-      vm.MyHue.Username = vm.MyHue.BridgeCache[vm.MyHue.BridgeID];
-      if ((vm.MyHue.BridgeIP !== '') && (vm.MyHue.BridgeID !== '') && (vm.MyHue.Username !== '')) {
-        ResumeConnection();
-      } else if (vm.MyHue.BridgeIP !== '') {
+      if (vm.MyHue.BridgeIP !== '') {
         ReConnect();
       } else Discover();
     }
@@ -139,7 +132,6 @@
     function Discover() {
       clearInterval(HeartbeatInterval);
       vm.MyHue.BridgeIP = '';
-      vm.MyHue.BridgeID = '';
       vm.MyHue.Username = '';
       SetStatus('Discovering Bridge via Portal');
       vm.MyHue.PortalDiscoverLocalBridges().then(function() {
@@ -153,7 +145,6 @@
     function Scan() {
       clearInterval(HeartbeatInterval);
       vm.MyHue.BridgeIP = '';
-      vm.MyHue.BridgeID = '';
       vm.MyHue.Username = '';
       SetStatus('Scanning Network for Bridge');
       vm.MyHue.NetworkDiscoverLocalBridges().then(function() {

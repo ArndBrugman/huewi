@@ -28,12 +28,15 @@
       else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
     });
 
-    document.addEventListener('backbutton', function(event) { // Cordova/PhoneGap only.
-      if (vm.Menu.Get() !== '') {
-        vm.Menu.Set('Escape');
-        setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
-      }
-    });
+    document.addEventListener('deviceready', function(){
+      document.addEventListener('backbutton', function(event) { // Cordova/PhoneGap only.
+        if (vm.Menu.Get() !== '') {
+          vm.Menu.Set('Escape');
+          setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
+          event.preventDefault();
+        }
+      }, false);
+    }, false);
 
     document.onkeyup = function(event) {
       if (vm.Menu.GetItem() !== '') {
