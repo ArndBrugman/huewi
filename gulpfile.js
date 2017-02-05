@@ -65,7 +65,7 @@ gulp.task('fonts', function() {
 
 // Images
 gulp.task('images', function() {
-  return gulp.src('assets/img/**/*.png')
+  return gulp.src('assets/img/**/*.*')
     .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
     .pipe(gulp.dest('dist/assets/img'))
     .pipe(notify({ message: 'Images task complete' }));
@@ -118,7 +118,7 @@ gulp.task('watch', function() {
   gulp.watch('./*.html', ['webpage']);
 
   // Watch components files
-  gulp.watch('./assets/**/huewi-*.js', ['components']);
+  gulp.watch('./assets/**/huewi-*.*', ['components']);
 
   // Create LiveReload server
   livereload.listen();

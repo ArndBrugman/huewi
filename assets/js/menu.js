@@ -4,7 +4,7 @@
   app
 
   .factory('Menu', function() {
-    var Item = 'Connecting';
+    var Item = '';
     var Id = '';
 
     var Service = {
