@@ -32,25 +32,20 @@
 
     vm.Status = 'Disconnected';
 
-    var HeartbeatInterval;
+    var HeartbeatInterval = -1;
+    var ReConnectInterval = -1;
 
-    if (window.cordova) {
-      document.addEventListener('deviceready', onStartup, false);
-      document.addEventListener('pause', onPause, false);
-      document.addEventListener('resume', onResume, false);
-    } else {
-      $(document).ready(onStartup);
-    }
-
-    $rootScope.$watch(function() {
-      return GetStatus();
-    }, function WatchStatus(NewStatus, OldStatus) {
-      if ((vm.Status.indexOf('Unable')>-1) && (!vm.MyHue.ScanningNetwork))
-      setTimeout(Connect, 500);
-    });
+    ReConnectInterval = setInterval(function MaintainConnection() {
+      if ((vm.Status.indexOf('Unable')>-1) && (!vm.MyHue.ScanningNetwork)) {
+        Connect();
+      }
+    }, 1500);
 
     var Service = {
       MyHue: vm.MyHue,
+      Startup: Startup,
+      Pause: Pause,
+      Resume: Resume,
       GetStatus: GetStatus,
       Connect: Connect,
       Discover: Discover,
@@ -59,19 +54,21 @@
 
     return Service;
 
-    function onStartup() {
+
+    function Startup() {
       $('#fadeafterloading').fadeOut(1234,'swing');
-      onResume();
+      Resume();
     }
 
-    function onResume() {
+    function Resume() {
       TimeBasedGradientUpdate(); // Immediate for correct Colors
       Connect();
       vm.MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
     }
 
-    function onPause() {
+    function Pause() {
       clearInterval(HeartbeatInterval);
+      HeartbeatInterval = -1;
     }
 
     function GetStatus() {
@@ -81,10 +78,11 @@
     function SetStatus(NewStatus) {
       vm.Status = NewStatus;
       console.log(vm.Status);
-      try {
-        $rootScope.$apply(); // Force UI update
-      }
-      catch (error) {}
+      setTimeout(function() {
+        try {
+          $rootScope.$apply(); // Force UI update
+        } catch (error) {}
+      }, 1);
     }
 
     // IP,ID & Username is known and stored in vm.MyHue.IP,ID & Username
@@ -109,6 +107,7 @@
     // IP is known and stored in vm.MyHue.BridgeIP
     function ReConnect() {
       clearInterval(HeartbeatInterval);
+      HeartbeatInterval = -1;
       SetStatus('Getting Bridge Config');
       vm.MyHue.BridgeGetDescription();
       vm.MyHue.BridgeGetConfig().then(function() {
@@ -123,7 +122,10 @@
     //Entry Point for Starting a Connection
     function Connect(NewBridgeAddress) {
       clearInterval(HeartbeatInterval);
+      HeartbeatInterval = -1;
       vm.MyHue.BridgeIP = NewBridgeAddress || localStorage.MyHueBridgeIP || '';
+      vm.MyHue.BridgeID = '';
+      vm.MyHue.Username = '';
       if (vm.MyHue.BridgeIP !== '') {
         ReConnect();
       } else Discover();
@@ -131,7 +133,9 @@
 
     function Discover() {
       clearInterval(HeartbeatInterval);
+      HeartbeatInterval = -1;
       vm.MyHue.BridgeIP = '';
+      vm.MyHue.BridgeID = '';
       vm.MyHue.Username = '';
       SetStatus('Discovering Bridge via Portal');
       vm.MyHue.PortalDiscoverLocalBridges().then(function() {
@@ -144,7 +148,9 @@
 
     function Scan() {
       clearInterval(HeartbeatInterval);
+      HeartbeatInterval = -1;
       vm.MyHue.BridgeIP = '';
+      vm.MyHue.BridgeID = '';
       vm.MyHue.Username = '';
       SetStatus('Scanning Network for Bridge');
       vm.MyHue.NetworkDiscoverLocalBridges().then(function() {
@@ -163,6 +169,7 @@
         $rootScope.$apply();
       }, function BridgeGetDataFailed() {
         clearInterval(HeartbeatInterval);
+        HeartbeatInterval = -1;
         SetStatus('Unable to receive Bridge Data');
       } );
     }

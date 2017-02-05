@@ -12,12 +12,47 @@
 
     window.hue = hueConnector.MyHue; // For Debugging TESTCODE
 
+    if (window.cordova) {
+      document.addEventListener('deviceready', function () {
+        document.addEventListener('pause', vm.hueConnector.Pause, false);
+        document.addEventListener('resume', vm.hueConnector.Resume, false);
+        document.addEventListener('backbutton', BackbuttonPressed, false);
+        vm.hueConnector.Startup();
+      }, false);
+    } else {
+      $(document).ready(vm.hueConnector.Startup);
+    }
+
+    function BackbuttonPressed() {
+      if (vm.Menu.GetItem() !== '') {
+        vm.Menu.SetItem('Escape');
+        setTimeout(function() {
+          try {
+            $rootScope.$apply(); // Force UI update
+          } catch (error) {}
+        }, 1);
+        setTimeout(function() {
+          vm.Menu.SetItem('');
+        }, 16)
+      } else {
+        if (navigator.app) {
+          navigator.app.exitApp();
+        } else if (navigator.device) {
+          navigator.device.exitApp();
+        } else {
+          window.close();
+        }
+      }
+    }
+
     $scope.$watch(function() {
       return vm.hueConnector.GetStatus();
     }, function WatchStatus(NewStatus, OldStatus) {
-      if (NewStatus!=='Connected')
-      $('#huewiStatusbar').slideDown(350);
-      else setTimeout(function() { $('#huewiStatusbar').slideUp(750); }, 1);
+      if (NewStatus!=='Connected') {
+        $('#huewiStatusbar').slideDown(350);
+      } else {
+        setTimeout(function() { $('#huewiStatusbar').slideUp(750); }, 1);
+      }
     });
 
     $scope.$watch(function() {
@@ -28,22 +63,15 @@
       else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
     });
 
-    document.addEventListener('deviceready', function(){
-      document.addEventListener('backbutton', function(event) { // Cordova/PhoneGap only.
-        if (vm.Menu.Get() !== '') {
-          vm.Menu.Set('Escape');
-          setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
-          event.preventDefault();
-        }
-      }, false);
-    }, false);
-
     document.onkeyup = function(event) {
       if (vm.Menu.GetItem() !== '') {
-        // Escape will close open Overlays.
-        if ((event.keyCode === 27)) { // Escape
+        if ((event.keyCode === 27)) { // Escape will close open Overlays.
           vm.Menu.SetItem('Escape');
-          setTimeout(function() { $rootScope.$apply(); }, 1); // Force UI update
+          setTimeout(function() {
+            try {
+              $rootScope.$apply(); // Force UI update
+            } catch (error) {}
+          }, 1);
         }
       }
     };
