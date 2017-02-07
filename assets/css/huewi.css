@@ -141,6 +141,20 @@ canvas {
   padding-bottom: 0px;
   display: none;
 }
+.toastposition {
+  position: absolute;
+  bottom: 15%;
+  width: 100%;
+  text-align: center;
+}
+.toast {
+  display: inline-block;
+  padding: 5px;
+  border-radius: 8px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.90);
+  background: rgba(50, 40, 30, 0.90);
+  color: rgba(250, 240, 230, 0.75);
+}
 .status {
   position: fixed;
   left: 0px;

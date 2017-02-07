@@ -116,6 +116,12 @@
     </nav><!-- /navdrawer -->
   </div><!-- /navcontainer -->
 
+  <div class='toastposition'>
+    <div class='toast fading' ng-show='vm.Menu.GetItem() === "Exit"'>
+      Please click back again to exit.
+    </div>
+  </div>
+
   <div class='status timebasedgradient'>
     <h4>hue Web Interface</h4>
     <div id='huewiStatusbar'>

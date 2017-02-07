@@ -56,19 +56,18 @@
 
 
     function Startup() {
-      $('#fadeafterloading').fadeOut(1234,'swing');
       Resume();
+    }
+
+    function Pause() {
+      clearInterval(HeartbeatInterval);
+      HeartbeatInterval = -1;
     }
 
     function Resume() {
       TimeBasedGradientUpdate(); // Immediate for correct Colors
       Connect();
       vm.MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
-    }
-
-    function Pause() {
-      clearInterval(HeartbeatInterval);
-      HeartbeatInterval = -1;
     }
 
     function GetStatus() {
