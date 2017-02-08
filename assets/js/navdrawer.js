@@ -16,7 +16,7 @@
       return toggleNavdrawer();
     });
     $('#navcontainer').click(function (event) {
-      if (event.target.nodeName === 'A' || event.target.nodeName === 'LI' || event.target.nodeName === 'H4') {
+      if (event.target.nodeName === 'A' || event.target.nodeName === 'LI') {
         return closeNavdrawer();
       }
       return false;
