@@ -9,6 +9,7 @@
     vm.hueConnector = hueConnector;
     vm.MyHue = hueConnector.MyHue;
     vm.Menu = Menu;
+    vm.BackbuttonPressed = BackbuttonPressed; // For Debugging TESTCODE
 
     window.hue = hueConnector.MyHue; // For Debugging TESTCODE
 
@@ -26,7 +27,7 @@
     }
 
     function BackbuttonPressed() {
-      if (vm.Menu.GetItem() === 'Exit') {
+      if (vm.Menu.GetItem() === 'QuitOnBack') {
         if (navigator.app) {
           navigator.app.exitApp();
         } else if (navigator.device) {
@@ -35,23 +36,19 @@
           window.close();
         }
       } else if (vm.Menu.GetItem() === '') {
-        vm.Menu.SetItem('Exit');
+        vm.Menu.SetItem('QuitOnBack');
         setTimeout(function() {
-          try {
-            $rootScope.$apply(); // Force UI update
-          } catch (error) {}
+          $rootScope.$apply(); // Force UI update
         }, 1);
         setTimeout(function() {
-          if (vm.Menu.GetItem() === 'Exit')
+          if (vm.Menu.GetItem() === 'QuitOnBack')
           vm.Menu.SetItem('');
           $rootScope.$apply(); // Force UI update
-        }, 3000);
+        }, 2500);
       } else if (vm.Menu.GetItem() !== '') {
         vm.Menu.SetItem('Escape');
         setTimeout(function() {
-          try {
-            $rootScope.$apply(); // Force UI update
-          } catch (error) {}
+          $rootScope.$apply(); // Force UI update
         }, 1);
         setTimeout(function() {
           if (vm.Menu.GetItem() === 'Escape')
@@ -74,7 +71,7 @@
     $scope.$watch(function() {
       return vm.Menu.GetItem();
     }, function WatchStatus(NewItem, OldItem) {
-      if (NewItem === '') // No Overlay selected
+      if ((NewItem === '') || (NewItem === 'Escape') || (NewItem === 'QuitOnBack')) // No Overlay selected
       $('body').css('overflow', 'initial'); // Enable scrolling of the <Body>
       else $('body').css('overflow', 'hidden'); // Disable scrolling of the <Body>
     });
@@ -82,12 +79,7 @@
     document.onkeyup = function(event) {
       if (vm.Menu.GetItem() !== '') {
         if ((event.keyCode === 27)) { // Escape will close open Overlays.
-          vm.Menu.SetItem('Escape');
-          setTimeout(function() {
-            try {
-              $rootScope.$apply(); // Force UI update
-            } catch (error) {}
-          }, 1);
+          BackbuttonPressed();
         }
       }
     };

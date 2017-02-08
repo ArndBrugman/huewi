@@ -9,9 +9,14 @@
   <meta name='apple-mobile-web-app-capable' content='yes' />
   <meta name='apple-mobile-web-app-title' content='huewi' />
   <meta name='apple-mobile-web-app-status-bar-style' content='black' />
-  <link rel="shortcut icon" type="image/png" href="./assets/img/huewi_logo.png"/>
-
   <meta http-equiv='x-dns-prefetch-control' content='off'>
+  <link rel="shortcut icon" type="image/png" href="./assets/img/huewi_logo.png"/>
+  <style type='text/css'>
+    html, body {
+      background: rgba(0, 0, 0, 1);
+      color: rgba(250, 240, 230, 1);
+    }
+  </style>
 
   <!-- >
   <h3>Local bower_components ._=+-+=_. Local bower_components  ._=+-+=_. Local bower_components</h3>
@@ -151,8 +156,9 @@
   </div><!-- /navcontainer -->
 
   <div class='toastposition'>
-    <div class='toast fading' ng-show='vm.Menu.GetItem() === "Exit"'>
-      Please click back again to exit.
+    <button class='btn btn-sm col' ng-click='vm.BackbuttonPressed()' ng-if='TESTCODE' >Test Android BackbuttonPressed</button>
+    <div class='toast fading timebasedgradient' ng-show='vm.Menu.GetItem() === "QuitOnBack"'>
+      Please press back key again to quit
     </div>
   </div>
 
