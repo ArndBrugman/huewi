@@ -9,9 +9,8 @@
   <meta name='apple-mobile-web-app-capable' content='yes' />
   <meta name='apple-mobile-web-app-title' content='huewi' />
   <meta name='apple-mobile-web-app-status-bar-style' content='black' />
-  <link rel="shortcut icon" type="image/png" href="./assets/img/huewi_logo.png"/>
-
   <meta http-equiv='x-dns-prefetch-control' content='off'>
+  <link rel="shortcut icon" type="image/png" href="./assets/img/huewi_logo.png"/>
 
   <!-- >
   <h3>Local bower_components ._=+-+=_. Local bower_components  ._=+-+=_. Local bower_components</h3>
@@ -100,7 +99,7 @@
   <div id='navcontainer' class='timebasedgradient'>
     <div id='navbutton' class='glyphicon glyphicon-menu-hamburger'></div>
     <nav id='navdrawer'>
-        <h4 ng-click='vm.Menu.SetItem("About")'>Settings</h4>
+        <h4>Settings</h4>
         <div class='list-group'>
         <li class='list-group-item' ng-click='vm.Menu.SetItem("Schedules")'>Schedules</li>
         <li class='list-group-item' ng-click='vm.Menu.SetItem("Scenes")'>Scenes</li>
@@ -124,6 +123,13 @@
       <div>Bridge Name: {{vm.MyHue.BridgeName}}</div>
     </div><!-- /huewiStatusbar -->
   </div><!-- /status -->
+
+  <div class='toastposition'>
+    <div class='btn btn-sm col' ng-click='vm.BackbuttonPressed()' ng-if='TESTCODE' >Test Android BackbuttonPressed</div>
+    <div class='toast fading' ng-show='vm.Menu.GetItem() === "QuitOnBack"'>
+      Please press back key again to quit
+    </div>
+  </div>
 
   <div id='fadeafterloading' class='overlay fading' ng-show='true' style='background:black'>
   </div>

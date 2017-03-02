@@ -34,12 +34,12 @@ gulp.task('styles', function() {
 
 // Scripts
 gulp.task('scripts', function() {
-  return gulp.src(['bower_components/huepi/huepi.js',
-  'bower_components/jquery/dist/jquery.min.js',
+  return gulp.src(['bower_components/jquery/dist/jquery.min.js',
   'bower_components/bootstrap/dist/js/bootstrap.min.js',
   'bower_components/angular/angular.min.js',
   'bower_components/angular-animate/angular-animate.min.js',
   'bower_components/angular-touch/angular-touch.min.js',
+  'bower_components/huepi/huepi.js',
   'app/huewi.js',
   'app/huewi-controller.js',
   'assets/js/*.js',

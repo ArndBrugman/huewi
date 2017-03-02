@@ -55,23 +55,19 @@ function TimeBasedGradientUpdate() {
     'rgba(250, 240, 230, 0.85)',
   ];
 
-  var index = new Date().getHours();
-  //night = 3
-  //morning = 5
-  //day = 14
-  //evening = 22
-  if (index <  7) index =  3;
-  else if (index <  9) index =  5;
-  else if (index < 18) index = 14;
-  else if (index < 23) index = 22;
-  else index = 3;
-  var timebasedgradient = timebasedgradients[index%24];
+  //return; // TESTCODE
 
-  $('.timebasedgradient').css('background-image', timebasedgradient);
-  //$('.timebasedgradient').css('background-image', timebasedgradients[index]);
-  //$('.timebasedgradient').css('background-image', '-webkit-' + timebasedgradients[index]);
-  //$('.timebasedgradient').css('background-image', '-moz-' + timebasedgradients[index]);
-  //$('.timebasedgradient').css('background-image', '-o-background: ' + timebasedgradients[index]);
+  var index = new Date().getHours();
+  if (index <  7) index =  3; // night = 3
+  else if (index <  9) index =  5; // morning = 5
+  else if (index < 18) index = 14; // day = 14
+  else if (index < 23) index = 22; // evening = 22
+  else index = 3;
+
+  $('.timebasedgradient').css('background-image', timebasedgradients[index]);
+  $('.timebasedgradient').css('background-image', '-webkit-' + timebasedgradients[index]);
+  $('.timebasedgradient').css('background-image', '-moz-' + timebasedgradients[index]);
+  $('.timebasedgradient').css('background-image', '-o-background: ' + timebasedgradients[index]);
 
   $('.timebasedgradient').css('color', timebasedcolors[index%24]);
 }
