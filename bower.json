@@ -7,7 +7,7 @@
     "angular": "^1.6.1",
     "angular-animate": "^1.6.1",
     "angular-touch": "^1.6.1",
-    "huepi": "^1.0.10"
+    "huepi": "^1.0.0"
   },
   "private": false
 }
