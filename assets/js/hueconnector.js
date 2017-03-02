@@ -5,7 +5,7 @@
 
   .factory('hueConnector', ['$rootScope', function ($rootScope) {
     var vm = this;
-
+window.MyHue = // DEBUGCODE
     vm.MyHue = new huepi();
     // Demo Data while Connecting...
     vm.MyHue.Lights['7001'] = {name: 'Demo Light'};

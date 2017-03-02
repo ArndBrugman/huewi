@@ -11,12 +11,6 @@
   <meta name='apple-mobile-web-app-status-bar-style' content='black' />
   <meta http-equiv='x-dns-prefetch-control' content='off'>
   <link rel="shortcut icon" type="image/png" href="./assets/img/huewi_logo.png"/>
-  <style type='text/css'>
-    html, body {
-      background: rgba(0, 0, 0, 1);
-      color: rgba(250, 240, 230, 1);
-    }
-  </style>
 
   <!-- >
   <h3>Local bower_components ._=+-+=_. Local bower_components  ._=+-+=_. Local bower_components</h3>
@@ -37,8 +31,6 @@
   <script type='text/javascript' src='cordova.js'></script>
 
   <!-- build:js -->
-  <script type='text/javascript' src='../huepi/huepi.js'></script>
-
   <script type='text/javascript' src='https://code.jquery.com/jquery-3.1.1.min.js'></script>
 
   <script type='text/javascript' src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
@@ -47,6 +39,7 @@
   <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.min.js'></script>
   <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-touch.min.js'></script>
 
+  <script type='text/javascript' src='../huepi/huepi.js'></script>
 
   <script type='text/javascript' src='app/huewi.js'></script>
 
@@ -155,13 +148,6 @@
     </nav><!-- /navdrawer -->
   </div><!-- /navcontainer -->
 
-  <div class='toastposition'>
-    <button class='btn btn-sm col' ng-click='vm.BackbuttonPressed()' ng-if='TESTCODE' >Test Android BackbuttonPressed</button>
-    <div class='toast fading timebasedgradient' ng-show='vm.Menu.GetItem() === "QuitOnBack"'>
-      Please press back key again to quit
-    </div>
-  </div>
-
   <div class='status timebasedgradient'>
     <h4>hue Web Interface</h4>
     <div id='huewiStatusbar'>
@@ -170,6 +156,13 @@
       <div>Bridge Name: {{vm.MyHue.BridgeName}}</div>
     </div><!-- /huewiStatusbar -->
   </div><!-- /status -->
+
+  <div class='toastposition'>
+    <div class='btn btn-sm col' ng-click='vm.BackbuttonPressed()' ng-if='TESTCODE' >Test Android BackbuttonPressed</div>
+    <div class='toast fading' ng-show='vm.Menu.GetItem() === "QuitOnBack"'>
+      Please press back key again to quit
+    </div>
+  </div>
 
   <div id='fadeafterloading' class='overlay fading' ng-show='true' style='background:black'>
   </div>
