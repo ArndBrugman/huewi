@@ -55,8 +55,6 @@ function TimeBasedGradientUpdate() {
     'rgba(250, 240, 230, 0.85)',
   ];
 
-  //return; // TESTCODE
-
   var index = new Date().getHours();
   if (index <  7) index =  3; // night = 3
   else if (index <  9) index =  5; // morning = 5
