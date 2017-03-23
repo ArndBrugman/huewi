@@ -9,19 +9,19 @@
     <button type='button' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-click='vm.hueConnector.Discover()' ng-hide='vm.MyHue.ScanningNetwork'>Discover</button>
     <button type='button' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-click='vm.hueConnector.Scan()' ng-hide='vm.MyHue.ScanningNetwork'>Scan</button>
     <div ng-show='vm.MyHue.ScanningNetwork'>
-      <span type='text' class=' btn btn-sm  col-xs-4 col-sm-4 col-md-2 col-lg-2'>Scanning</span>
-      <span type='text' class=' btn btn-sm  col-xs-4 col-sm-4 col-md-2 col-lg-2'>Network</span>
+      <span type='text' class='btn btn-sm  col-xs-4 col-sm-4 col-md-2 col-lg-2'>Scanning</span>
+      <span type='text' class='btn btn-sm  col-xs-4 col-sm-4 col-md-2 col-lg-2'>Network</span>
       <button type='button' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-click='vm.MyHue.ScanningNetwork = false'>Cancel</button>
     </div>
     <button type='button' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' onclick='delete localStorage.MyHueBridgeIP; window.location.reload(true)' ng-hide='vm.MyHue.ScanningNetwork'>Reload</button>
-    <span type='text' class=' btn btn-sm  col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-hide='vm.MyHue.ScanningNetwork'>Manual Bridge:</span>
+    <span type='text' class='btn btn-sm  col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-hide='vm.MyHue.ScanningNetwork'>Manual Bridge:</span>
     <input type='text' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-model='vm.ManualBridge' ng-hide='vm.MyHue.ScanningNetwork'></input>
     <button type='button' class='btn btn-sm col-xs-4 col-sm-4 col-md-2 col-lg-2' ng-click='vm.hueConnector.Connect(vm.ManualBridge)' ng-hide='vm.MyHue.ScanningNetwork'>Connect</button>
   </div>
 </div>
 
 <div class='fading' ng-hide='vm.MyHue.BridgeName === "" || vm.MyHue.Username === ""'>
-  <h4>'{{vm.MyHue.BridgeName}}' (Current Bridge)</h4>
+  <h4>Connected to '{{vm.MyHue.BridgeName}}'</h4>
   <div class='list-group row'>
     <div class='list-group-item col-xs-6 col-sm-4 col-md-3 col-lg-2'>
       <div class='list-group fading' ng-show='vm.MyHue.BridgeConfig.linkbutton'>
@@ -40,7 +40,7 @@
 <div class='fading' ng-hide='vm.MyHue.LocalBridges.length == 0'>
   <h4>Bridges on Network</h4>
   <div class='list-group row'>
-    <div class='list-group-item col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-repeat='Bridge in vm.MyHue.LocalBridges' ng-click='vm.MyHue.ScanningNetwork = false; vm.MyHue.BridgeIP = Bridge.internalipaddress; vm.hueConnector.Connect()'>
+    <div class='list-group-item col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-repeat='Bridge in vm.MyHue.LocalBridges' ng-click='vm.MyHue.ScanningNetwork = false; vm.MyHue.BridgeIP = Bridge.internalipaddress; vm.hueConnector.Connect(Bridge.internalipaddress)'>
       <div class='col-xs-10 col-sm-10 col-md-11 col-lg-11'>
         {{Bridge.internalipaddress}}<span ng-show='Bridge.internalipaddress===vm.MyHue.BridgeIP'>, '{{vm.MyHue.BridgeName}}'</span>, {{Bridge.id}}
       </div>
@@ -55,16 +55,18 @@
     <div class='list-group-item col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-repeat='Listed in vm.MyHue.BridgeConfig.whitelist | addKey | asArray | noSpaces | orderBy:"last_use_date":true' ng-click='vm.Details(Listed.__key)'>
       <div class='col-xs-8 col-sm-10 col-md-11 col-lg-11'>
         {{Listed.name}}
-        <span ng-show='Listed.__key===vm.MyHue.Username'>(Active)</span>
         <div ng-if='Listed.__key===vm.Details()'>
           <small>
-            {{Listed.__key}}<br>
+            Last Used: {{Listed['last_use_date']}}<br>
             Created: {{Listed['create_date']}}<br>
-            LastUsed: {{Listed['last_use_date']}}
+            {{Listed.__key}}<br>
           </small>
         </div>
       </div>
-      <span ng-click='vm.MyHue.BridgeDeleteUser(Listed.__key)' class='btn btn-sm col-xs-4 col-sm-2 col-md-1 col-lg-1'>Delete Key</span>
+      <span ng-click='vm.MyHue.BridgeDeleteUser(Listed.__key)' class='btn btn-sm col-xs-4 col-sm-2 col-md-1 col-lg-1'>
+        <span ng-show='Listed.__key===vm.MyHue.Username'>!Delete Current!</span>
+        <span ng-show='Listed.__key!==vm.MyHue.Username'>Delete Key</span>
+      </span>
     </div>
   </div>
 </div>

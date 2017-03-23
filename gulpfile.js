@@ -82,13 +82,6 @@ gulp.task('webpage', function () {
     .pipe(notify({ message: 'Webpage task complete' }));
 });
 
-// Components
-gulp.task('components', function () { // components are embedded in controllers now
-  /*gulp.src('app/components/*.html')
-    .pipe(gulp.dest('dist/app/components'))
-    .pipe(notify({ message: 'Components task complete' }));*/
-});
-
 // Clean
 gulp.task('clean', function() {
   return del(['dist/assets/css', 'dist/assets/fonts', 'dist/assets/js', 'dist/assets/img', 'dist']);
@@ -96,7 +89,7 @@ gulp.task('clean', function() {
 
 // Default task
 gulp.task('default', ['clean'], function() {
-  gulp.start('styles', 'fonts', 'scripts', 'images', 'webpage', 'components');
+  gulp.start('styles', 'fonts', 'scripts', 'images', 'webpage');
 });
 
 // Watch
@@ -118,7 +111,7 @@ gulp.task('watch', function() {
   gulp.watch('./*.html', ['webpage']);
 
   // Watch components files
-  gulp.watch('./assets/**/huewi-*.*', ['components']);
+  gulp.watch('./assets/**/huewi-*.*', ['scripts']);
 
   // Create LiveReload server
   livereload.listen();

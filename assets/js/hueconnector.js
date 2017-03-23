@@ -66,8 +66,8 @@ window.MyHue = // DEBUGCODE
 
     function Resume() {
       TimeBasedGradientUpdate(); // Immediate for correct Colors
-      Connect();
       vm.MyHue.PortalDiscoverLocalBridges(); // Parallel PortalDiscoverLocalBridges
+      Connect();
     }
 
     function GetStatus() {
@@ -108,7 +108,6 @@ window.MyHue = // DEBUGCODE
       clearInterval(HeartbeatInterval);
       HeartbeatInterval = -1;
       SetStatus('Getting Bridge Config');
-      vm.MyHue.BridgeGetDescription();
       vm.MyHue.BridgeGetConfig().then(function() {
         SetStatus('Bridge Config Received, Getting Data');
         ResumeConnection();
@@ -124,6 +123,7 @@ window.MyHue = // DEBUGCODE
       HeartbeatInterval = -1;
       vm.MyHue.BridgeIP = NewBridgeAddress || localStorage.MyHueBridgeIP || '';
       vm.MyHue.BridgeID = '';
+      vm.MyHue.BridgeName = '';
       vm.MyHue.Username = '';
       if (vm.MyHue.BridgeIP !== '') {
         ReConnect();
@@ -133,9 +133,6 @@ window.MyHue = // DEBUGCODE
     function Discover() {
       clearInterval(HeartbeatInterval);
       HeartbeatInterval = -1;
-      vm.MyHue.BridgeIP = '';
-      vm.MyHue.BridgeID = '';
-      vm.MyHue.Username = '';
       SetStatus('Discovering Bridge via Portal');
       vm.MyHue.PortalDiscoverLocalBridges().then(function() {
         SetStatus('Bridge Discovered');
@@ -148,9 +145,6 @@ window.MyHue = // DEBUGCODE
     function Scan() {
       clearInterval(HeartbeatInterval);
       HeartbeatInterval = -1;
-      vm.MyHue.BridgeIP = '';
-      vm.MyHue.BridgeID = '';
-      vm.MyHue.Username = '';
       SetStatus('Scanning Network for Bridge');
       vm.MyHue.NetworkDiscoverLocalBridges().then(function() {
         SetStatus('Bridge Found');
