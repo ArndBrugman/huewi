@@ -121,7 +121,7 @@ window.MyHue = // DEBUGCODE
     function Connect(NewBridgeAddress) {
       clearInterval(HeartbeatInterval);
       HeartbeatInterval = -1;
-      vm.MyHue.BridgeIP = NewBridgeAddress || localStorage.MyHueBridgeIP || '';
+      vm.MyHue.BridgeIP = NewBridgeAddress || vm.MyHue.BridgeIP || localStorage.MyHueBridgeIP || '';
       vm.MyHue.BridgeID = '';
       vm.MyHue.BridgeName = '';
       vm.MyHue.Username = '';

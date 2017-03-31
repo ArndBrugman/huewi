@@ -40,7 +40,7 @@
 <div class='fading' ng-hide='vm.MyHue.LocalBridges.length == 0'>
   <h4>Bridges on Network</h4>
   <div class='list-group row'>
-    <div class='list-group-item col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-repeat='Bridge in vm.MyHue.LocalBridges' ng-click='vm.MyHue.ScanningNetwork = false; vm.MyHue.BridgeIP = Bridge.internalipaddress; vm.hueConnector.Connect(Bridge.internalipaddress)'>
+    <div class='list-group-item col-xs-6 col-sm-4 col-md-3 col-lg-2' ng-repeat='Bridge in vm.MyHue.LocalBridges' ng-click='vm.MyHue.ScanningNetwork = false; vm.hueConnector.Connect(Bridge.internalipaddress)'>
       <div class='col-xs-10 col-sm-10 col-md-11 col-lg-11'>
         {{Bridge.internalipaddress}}<span ng-show='Bridge.internalipaddress===vm.MyHue.BridgeIP'>, '{{vm.MyHue.BridgeName}}'</span>, {{Bridge.id}}
       </div>
