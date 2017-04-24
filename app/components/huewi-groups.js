@@ -32,21 +32,27 @@
 
     function ChangeType()
     {
-      if (vm.GroupType === 'RoomsAndGroups') {
+      if (vm.GroupType === 'AllGroupsAndRooms') {
         vm.GroupType = 'Room';
       } else if (vm.GroupType === 'Room') {
         vm.GroupType = 'LightGroup';
       } else {
-        vm.GroupType = 'RoomsAndGroups';
+        vm.GroupType = 'AllGroupsAndRooms';
       }
     }
 
     function FilterGroups(Group)
     {
-      if (vm.GroupType === 'RoomsAndGroups') {
+      if (vm.GroupType === 'AllGroupsAndRooms') {
         return true;
       }
-      return Group.type === vm.GroupType;
+      if (Group.type === vm.GroupType) {
+        if ((Group.name.indexOf('huelabs')>=0) || (Group.name.indexOf('$')>=0)) {
+          return false;
+        }
+        return true;
+      }
+      return false;
     }
 
     function SetGroupId(NewId) {
