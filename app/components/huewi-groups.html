@@ -1,8 +1,9 @@
 <h3 ng-click='vm.ChangeType()' ng-show='vm.GroupType==="Room"' >Rooms</h3>
 <h3 ng-click='vm.ChangeType()' ng-show='vm.GroupType==="LightGroup"' >Groups</h3>
+<h3 ng-click='vm.ChangeType()' ng-show='vm.GroupType==="RoomsAndGroups"' >All Groups</h3>
 
 <div class='list-group row'>
-  <div class='list-group-item col-xs-12 col-sm-12 col-md-12 col-lg-12' ng-repeat='Group in vm.MyHue.Groups | addKey | asArray | orderBy:"name" | filter:{type:vm.GroupType} | filter:"!huelabs"'>
+  <div class='list-group-item col-xs-12 col-sm-12 col-md-12 col-lg-12' ng-repeat='Group in vm.MyHue.Groups | addKey | asArray | orderBy:"name" | filter:vm.FilterGroups | filter:"!huelabs"'>
     <div class='col-xs-4 col-sm-5 col-md-4 col-lg-3' ng-click='vm.Menu.SetItem("Group", Group.__key)'>
       {{Group.name}}
     </div>

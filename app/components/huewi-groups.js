@@ -24,6 +24,7 @@
     vm.GroupId = '-1';
 
     vm.ChangeType = ChangeType;
+    vm.FilterGroups = FilterGroups;
     vm.SetGroupId = SetGroupId;
     vm.SetGroupBrightness = SetGroupBrightness;
 
@@ -31,11 +32,21 @@
 
     function ChangeType()
     {
-      if (vm.GroupType === 'LightGroup') {
+      if (vm.GroupType === 'RoomsAndGroups') {
         vm.GroupType = 'Room';
-      } else {
+      } else if (vm.GroupType === 'Room') {
         vm.GroupType = 'LightGroup';
+      } else {
+        vm.GroupType = 'RoomsAndGroups';
       }
+    }
+
+    function FilterGroups(Group)
+    {
+      if (vm.GroupType === 'RoomsAndGroups') {
+        return true;
+      }
+      return Group.type === vm.GroupType;
     }
 
     function SetGroupId(NewId) {
