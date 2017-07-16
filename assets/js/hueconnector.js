@@ -151,9 +151,10 @@ window.MyHue = // DEBUGCODE
         ReConnect();
       }, function() { // else
         SetStatus('Unable to locate Bridge with Network Scan');
-      }).progress(function update(Percentage){
-        SetStatus('Searching Network for Bridge, '+ Percentage +'% done');
-      } );
+      });
+    //    .progress(function update(Percentage){
+    //    SetStatus('Searching Network for Bridge, '+ Percentage +'% done');
+    //  } );
     }
 
     function onHeartbeat() {
